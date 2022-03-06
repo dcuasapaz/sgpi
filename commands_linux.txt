@@ -1,0 +1,3 @@
+# Ver la version de postgres
+/usr/lib/postgresql/14/bin/postgres -V
+/usr/lib/postgresql/14/bin/postgres --version
