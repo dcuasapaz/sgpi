@@ -1,0 +1,21 @@
+.pnl {
+	padding: 0px;
+}
+
+.pnl-border {
+	border-right: 1px #34373c solid;
+}
+
+.pnl-project {
+	width: 80%;
+	margin: 0 auto;
+	border: 2px #dadada solid;
+	border-radius: 10px;
+}
+
+.pnl-audit {
+	width: 80%;
+	margin: 0 auto;
+	border: 2px #dadada solid;
+	border-radius: 3px;
+}

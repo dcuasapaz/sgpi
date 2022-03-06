@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core">
+<h:head>
+	<link href="#{request.contextPath}/css/stl_adm.css" rel="stylesheet"
+		type="text/css" />
+	<link rel="shortcut icon" href="/#{default.acr()}/ico/gidi.ico" />
+	<h:outputScript name="validador.js"></h:outputScript>
+	<title>#{webCtlPrf.mnu.SMnuNme} | #{infCtlStm.stm.SStmAcr}</title>
+</h:head>
+<h:body>
+	<div id="adm-bdy">
+
+		<div id="adm-hdr"></div>
+
+		<div class="hr" />
+
+		<h:form id="frm-adm-mnu">
+
+			<p:growl id="grw-adm-mnu" closable="true" redisplay="true"
+				showDetail="true" />
+
+			<div id="adm-usr">
+
+				<h:panelGroup id="pgr-hdr-bdy-rgh" layout="block"
+					styleClass="tpl-hdr-bdy-rgh">
+
+					<h:panelGroup layout="block" styleClass="usr-inf">
+						<div class='stt-crc' style='background: #33FF33' />
+						<p:spacer width="5" />
+						<h:panelGroup layout="block" styleClass="usr-inf-nme">
+							<h:outputText
+								value="#{scrCtlSss.prl.dtaTblPr.SPrsNme.charAt(0)}#{scrCtlSss.prl.dtaTblPr.SPrsLstNme.charAt(0)}" />
+						</h:panelGroup>
+						<p:spacer width="5" />
+						<h:outputText value="#{scrCtlSss.prl.dtaTblPr.SPrsEml}" />
+						<p:spacer width="5" />
+						<p:commandButton value="Cerrar Sesión" styleClass="usr-btn"
+							action="#{scrCtlSss.clsSss()}" update="@form"
+							icon="ui-icon-circle-close" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+			</div>
+
+			<div id="adm-ctt">
+
+				<h:outputLabel value="Menú Principal" styleClass="lbl-ttl-mnu" />
+				<h:panelGroup layout="block" styleClass="hr-ttl" />
+
+				<h:panelGrid id="png-adm-mnu-ctt" columns="2" styleClass="bdy-90"
+					columnClasses="bdy-60,bdy-30" cellpadding="5" cellspacing="5">
+
+					<h:panelGroup styleClass="ctt-act-mnu" layout="block">
+						<p:dataGrid id="dgd-mnu-sub" var="varMnuSub"
+							value="#{webCtlPrf.lstMnuSub}" columns="4" layout="grid"
+							styleClass="bdy-80">
+							<p:link href="#{varMnuSub.SMnuSubLnk}" styleClass="mnu-lnk"
+								rendered="#{varMnuSub.BMnuSubStt}">
+								<h:panelGrid styleClass="mnu-lnk-bdy">
+									<h:panelGrid columns="1" styleClass="mnu-lnk-ttl">
+										<h:outputLabel value="#{varMnuSub.SMnuSubNme}" />
+									</h:panelGrid>
+									<h:panelGrid columns="1" styleClass="mnu-lnk-img">
+										<p:graphicImage value="#{varMnuSub.SMnuSubImg}"
+											styleClass="mnu-lnk-img-obj" />
+									</h:panelGrid>
+								</h:panelGrid>
+							</p:link>
+						</p:dataGrid>
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="ctt-act-inf" layout="block">
+
+						<h:panelGrid columns="1" styleClass="adm-inf-ttl">
+							<h:outputLabel value="Account info" />
+						</h:panelGrid>
+
+						<h:panelGrid columns="1" styleClass="adm-inf-bdy" cellpadding="1"
+							cellspacing="1">
+
+							<h:panelGrid id="png-prs-dte" columns="2" styleClass="bdy-100"
+								columnClasses="bdy-40 alg-lft,bdy-60">
+								<h:outputLabel for="out-prs-dte"
+									value="#{html.L_MAIN_SCR_DTE_RGS()}"
+									styleClass="adm-inf-ttl-lbl" />
+								<h:outputText id="out-prs-dte"
+									value="#{scrCtlSss.prl.DPrsRolDteRgs}" styleClass="lnk-shw" />
+							</h:panelGrid>
+
+							<h:panelGrid id="png-prs-eml" columns="2" styleClass="bdy-100"
+								columnClasses="bdy-40 alg-lft,bdy-60">
+								<h:outputLabel for="inp-prs-eml"
+									value="#{html.L_MAIN_PRS_EML()}" styleClass="adm-inf-ttl-lbl" />
+								<p:inplace id="inp-prs-eml" editor="true" styleClass="lnk-edt">
+									<p:ajax event="save" listener="#{scrCltPfl.UpdPrsEml()}"
+										update="grw-adm-mnu" />
+									<h:inputText value="#{scrCltPfl.prl.dtaTblPr.SPrsEml}"
+										styleClass="inp" required="#{scrCltPfl.rqrPrsEml}"
+										disabled="#{scrCltPfl.dsbPrsEml}"
+										requiredMessage="#{message.M_PRS_USR_MND()}"
+										rendered="#{scrCltPfl.vsbPrsEml}">
+										<f:validator validatorId="custom.emailValidator" />
+									</h:inputText>
+								</p:inplace>
+								<p:blockUI block="png-prs-eml" trigger="inp-prs-eml">
+									<p:graphicImage value="#{html.imgLoad}" width="32" />
+								</p:blockUI>
+							</h:panelGrid>
+
+							<h:panelGrid id="png-prs-usr" columns="2" styleClass="bdy-100"
+								columnClasses="bdy-40 alg-lft,bdy-60">
+								<h:outputLabel for="inp-prs-usr"
+									value="#{html.L_MAIN_PRS_USR()}" styleClass="adm-inf-ttl-lbl" />
+								<p:inplace id="inp-prs-usr" editor="true" styleClass="lnk-edt">
+									<p:ajax event="save" listener="#{scrCltPfl.UpdPrsUsr()}"
+										update="grw-adm-mnu" />
+									<h:inputText value="#{scrCltPfl.prl.dtaTblPr.SPrsUsr}"
+										styleClass="inp" required="#{scrCltPfl.rqrPrsUsr}"
+										disabled="#{scrCltPfl.dsbPrsUsr}"
+										requiredMessage="#{message.M_PRS_USR_MND()}"
+										rendered="#{scrCltPfl.vsbPrsUsr}" />
+								</p:inplace>
+								<p:blockUI block="png-prs-usr" trigger="inp-prs-usr">
+									<p:graphicImage value="#{html.imgLoad}" width="32" />
+								</p:blockUI>
+							</h:panelGrid>
+
+							<h:panelGrid id="png-prs-psw" columns="2" styleClass="bdy-100"
+								columnClasses="bdy-40 alg-lft,bdy-60">
+								<h:outputLabel for="inp-prs-psw"
+									value="#{html.L_MAIN_PRS_PSW()}" styleClass="adm-inf-ttl-lbl" />
+								<p:inplace id="inp-prs-psw" editor="true"
+									label="#{html.L_MAIN_PRS_PSW_NOT()}" styleClass="lnk-edt">
+									<p:ajax event="save" listener="#{scrCltPfl.UpdPrsPsw()}"
+										update="grw-adm-mnu png-prs-psw" />
+									<h:inputText value="#{scrCltPfl.prl.dtaTblPr.SPrsPsw}"
+										required="#{scrCltPfl.rqrPrsPsw}"
+										disabled="#{scrCltPfl.dsbPrsPsw}"
+										rendered="#{scrCltPfl.vsbPrsPsw}"
+										requiredMessage="#{message.prsPswObl()}" styleClass="inp" />
+								</p:inplace>
+								<p:blockUI block="png-prs-psw" trigger="inp-prs-psw">
+									<p:graphicImage value="#{html.imgLoad}" width="32" />
+								</p:blockUI>
+							</h:panelGrid>
+
+							<h:panelGrid id="png-prs-rol-ind" columns="2"
+								styleClass="bdy-100" columnClasses="bdy-40 alg-lft,bdy-60">
+								<h:outputLabel for="inp-prs-rol-ind"
+									value="#{html.L_MAIN_SCR_PRF_SSS()}"
+									styleClass="adm-inf-ttl-lbl" />
+								<h:outputText id="inp-prs-rol-ind"
+									value="#{scrCtlOpt.rtrOpt(scrCtlSss.prl.IRolId).SOptNme}"
+									styleClass="lnk-shw" />
+							</h:panelGrid>
+
+							<h:panelGrid id="png-prs-rol" columns="2" styleClass="bdy-100"
+								columnClasses="bdy-40 alg-lft,bdy-60">
+								<h:outputLabel value="#{html.L_MAIN_SCR_PRF()}"
+									styleClass="adm-inf-ttl-lbl" />
+								<p:dataList value="#{scrCltPfl.lstPrsRol}" var="varPrsRol"
+									type="definition" styleClass="adm-inf-dtl-lbl"
+									style="color: #fff;">
+
+									<h:panelGrid columns="2" columnClasses="bdy-20, bdy-80"
+										styleClass="bdy-100">
+										<h:outputText
+											value="[#{sitCtlOpt.ent(varPrsRol.IPrjId).SOptAcr}]"
+											style="color: #fff;" />
+										<h:outputText
+											value="#{scrCtlOpt.rtrOpt(varPrsRol.IRolId).SOptNme}"
+											style="color: #fff;" />
+									</h:panelGrid>
+
+								</p:dataList>
+							</h:panelGrid>
+
+						</h:panelGrid>
+					</h:panelGroup>
+
+				</h:panelGrid>
+
+			</div>
+		</h:form>
+		<div id="adm-ftr"></div>
+
+	</div>
+
+</h:body>
+
+</h:html>
