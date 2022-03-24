@@ -14,47 +14,65 @@
 				showSummary="true" />
 			<h:panelGroup id="pgr-dta-prs-apn" layout="block"
 				styleClass="brr-mnu ">
-				<p:menubar>
+				<h:panelGrid columns="10"
+					columnClasses="main-10, main-10, main-10, main-10, main-10">
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-hme" value="#{html.S_BTN_MNU_HME()}"
+							disabled="#{dtaCtlPrs.dsbBtnHme}"
+							rendered="#{dtaCtlPrs.vsbBtnHme}"
+							action="#{webCtlMnu.home(scrCtlSss.prl.IRolId)}" update="@form"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-add" value="#{html.S_BTN_MNU_NEW()}"
+							action="#{dtaCtlPrs.add()}" update="@form"
+							disabled="#{dtaCtlPrs.dsbBtnAdd}"
+							rendered="#{dtaCtlPrs.vsbBtnAdd}"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
 
-					<p:menuitem id="#{html.hmeBtnId}" value="#{html.hmeBtnNme}"
-						icon="#{html.hmeBtnIcn}" disabled="#{dtaCtlPrs.dsbBtnHme}"
-						rendered="#{dtaCtlPrs.vsbBtnHme}"
-						action="#{webCtlMnu.home(scrCtlSss.prl.IRolId)}" update="@form" />
-					<p:menuitem id="#{html.newBtnId}" value="#{html.newBtnNme}"
-						icon="#{html.newBtnIcn}" action="#{dtaCtlPrs.add()}"
-						update="@form" disabled="#{dtaCtlPrs.dsbBtnAdd}"
-						rendered="#{dtaCtlPrs.vsbBtnAdd}" />
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-sve" value="#{html.S_BTN_MNU_SVE()}"
+							action="#{dtaCtlPrs.sve()}" update="@form"
+							disabled="#{dtaCtlPrs.dsbBtnSve}"
+							rendered="#{dtaCtlPrs.vsbBtnSve}"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-upd" value="#{html.S_BTN_MNU_UPD()}"
+							action="#{dtaCtlPrs.upd()}" update="@form"
+							disabled="#{dtaCtlPrs.dsbBtnUpd}"
+							rendered="#{dtaCtlPrs.vsbBtnUpd}"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
 
-					<p:menuitem id="#{html.sveBtnId}" value="#{html.sveBtnNme}"
-						icon="#{html.sveBtnIcn}" action="#{dtaCtlPrs.sve()}"
-						update="@form" disabled="#{dtaCtlPrs.dsbBtnSve}"
-						rendered="#{dtaCtlPrs.vsbBtnSve}" />
 
-					<p:menuitem id="#{html.updBtnId}" value="#{html.updBtnNme}"
-						icon="#{html.updBtnIcn}" action="#{dtaCtlPrs.upd()}"
-						update="@form" disabled="#{dtaCtlPrs.dsbBtnUpd}"
-						rendered="#{dtaCtlPrs.vsbBtnUpd}" />
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-rst" value="#{html.S_BTN_MNU_RST()}"
+							icon="ui-icon-arrowrefresh-1-n" disabled="#{dtaCtlPrs.dsbBtnRtr}"
+							rendered="#{dtaCtlPrs.vsbBtnRtr}"
+							onclick="window.location.reload()"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+				</h:panelGrid>
 
-					<p:menuitem id="#{html.rfrBtnId}" value="#{html.rfrBtnNme}"
-						icon="#{html.rfrBtnIcn}" disabled="#{dtaCtlPrs.dsbBtnRtr}"
-						rendered="#{dtaCtlPrs.vsbBtnRtr}"
-						onclick="window.location.reload()" />
-				</p:menubar>
+				<h:panelGroup layout="block" styleClass="pnl-mnu-lne" />
 
-				<p:blockUI id="#{html.newBlcId}" block="frm-dta-prs"
-					trigger="#{html.newBtnId}">
+				<p:blockUI id="blc-sit-add" block="frm-dta-prs"
+					trigger="itm-sit-add">
 					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
 				</p:blockUI>
 
-				<p:blockUI id="#{html.sveBlcId}" block="frm-dta-prs"
-					trigger="#{html.sveBtnId}">
+				<p:blockUI id="blc-sit-sve" block="frm-dta-prs"
+					trigger="itm-sit-sve">
+					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
+				</p:blockUI>
+				<p:blockUI id="blc-sit-upd" block="frm-dta-prs"
+					trigger="itm-sit-upd">
 					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
 				</p:blockUI>
 
-				<p:blockUI id="#{html.updBlcId}" block="frm-dta-prs"
-					trigger="#{html.updBtnId}">
-					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
-				</p:blockUI>
+
 
 			</h:panelGroup>
 
@@ -117,7 +135,8 @@
 							escape="false" />
 					</p:column>
 
-					<p:column headerText="Country" sortBy="#{varPrs.dpaTblCnr.SCnrNmeSpn}"
+					<p:column headerText="Country"
+						sortBy="#{varPrs.dpaTblCnr.SCnrNmeSpn}"
 						filterBy="#{varPrs.dpaTblCnr.SCnrNmeSpn}" styleClass="bdy-10">
 						<h:outputText value="#{varPrs.dpaTblCnr.SCnrNmeSpn}"
 							escape="false" />
@@ -129,16 +148,16 @@
 						<h:panelGrid styleClass="bdy-100" columns="2"
 							columnClasses="bdy-50,bdy-50">
 
-							<p:commandLink id="#{html.edtBtnId}" action="#{dtaCtlPrs.edt()}"
-								title="#{html.edtBtnNme}" styleClass="btn-tbl alg-ctr"
-								update="@form" disabled="#{dtaCtlPrs.dsbTblBtnEdt}"
+							<p:commandLink id="btn-frm-edt" action="#{dtaCtlPrs.edt()}"
+								title="Edit" styleClass="btn-tbl alg-ctr" update="@form"
+								disabled="#{dtaCtlPrs.dsbTblBtnEdt}"
 								rendered="#{dtaCtlPrs.vsbTblBtnEdt}">
 								<p:graphicImage value="#{html.icn(html.edt,16,html.png)}" />
 								<f:setPropertyActionListener target="#{dtaCtlPrs.prs}"
 									value="#{varPrs}" />
 							</p:commandLink>
-							<p:commandLink id="#{html.dltBtnId}" action="#{dtaCtlPrs.dlt()}"
-								title="#{html.dltBtnNme}" styleClass="btn-tbl alg-ctr"
+							<p:commandLink id="btn-frm-dlt" action="#{dtaCtlPrs.dlt()}"
+								title="Delete" styleClass="btn-tbl alg-ctr"
 								disabled="#{dtaCtlPrs.dsbTblBtnDlt}"
 								rendered="#{dtaCtlPrs.vsbTblBtnDlt}" update="@form">
 								<p:graphicImage value="#{html.icn(html.dlt,16,html.png)}" />
@@ -148,11 +167,11 @@
 						</h:panelGrid>
 
 						<p:blockUI id="#{html.edtBlcId}" block="dtb-dta-prs"
-							trigger="#{html.edtBtnId}">
+							trigger="btn-frm-edt">
 							<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
 						</p:blockUI>
 						<p:blockUI id="#{html.dltBlcId}" block="dtb-dta-prs"
-							trigger="#{html.dltBtnId}">
+							trigger="btn-frm-dlt">
 							<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
 						</p:blockUI>
 					</p:column>
@@ -173,8 +192,7 @@
 					<h:panelGrid columns="2" styleClass="bdy-100"
 						columnClasses="bdy-20,bdy-80">
 
-						<h:outputLabel for="som-dta-prs-idn-tpe"
-							value="ID Type:" />
+						<h:outputLabel for="som-dta-prs-idn-tpe" value="ID Type:" />
 						<p:selectOneMenu id="som-dta-prs-idn-tpe"
 							required="#{dtaCtlPrs.rqrPrsIdnTpe}"
 							disabled="#{dtaCtlPrs.dsbPrsIdnTpe}"

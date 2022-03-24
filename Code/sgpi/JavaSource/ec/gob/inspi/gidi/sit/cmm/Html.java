@@ -12,6 +12,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.FillPatternType;
 
 import ec.gob.inspi.gidi.sit.enm.LabelAdt;
+import ec.gob.inspi.gidi.sit.enm.LabelDta;
 import ec.gob.inspi.gidi.sit.enm.LabelEgs;
 import ec.gob.inspi.gidi.sit.enm.LabelLrv;
 import ec.gob.inspi.gidi.sit.enm.LabelPrc;
@@ -39,6 +40,31 @@ public class Html {
 
 	public Html() {
 
+	}
+
+	// --------------------------------------------------------------
+	public static String S_LBL_PRS_EML() {
+		return LabelDta.EMAIL.getSLblNme();
+	}
+
+	public static String S_LBL_PRS_USR() {
+		return LabelDta.USER.getSLblNme();
+	}
+
+	public static String D_LBL_PRS_DTE_RGS() {
+		return LabelDta.DATE_RECORD.getSLblNme();
+	}
+
+	public static String S_LBL_PRS_PSW() {
+		return LabelDta.PASSWORD.getSLblNme();
+	}
+
+	public static String S_LBL_PRS_PRF_SSS() {
+		return LabelDta.PROFILE_SESION.getSLblNme();
+	}
+
+	public static String S_LBL_PRS_PRF() {
+		return LabelDta.PROFILES.getSLblNme();
 	}
 
 	// --------------------------------------------------------------
@@ -556,11 +582,11 @@ public class Html {
 	}
 
 	public static String I_LBL_TBL_LRV_CLC_LIVE() {
-		return LabelTableExport.N_LARVAE_DEAD.getSLblNme();
+		return LabelTableExport.N_LARVAE_LIVE.getSLblNme();
 	}
 
 	public static String I_LBL_TBL_LRV_CLC_DEAD() {
-		return LabelTableExport.N_LARVAE_LIVE.getSLblNme();
+		return LabelTableExport.N_LARVAE_DEAD.getSLblNme();
 	}
 
 	public static String S_LBL_TBL_PRC_CMM() {

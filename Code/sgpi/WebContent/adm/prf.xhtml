@@ -15,48 +15,65 @@
 
 			<h:panelGroup id="pgr-scr-prl" layout="block" styleClass="brr-mnu ">
 
-				<p:menubar>
 
-					<p:menuitem id="#{html.hmeBtnId}" value="#{html.hmeBtnNme}"
-						icon="#{html.hmeBtnIcn}" disabled="#{scrCtlPrl.dsbBtnHme}"
-						rendered="#{scrCtlPrl.vsbBtnHme}"
-						action="#{webCtlMnu.home(scrCtlSss.prl.IRolId)}" update="@form" />
+				<h:panelGrid columns="10"
+					columnClasses="main-10, main-10, main-10, main-10, main-10">
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-hme" value="#{html.S_BTN_MNU_HME()}"
+							disabled="#{scrCtlPrl.dsbBtnHme}"
+							rendered="#{scrCtlPrl.vsbBtnHme}"
+							action="#{webCtlMnu.home(scrCtlSss.prl.IRolId)}" update="@form"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-add" value="#{html.S_BTN_MNU_NEW()}"
+							action="#{scrCtlPrl.add()}" update="@form"
+							disabled="#{scrCtlPrl.dsbBtnAdd}"
+							rendered="#{scrCtlPrl.vsbBtnAdd}"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
 
-					<p:menuitem id="#{html.newBtnId}" value="#{html.newBtnNme}"
-						icon="#{html.newBtnIcn}" action="#{scrCtlPrl.add()}"
-						update="@form" disabled="#{scrCtlPrl.dsbBtnAdd}"
-						rendered="#{scrCtlPrl.vsbBtnAdd}" />
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-sve" value="#{html.S_BTN_MNU_SVE()}"
+							action="#{scrCtlPrl.sve()}" update="@form"
+							disabled="#{scrCtlPrl.dsbBtnSve}"
+							rendered="#{scrCtlPrl.vsbBtnSve}"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-upd" value="#{html.S_BTN_MNU_UPD()}"
+							action="#{scrCtlPrl.upd()}" update="@form"
+							disabled="#{scrCtlPrl.dsbBtnUpd}"
+							rendered="#{scrCtlPrl.vsbBtnUpd}"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
 
-					<p:menuitem id="#{html.sveBtnId}" value="#{html.sveBtnNme}"
-						icon="#{html.sveBtnIcn}" action="#{scrCtlPrl.sve()}"
-						update="@form" disabled="#{scrCtlPrl.dsbBtnSve}"
-						rendered="#{scrCtlPrl.vsbBtnSve}" />
 
-					<p:menuitem id="#{html.updBtnId}" value="#{html.updBtnNme}"
-						icon="#{html.updBtnIcn}" action="#{scrCtlPrl.upd()}"
-						update="@form" disabled="#{scrCtlPrl.dsbBtnUpd}"
-						rendered="#{scrCtlPrl.vsbBtnUpd}" />
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-rst" value="#{html.S_BTN_MNU_RST()}"
+							icon="ui-icon-arrowrefresh-1-n" disabled="#{scrCtlPrl.dsbBtnRtr}"
+							rendered="#{scrCtlPrl.vsbBtnRtr}"
+							onclick="window.location.reload()"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+				</h:panelGrid>
 
-					<p:menuitem id="#{html.rfrBtnId}" value="#{html.rfrBtnNme}"
-						icon="#{html.rfrBtnIcn}" disabled="#{scrCtlPrl.dsbBtnRtr}"
-						rendered="#{scrCtlPrl.vsbBtnRtr}"
-						onclick="window.location.reload()" />
-				</p:menubar>
+				<h:panelGroup layout="block" styleClass="pnl-mnu-lne" />
 
-				<p:blockUI id="#{html.newBlcId}" block="frm-scr-prl"
-					trigger="#{html.newBtnId}">
+				<p:blockUI id="blc-sit-add" block="frm-scr-prl"
+					trigger="itm-sit-add">
 					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
 				</p:blockUI>
 
-				<p:blockUI id="#{html.sveBlcId}" block="frm-scr-prl"
-					trigger="#{html.sveBtnId}">
+				<p:blockUI id="blc-sit-sve" block="frm-scr-prl"
+					trigger="itm-sit-sve">
+					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
+				</p:blockUI>
+				<p:blockUI id="blc-sit-upd" block="frm-scr-prl"
+					trigger="itm-sit-upd">
 					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
 				</p:blockUI>
 
-				<p:blockUI id="#{html.updBlcId}" block="frm-scr-prl"
-					trigger="#{html.updBtnId}">
-					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
-				</p:blockUI>
 
 			</h:panelGroup>
 
@@ -78,7 +95,7 @@
 						styleClass="bdy-10" exportable="false">
 						<h:panelGroup layout="block" styleClass="tbl-inf-stt">
 							<div class='tbl-inf-stt-obj'
-								style='background: #{webCtlClr.rtrClr(scrCtlOpt.rtrOpt(varPrl.ISttId).IClrCde).SClrHex};' />
+								style='background: #{webCtlClr.entClr(scrCtlOpt.rtrOpt(varPrl.ISttId).IClrCde).SClrHex};' />
 							<p:spacer width="5" />
 							<h:outputText value="#{scrCtlOpt.rtrOpt(varPrl.ISttId).SOptNme}" />
 						</h:panelGroup>
@@ -129,16 +146,16 @@
 						exportable="false">
 						<h:panelGrid styleClass="bdy-100" columns="2"
 							columnClasses="bdy-50,bdy-50">
-							<p:commandLink id="#{html.edtBtnId}" action="#{scrCtlPrl.edt()}"
-								title="#{html.edtBtnNme}" styleClass="btn-tbl alg-ctr"
-								update="@form" disabled="#{scrCtlPrl.dsbTblBtnEdt}"
+							<p:commandLink id="btn-frm-edt" action="#{scrCtlPrl.edt()}"
+								title="Edit" styleClass="btn-tbl alg-ctr" update="@form"
+								disabled="#{scrCtlPrl.dsbTblBtnEdt}"
 								rendered="#{scrCtlPrl.vsbTblBtnEdt}">
 								<p:graphicImage value="#{html.icn(html.edt,16,html.png)}" />
 								<f:setPropertyActionListener target="#{scrCtlPrl.prl}"
 									value="#{varPrl}" />
 							</p:commandLink>
-							<p:commandLink id="#{html.dltBtnId}" action="#{scrCtlPrl.dlt()}"
-								title="#{html.dltBtnNme}" styleClass="btn-tbl alg-ctr"
+							<p:commandLink id="btn-frm-dlt" action="#{scrCtlPrl.dlt()}"
+								title="Delete" styleClass="btn-tbl alg-ctr"
 								disabled="#{scrCtlPrl.dsbTblBtnDlt}"
 								rendered="#{scrCtlPrl.vsbTblBtnDlt}" update="@form">
 								<p:graphicImage value="#{html.icn(html.dlt,16,html.png)}" />
@@ -147,11 +164,11 @@
 							</p:commandLink>
 						</h:panelGrid>
 						<p:blockUI id="#{html.edtBlcId}" block="dtb-scr-prl"
-							trigger="#{html.edtBtnId}">
+							trigger="btn-frm-edt">
 							<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
 						</p:blockUI>
 						<p:blockUI id="#{html.dltBlcId}" block="dtb-scr-prl"
-							trigger="#{html.dltBtnId}">
+							trigger="btn-frm-dlt">
 							<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
 						</p:blockUI>
 					</p:column>
@@ -170,7 +187,7 @@
 						<h:outputLabel for="som-scr-stt" value="Status system:" />
 						<h:panelGroup layout="block" styleClass="tbl-inf-stt">
 							<div class='tbl-inf-stt-obj'
-								style='background: #{webCtlClr.rtrClr(scrCtlOpt.rtrOpt(scrCtlPrl.prl.ISttId).IClrCde).SClrHex};' />
+								style='background: #{webCtlClr.entClr(scrCtlOpt.rtrOpt(scrCtlPrl.prl.ISttId).IClrCde).SClrHex};' />
 							<p:spacer width="5" />
 							<h:outputText
 								value="#{scrCtlOpt.rtrOpt(scrCtlPrl.prl.ISttId).SOptNme}" />

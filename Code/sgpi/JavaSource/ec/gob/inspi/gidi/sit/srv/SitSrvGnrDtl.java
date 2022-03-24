@@ -32,6 +32,7 @@ public class SitSrvGnrDtl extends SrvDb<SitTblGnrDtl> {
 			return true;
 		} catch (Exception e) {
 			Print.LOG_SEVERE_SERVICE(this.getClass().getSimpleName(), Process.SAVE, e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -49,7 +50,7 @@ public class SitSrvGnrDtl extends SrvDb<SitTblGnrDtl> {
 
 	public List<SitTblGnrDtl> lstGnrDtl(SitTblGnr gnr, int ITpeDtl, boolean BGnrDtlStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnrDtl gnr WHERE gnr.sitTblGnr = :param1 AND gnr.iTpeDtl = :param2 AND gnr.BGnrDtlStt = :param3";
+			String sql = "SELECT gnr FROM SitTblGnrDtl gnr WHERE gnr.sitTblGnr = :param1 AND gnr.iTpeDtl = :param2 AND gnr.BGnrDtlStt = :param3 ORDER BY gnr.DGnrDtlDtePrc, gnr.IPrcId, gnr.iStgId";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", gnr);
 			q.setParameter("param2", ITpeDtl);
@@ -63,7 +64,7 @@ public class SitSrvGnrDtl extends SrvDb<SitTblGnrDtl> {
 
 	public List<SitTblGnrDtl> lstGnrDtlPrc(SitTblGnr gnr, int ITpeDtl, int IPrcId, boolean BGnrDtlStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnrDtl gnr WHERE gnr.sitTblGnr = :param1 AND gnr.iTpeDtl = :param2 AND gnr.BGnrDtlStt = :param3 AND gnr.IPrcId = :param4";
+			String sql = "SELECT gnr FROM SitTblGnrDtl gnr WHERE gnr.sitTblGnr = :param1 AND gnr.iTpeDtl = :param2 AND gnr.BGnrDtlStt = :param3 AND gnr.IPrcId = :param4 ORDER BY gnr.DGnrDtlDtePrc, gnr.IPrcId";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", gnr);
 			q.setParameter("param2", ITpeDtl);

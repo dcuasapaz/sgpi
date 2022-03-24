@@ -82,6 +82,7 @@ public class SitCtlGnr {
 	protected SitSrvOPt SOtp;
 
 	private int ITrpId;
+	private int IStsFrm = 0;
 
 	public SitCtlGnr() {
 		gnr = new SitTblGnr();
@@ -205,6 +206,7 @@ public class SitCtlGnr {
 
 	public void add() {
 		try {
+			IStsFrm = 0;
 			this.cptAdd();
 			gnr = new SitTblGnr();
 			gnrDtlLrv = new SitTblGnrDtl();
@@ -322,15 +324,84 @@ public class SitCtlGnr {
 	public void upd() {
 		try {
 			try {
+				nmb = new SitTblNmb();
+				nmb = SNmb.searchId(INmbId);
+			} catch (Exception e) {
+				Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+			}
+
+			// UPDATE: SitTblGnr
+			try {
 				gnr.setITrpId(ITrpId);
+				gnr.setSitTblNmb(nmb);
 				SGnr.update(gnr);
 				Message.msgInf(MessageForm.MSG_UPD_OK.getSLblNme());
 			} catch (Exception e) {
 				Message.msgErr(MessageForm.MSG_UPD_ERROR.getSLblNme());
 				Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.UPDATE, e.getMessage());
 			}
+			// UPDATE: SitTblGnrPrsPrf --> Field agents
+			try {
+				if (lstPrsPrfAgnAdd.size() > Default.I_DFL_VLE()) {
+					// Delete logic old records
+					List<SitTblGnrPrsPrf> auxLstGnrPrsPrf = new ArrayList<SitTblGnrPrsPrf>();
+					auxLstGnrPrsPrf = SGnrPrsPrf.lstGnrPrsPrf(gnr, Code.I_TCH_FLD());
+					if (auxLstGnrPrsPrf.size() > 0) {
+						for (SitTblGnrPrsPrf auxGnrPrsPrf : auxLstGnrPrsPrf) {
+							SGnrPrsPrf.dltLgc(auxGnrPrsPrf);
+						}
+					}
+					// Insert new records
+					for (ScrTblPrsRol prsPrfAux : lstPrsPrfAgnAdd) {
+						if (SGnrPrsPrf.sve(prl, prsPrfAux, gnr) != false) {
+							Message.msgInf(MessageForm.MSG_UPD_AGN_FLD_OK.getSLblNme());
+						} else {
+							Message.msgWrn(MessageForm.MSG_UPD_AGN_FLD_ERROR.getSLblNme());
+							break;
+						}
+					}
+				} else {
+					Message.msgWrn(MessageForm.MSG_UPD_AGN_FLD_EMPTY.getSLblNme());
+				}
+			} catch (Exception e) {
+				Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.UPDATE, e.getMessage());
+				Message.msgErr(MessageForm.MSG_UPD_AGN_FLD_ERROR.getSLblNme());
+			}
+			// UPDATE: SitTblGnrPrsPrf --> Lab Technician
+			try {
+				if (lstPrsPrfTchAdd.size() > Default.I_DFL_VLE()) {
+					// Delete logic old records
+					List<SitTblGnrPrsPrf> auxLstGnrPrsPrf = new ArrayList<SitTblGnrPrsPrf>();
+					auxLstGnrPrsPrf = SGnrPrsPrf.lstGnrPrsPrf(gnr, Code.I_TCH_LAB());
+					if (auxLstGnrPrsPrf.size() > 0) {
+						for (SitTblGnrPrsPrf auxGnrPrsPrf : auxLstGnrPrsPrf) {
+							SGnrPrsPrf.dltLgc(auxGnrPrsPrf);
+						}
+					}
+					// Insert new records
+					for (ScrTblPrsRol prsPrfAux : lstPrsPrfTchAdd) {
+						if (SGnrPrsPrf.sve(prl, prsPrfAux, gnr) != false) {
+							Message.msgInf(MessageForm.MSG_UPD_LAB_TCH_OK.getSLblNme());
+						} else {
+							Message.msgWrn(MessageForm.MSG_UPD_LAB_TCH_ERROR.getSLblNme());
+							break;
+						}
+					}
+				} else {
+					Message.msgWrn(MessageForm.MSG_UPD_LAB_TCH_EMPTY.getSLblNme());
+				}
+			} catch (Exception e) {
+				Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.UPDATE, e.getMessage());
+				Message.msgErr(MessageForm.MSG_UPD_LAB_TCH_ERROR.getSLblNme());
+			}
+			this.actPgr(true, false);
+			this.actBtnUpd(true, true);
+			this.actBtnAdd(false, true);
+			this.actBtnHme(false, true);
+			this.srcPrm();
 		} catch (Exception e) {
 			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.UPDATE, e.getMessage());
+			Message.msgErr(MessageForm.MSG_UPD_ERROR.getSLblNme());
 		}
 	}
 
@@ -418,6 +489,8 @@ public class SitCtlGnr {
 
 	public void edt() {
 		try {
+
+			this.IStsFrm = 1;
 			this.actPgr(false, true);
 			this.actBtnHme(true, true);
 			this.actBtnAdd(true, true);
@@ -1399,10 +1472,11 @@ public class SitCtlGnr {
 		gnrDtlLrv.setIGnrDtlNmb(Default.I_DFL_VLE());
 		gnrDtlLrv.setiGnrDtlNmbDd(Default.I_DFL_VLE());
 		gnrDtlLrv.setITpeDtl(Code.I_SIT_LRV());
+		gnrDtlLrv.setDGnrDtlDtePrc(Default.D_CURRENT_DATE());
 		this.actLrvNmbLive(false, true, true);
 		this.actLrvNmbDied(false, true, true);
 		this.actLrvStg(false, true, true);
-		this.actLrvCtn(false, true, false);
+		this.actLrvCtn(false, true, true);
 		this.actLrvBtnAdd(false, true);
 		this.actLrvBtnNew(true, true);
 		this.actLrvBtnRst(false, true);
@@ -1412,14 +1486,35 @@ public class SitCtlGnr {
 
 	public void addLrvStg() {
 		try {
-			if (gnr.getITpeId() == Code.I_SIT_TPE_FLD()) {
+
+			if (IStsFrm == 0) {
+				if (gnr.getITpeId() == Code.I_SIT_TPE_FLD()) {
+					gnrDtlLrv.setIGnsId(Default.I_DFL_SLC_VLE());
+					gnrDtlLrv.setISexId(Default.I_DFL_SLC_VLE());
+					if (gnrDtlLrv.getIGnrDtlNmb() == Default.I_DFL_VLE()
+							&& gnrDtlLrv.getiGnrDtlNmbDd() == Default.I_DFL_VLE()) {
+						Message.msgWrn(Message.S_MSG_FRMO1_INPUT_DST_ZERO);
+					} else {
+						lstLrsStgSlc.add(gnrDtlLrv);
+						this.actLrvCmm(false, true, false);
+						this.actLrvNmbLive(true, true, false);
+						this.actLrvNmbDied(true, true, false);
+						this.actLrvBtnAdd(true, true);
+						this.actLrvBtnNew(false, true);
+						this.actLrvBtnRst(true, true);
+						this.actLrvStg(true, true, false);
+						this.actLrvCtn(true, true, false);
+						this.actLrvPrc(true, true, false);
+						this.actLrvPrcDte(true, true, false);
+					}
+				}
+			} else if (IStsFrm == 1) {
 				gnrDtlLrv.setIGnsId(Default.I_DFL_SLC_VLE());
 				gnrDtlLrv.setISexId(Default.I_DFL_SLC_VLE());
 				if (gnrDtlLrv.getIGnrDtlNmb() == Default.I_DFL_VLE()
 						&& gnrDtlLrv.getiGnrDtlNmbDd() == Default.I_DFL_VLE()) {
 					Message.msgWrn(Message.S_MSG_FRMO1_INPUT_DST_ZERO);
 				} else {
-					lstLrsStgSlc.add(gnrDtlLrv);
 					this.actLrvCmm(false, true, false);
 					this.actLrvNmbLive(true, true, false);
 					this.actLrvNmbDied(true, true, false);
@@ -1430,6 +1525,10 @@ public class SitCtlGnr {
 					this.actLrvCtn(true, true, false);
 					this.actLrvPrc(true, true, false);
 					this.actLrvPrcDte(true, true, false);
+					SGnrDtl.sve(prl, gnrDtlLrv, gnr);
+					Message.msgInf(MessageForm.MSG_UPD_LRV_OK.getSLblNme());
+					this.newLstLrvStg();
+					lstLrsStgSlc = SGnrDtl.lstGnrDtl(gnr, Code.I_SIT_LRV(), true);
 				}
 			}
 		} catch (Exception e) {
@@ -1440,9 +1539,23 @@ public class SitCtlGnr {
 
 	public void dltLrvStg() {
 		try {
-			lstLrsStgSlc.remove(gnrDtlLrv);
+			if (IStsFrm == 0) {
+				lstLrsStgSlc.remove(gnrDtlLrv);
+			} else if (IStsFrm == 1) {
+				try {
+					if (SGnrDtl.dltLgc(gnrDtlLrv)) {
+						Message.msgInf(MessageForm.MSG_UPD_LRV_OK.getSLblNme());
+					} else {
+						Message.msgWrn(MessageForm.MSG_UPD_LRV_ERROR.getSLblNme());
+					}
+					this.newLstLrvStg();
+					lstLrsStgSlc = SGnrDtl.lstGnrDtl(gnr, Code.I_SIT_LRV(), true);
+				} catch (Exception e) {
+					Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.DELETE, e.getMessage());
+				}
+			}
 		} catch (Exception e) {
-			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.DELETE, e.getMessage());
 		}
 	}
 
@@ -1455,9 +1568,12 @@ public class SitCtlGnr {
 			gnrDtlLrv = new SitTblGnrDtl();
 			gnrDtlLrv.setIGnrDtlNmb(Default.I_DFL_VLE());
 			gnrDtlLrv.setiGnrDtlNmbDd(Default.I_DFL_VLE());
+			this.actLrvNmbLive(true, true, false);
 			this.actLrvNmbDied(true, true, false);
 			this.actLrvStg(true, true, false);
 			this.actLrvCtn(true, true, false);
+			this.actLrvPrc(true, true, false);
+			this.actLrvPrcDte(true, true, false);
 		} catch (Exception e) {
 			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
 		}
@@ -1529,6 +1645,7 @@ public class SitCtlGnr {
 			gnrDtlAdl.setITpeDtl(Code.I_SIT_ADL());
 			gnrDtlAdl.setIGnrDtlNmb(Default.I_DFL_VLE());
 			gnrDtlAdl.setiGnrDtlNmbDd(Default.I_DFL_VLE());
+			gnrDtlAdl.setDGnrDtlDtePrc(Default.D_CURRENT_DATE());
 			this.actAdlBtnAdd(false, true);
 			this.actAdlBtnRst(false, true);
 			this.actAdlBtnNew(true, true);
@@ -1539,7 +1656,7 @@ public class SitCtlGnr {
 			this.actAdlPrc(false, true, true);
 			this.actAdlPrcDte(false, true, true);
 		} catch (Exception e) {
-			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.LOAD, e.getMessage());
 		}
 	}
 
@@ -1565,8 +1682,29 @@ public class SitCtlGnr {
 
 	public void addAdl() {
 		try {
-
-			if (gnr.getITpeId() == Code.I_SIT_TPE_FLD()) {
+			if (IStsFrm == 0) {
+				if (gnr.getITpeId() == Code.I_SIT_TPE_FLD()) {
+					if (gnrDtlAdl.getIGnrDtlNmb() == Default.I_DFL_VLE()
+							&& gnrDtlAdl.getiGnrDtlNmbDd() == Default.I_DFL_VLE()) {
+						Message.msgWrn(Message.S_MSG_FRMO1_INPUT_DST_ZERO);
+					} else {
+						gnrDtlAdl.setITpeDtl(Code.I_SIT_ADL());
+						gnrDtlAdl.setIStgId(Default.I_DFL_SLC_VLE());
+						gnrDtlAdl.setICtnId(Default.I_DFL_SLC_VLE());
+						gnrDtlAdl.setDGnrDtlDtePrc(gnr.getdGnrRgsDte());
+						lstAdlSlc.add(gnrDtlAdl);
+						this.actAdlNmb(true, true, false);
+						this.actAdlNmbDd(true, true, false);
+						this.actAdlSex(true, true, false);
+						this.actAdlSpc(true, true, false);
+						this.actAdlBtnAdd(true, true);
+						this.actAdlBtnNew(false, true);
+						this.actAdlBtnRst(true, true);
+						this.actAdlPrc(true, true, false);
+						this.actAdlPrcDte(true, true, false);
+					}
+				}
+			} else if (IStsFrm == 1) {
 				if (gnrDtlAdl.getIGnrDtlNmb() == Default.I_DFL_VLE()
 						&& gnrDtlAdl.getiGnrDtlNmbDd() == Default.I_DFL_VLE()) {
 					Message.msgWrn(Message.S_MSG_FRMO1_INPUT_DST_ZERO);
@@ -1574,8 +1712,6 @@ public class SitCtlGnr {
 					gnrDtlAdl.setITpeDtl(Code.I_SIT_ADL());
 					gnrDtlAdl.setIStgId(Default.I_DFL_SLC_VLE());
 					gnrDtlAdl.setICtnId(Default.I_DFL_SLC_VLE());
-					gnrDtlAdl.setDGnrDtlDtePrc(gnr.getdGnrRgsDte());
-					lstAdlSlc.add(gnrDtlAdl);
 					this.actAdlNmb(true, true, false);
 					this.actAdlNmbDd(true, true, false);
 					this.actAdlSex(true, true, false);
@@ -1585,11 +1721,14 @@ public class SitCtlGnr {
 					this.actAdlBtnRst(true, true);
 					this.actAdlPrc(true, true, false);
 					this.actAdlPrcDte(true, true, false);
+					SGnrDtl.sve(prl, gnrDtlAdl, gnr);
+					Message.msgInf(MessageForm.MSG_UPD_ADL_OK.getSLblNme());
+					this.newLstLrvStg();
+					lstAdlSlc = SGnrDtl.lstGnrDtl(gnr, Code.I_SIT_ADL(), true);
 				}
 			}
-
 		} catch (Exception e) {
-			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.ADD, e.getMessage());
 		}
 	}
 
@@ -1607,6 +1746,8 @@ public class SitCtlGnr {
 			this.actAdlNmbDd(true, true, false);
 			this.actAdlSex(true, true, false);
 			this.actAdlSpc(true, true, false);
+			this.actAdlPrc(true, true, false);
+			this.actAdlPrcDte(true, true, false);
 		} catch (Exception e) {
 			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
 		}
@@ -1614,9 +1755,24 @@ public class SitCtlGnr {
 
 	public void dltAdl() {
 		try {
-			lstAdlSlc.remove(gnrDtlAdl);
+
+			if (IStsFrm == 0) {
+				lstAdlSlc.remove(gnrDtlAdl);
+			} else if (IStsFrm == 1) {
+				try {
+					if (SGnrDtl.dltLgc(gnrDtlAdl)) {
+						Message.msgInf(MessageForm.MSG_UPD_ADL_OK.getSLblNme());
+					} else {
+						Message.msgWrn(MessageForm.MSG_UPD_ADL_ERROR.getSLblNme());
+					}
+					this.newLstLrvStg();
+					lstAdlSlc = SGnrDtl.lstGnrDtl(gnr, Code.I_SIT_ADL(), true);
+				} catch (Exception e) {
+					Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.DELETE, e.getMessage());
+				}
+			}
 		} catch (Exception e) {
-			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.DELETE, e.getMessage());
 		}
 	}
 
