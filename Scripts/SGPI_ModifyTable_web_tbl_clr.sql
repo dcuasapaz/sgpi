@@ -12,7 +12,6 @@ ALTER TABLE web_tbl_clr ADD COLUMN b_clr_stt boolean NOT NULL DEFAULT TRUE ;
 ALTER TABLE web_tbl_clr ADD COLUMN s_clr_tpe text NOT NULL DEFAULT '';
 ALTER TABLE web_tbl_clr ADD COLUMN s_clr_stl text NOT NULL DEFAULT '';
 
-
 COMMENT ON COLUMN web_tbl_clr.d_clr_rgs_dte IS 'Fecha registro';
 COMMENT ON COLUMN web_tbl_clr.s_clr_rgs_tme IS 'Hora registro';
 COMMENT ON COLUMN web_tbl_clr.b_clr_stt IS 'Activo/No activo';
@@ -32,9 +31,12 @@ CREATE INDEX CONCURRENTLY s_idx_web_clr_stl_btn_inf ON web_tbl_clr USING btree(s
 CREATE INDEX CONCURRENTLY s_idx_web_clr_stl_btn_lgh ON web_tbl_clr USING btree(s_clr_stl) WHERE s_clr_stl = 'btn-light';
 CREATE INDEX CONCURRENTLY s_idx_web_clr_stl_btn_drk ON web_tbl_clr USING btree(s_clr_stl) WHERE s_clr_stl = 'btn-dark';
 
-
-
 SELECT * FROM web_tbl_clr ORDER BY 1;
+
+
+
+
+
 
 -- Delete register error 
 --DELETE FROM web_tbl_clr WHERE i_clr_id BETWEEN 101 AND 902;

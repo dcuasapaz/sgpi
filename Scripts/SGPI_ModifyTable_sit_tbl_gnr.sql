@@ -1,3 +1,10 @@
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+/* AUTOR | DATE | MODULE | OBJECT | DESCRIPTION
+* --------------------------------------------------------------
+* Diego Cuasapaz | 2022-03-06 | SIT| Attribute | Add column status, date process close
+*/
+----------------------------------------------------------------------------------- 
+
 /*-------------------------------------------------------------------------------------------------------------------------------------*/
 /*
  * Module: SIT
@@ -6,7 +13,7 @@
  * Description: add column 
  * 
  * */
-SELECT * FROM sit_tbl_gnr AS stg ORDER BY 1;
+SELECT * FROM sit_tbl_gnr AS stg ORDER BY 1;SELECT * FROM sit_tbl_gnr AS stg ORDER BY 1;
 ALTER TABLE sit_tbl_gnr ADD COLUMN i_gnr_nmb_egs_vlb_no integer;
 /*-------------------------------------------------------------------------------------------------------------------------------------*/
 /*
@@ -56,4 +63,16 @@ COMMENT ON COLUMN sit_tbl_gnr_dtl.i_gnr_dtl_rgs_prs_rol_id IS 'FK --> Usuario qu
 
 SELECT * FROM sit_tbl_gnr_prs_prf;
 
+ALTER TABLE sit_tbl_gnr ADD COLUMN d_gnr_dte_prc_cls date NOT NULL DEFAULT CURRENT_DATE;
+ALTER TABLE sit_tbl_gnr ADD COLUMN i_prc_sts_id integer NOT NULL DEFAULT 1001;
+
+SELECT * FROM sit_tbl_gnr
+2022-01-122022-01-12AS gnr WHERE 
+-- Date proccess
+-- Proccess
+-- LOCATION 
+-- Status --> OPEN 
+-- Number
+-- d_gnr_dte_set 
+-- d_gnr_dte_clc 
 

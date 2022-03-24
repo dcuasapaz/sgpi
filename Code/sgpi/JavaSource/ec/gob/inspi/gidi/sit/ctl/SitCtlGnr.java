@@ -3,6 +3,7 @@ package ec.gob.inspi.gidi.sit.ctl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,12 +13,16 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import java.util.Optional;
+
 import ec.gob.inspi.gidi.sit.cmm.Code;
 import ec.gob.inspi.gidi.sit.cmm.Default;
-import ec.gob.inspi.gidi.sit.cmm.Log;
 import ec.gob.inspi.gidi.sit.cmm.Message;
 import ec.gob.inspi.gidi.sit.cmm.Method;
-import ec.gob.inspi.gidi.sit.cmm.Name;
+import ec.gob.inspi.gidi.sit.cmm.Print;
+import ec.gob.inspi.gidi.sit.enm.CodeSit;
+import ec.gob.inspi.gidi.sit.enm.MessageForm;
+import ec.gob.inspi.gidi.sit.enm.Process;
 import ec.gob.inspi.gidi.sit.ent.ScrTblPrsRol;
 import ec.gob.inspi.gidi.sit.ent.SitTblGnr;
 import ec.gob.inspi.gidi.sit.ent.SitTblGnrDtl;
@@ -36,30 +41,57 @@ import ec.gob.inspi.gidi.sit.srv.SitSrvSte;
 @ViewScoped
 public class SitCtlGnr {
 
+	/*
+	 * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	 * +++++++
+	 */
+	// AUTOR | DATE | SECTION | OBJECT | DESCRIPTION
+	// --------------------------------------------------------------------------------------
+	// Diego Cuasapaz | 2022-03-06 | PRC | Date | boolean: vsb, rqr, dsb
+	// Diego Cuasapaz | 2022-03-06| PRC | Status | boolean: vsb, rqr, dsb
+	// Diego Cuasapaz | 2022-03-06 | PRC | Date close | boolean: vsb, rqr, dsb
+	// Diego Cuasapaz | 2022-03-06 | PRC | Comment | boolean: vsb, rqr, dsb
+	// Diego Cuasapaz | 2022-03-07 | TRP | Action | depurate code
+	// Diego Cuasapaz | 2022-03-07 | EGS | Action | depurate code
+	// Diego Cuasapaz | 2022-03-07 | LRV | Action | depurate code
+	// Diego Cuasapaz | 2022-03-07 | ADL | Action | depurate code
+	// --------------------------------------------------------------------------------------
 	protected Method mth;
-	protected Message msg;
-	protected Code cde;
 	protected Default dfl;
 	private ScrTblPrsRol prl;
 	protected ScrCtlSss sss;
-	protected Name nme;
-
-	protected Log log;
 	private static Logger LOG;
+
+	private SitTblGnr gnr;
+	private SitTblGnrDtl gnrDtl;
+	private List<SitTblGnr> lstGnr;
+	@EJB
+	protected SitSrvGnr SGnr;
+
+	private boolean dsbTrp;
+	private boolean vsbTrp;
+	private boolean rqrTrp;
+
+	private void actTrp(boolean dsb, boolean vsb, boolean rqr) {
+		dsbTrp = dsb;
+		vsbTrp = vsb;
+		rqrTrp = rqr;
+	}
+
+	@EJB
+	protected SitSrvOPt SOtp;
+
+	private int ITrpId;
 
 	public SitCtlGnr() {
 		gnr = new SitTblGnr();
 		gnrDtl = new SitTblGnrDtl();
 		mth = new Method();
-		msg = new Message();
-		cde = new Code();
 		dfl = new Default();
 		gnrDtlAdl = new SitTblGnrDtl();
 		gnrDtlLrv = new SitTblGnrDtl();
 		prl = new ScrTblPrsRol();
 		sss = new ScrCtlSss();
-		log = new Log();
-		nme = new Name();
 		LOG = Logger.getLogger(this.getClass().getName());
 	}
 
@@ -67,87 +99,85 @@ public class SitCtlGnr {
 		try {
 			prl = sss.getPrl();
 		} catch (Exception e) {
-			this.log.impCtl(this.getClass().getSimpleName(), nme.evnLoad(), nme.actAdd(),
-					ScrTblPrsRol.class.getSimpleName(), e.getMessage());
-			e.printStackTrace();
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.LOAD, e.getMessage());
 		}
 	}
 
 	private void cptInit() {
 
-		BGnrTrpRcv = true;
-		BGnrTrpSup = true;
-		this.actPgr(true, false);
+		this.actPgr(false, false);
 		this.actBtnHme(false, true);
 		this.actBtnAdd(false, true);
 		this.actBtnAddCpy(true, true);
 		this.actBtnSve(true, true);
-		this.actBtnUpd(true, false);
+		this.actBtnUpd(true, true);
+		this.actBtnSrc(false, true);
+		this.actBtnDwn(true, true);
 		this.actBtnRtr(false, true);
 		this.actTblBtnEdt(true, true);
 		this.actTblBtnDlt(false, true);
 
-		this.actTpe(true, true, false);
+		this.actPrcDte(true, true, false); // Date process
+		this.actPrc(true, true, false); // Process
+		this.actPrcSte(true, true, false); // Location
+		this.actPrcSts(true, true, false); // Status
+		this.actPrcDteCls(true, true, false); // Date process close
+		this.actPrcCmm(true, true, false); // Comment
 
-		this.actGnrNmbCpl(true, true, false);
-		this.actGnrNmbBrk(true, true, false);
-		this.actGnrNmbUsd(true, true, false);
-		this.actGnrNmbVbl(true, true, false);
-		this.actGnrObsEgs(true, true, false);
+		this.actTrp(true, true, false); // Trap
+		this.actTrpNmb(true, true, false); // Number
+		this.actTrpDteSet(true, true, false); // Date set up
+		this.actTrpDteClc(true, true, false); // Date collected
+		this.actTrpRcv(true, true, false); // Recover
+		this.actTrpSup(true, true, false); // Set up
+		this.actTrpAgnFld(true, true, false); // Field agent
+		this.actTrpAgnLab(true, true, false); // Lab technician
+		this.actBtnRstPrfAgn(true, true); // Button Reset Field agent
+		this.actBtnRstPrfTch(true, true); // Button Reset Lab technician
 
-		this.actGnrNmbLrsPps(true, true, false);
-		this.actPrsPrf(true, true, false);
-		this.actYr(true, true, false);
-		this.actEpi(true, true, false);
-		this.actPrj(true, true, false);
-		this.actTrp(true, true, false);
-		this.actSte(true, true, false);
-		this.actNmb(true, true, false);
-		this.actDteSet(true, true, false);
-		this.actDteClc(true, true, false);
-		this.actTrpRcv(true, true, false);
-		this.actTrpSup(true, true, false);
-		this.actBEgs(true, true, false);
-		this.actBLrs(true, true, false);
-		this.actBAdl(true, true, false);
-		this.actLrsStg(true, true, false);
-		this.actLrsCtn(true, true, false);
-		this.actBtnAdlAdd(true, true);
-		this.actBtnAdlNew(true, true);
-		this.actBtnAdlRst(true, true);
-		this.actBtnLrvAdd(true, true);
-		this.actBtnLrvNew(true, true);
-		this.actBtnLrvRst(true, true);
-		this.actGnrObsEgs(true, true, false);
-		this.actGnrObsLrv(true, true, false);
-		this.actGnrObsAdl(true, true, false);
-		this.actGnrDtlLrvNmbLive(true, true, false);
-		this.actGnrDtlLrvNmbDied(true, true, false);
-		this.actGnrDtlLrvNmb(true, true, false);
-		this.actGnrDtlLrvStg(true, true, false);
-		this.actGnrDtlLrvSex(true, true, false);
-		this.actGnrDtlLrvSpc(true, true, false);
+		this.actBEgs(true, true, false); // Collected eggs
+		this.actEgsNmbCpl(true, true, false); // Whole
+		this.actEgsNmbBrk(true, true, false); // Broken
+		this.actEgsNmbVbl(true, true, false); // Viable
+		this.actEgsNmbVblNo(true, true, false); // No viable
+		this.actEgsCmm(true, true, false); // Comment
 
-		this.actAdlNmb(true, true, false);
-		this.actAdlNmbDd(true, true, false);
-		this.actAdlSex(true, true, false);
-		this.actAdlSpc(true, true, false);
-		this.actBtnAdlAdd(true, true);
-		this.actBtnAdlNew(true, true);
-		this.actBtnAdlRst(true, true);
+		this.actBLrv(true, true, false); // Collected larvae
+		this.actLrvPrc(true, true, false); // Process
+		this.actLrvPrcDte(true, true, false); // Date process
+		this.actLrvCtn(true, true, false); // Contain
+		this.actLrvStg(true, true, false); // Stage
+		this.actLrvNmbLive(true, true, false); // N. live
+		this.actLrvNmbDied(true, true, false); // N. dead
+		this.actLrvCmm(true, true, false); // Comment
+		this.actLrvBtnAdd(true, true); // Button new
+		this.actLrvBtnNew(true, true); // Button add
+		this.actLrvBtnRst(true, true); // Button restore
 
-		this.actGnrPrfAgn(true, true, false);
+		this.actBAdl(true, true, false); // Collected adults
+		this.actAdlPrc(true, true, false); // Process
+		this.actAdlPrcDte(true, true, false); // Date process
+		this.actAdlSex(true, true, false); // Sex
+		this.actAdlSpc(true, true, false); // Specie
+		this.actAdlNmb(true, true, false); // N. Live
+		this.actAdlNmbDd(true, true, false); // N. Dead
+		this.actAdlCmm(true, true, false); // Comment
+		this.actAdlBtnAdd(true, true); // Button new
+		this.actAdlBtnNew(true, true); // Button add
+		this.actAdlBtnRst(true, true); // Button restore
 
-		this.actBtnRstPrfTch(true, true);
+		this.actSrcSte(true, true, false); // Location
+		this.actSrcPrc(true, true, false); // Process
+		this.actSrcPrm(true, true, false); // Parameter
+		this.actSrcDteSrt(true, true, false); // Date start
+		this.actSrcDteEnd(true, true, false); // Date end
+		this.actBtnSrcPrm(true, true); // Button search
 
-		this.actGnrPrfTch(true, true, false);
-		this.newPrsPrfAgnSlc();
-		this.newPrsPrfTchSlc();
 	}
 
 	@PostConstruct
 	public void init() {
-		this.loadGnr();
+
 		this.loadPrl();
 		this.cptInit();
 	}
@@ -157,12 +187,17 @@ public class SitCtlGnr {
 		this.actBtnHme(true, true);
 		this.actBtnAdd(true, true);
 		this.actBtnSve(false, true);
-		this.actPrj(false, true, true);
-		this.actSte(false, true, true);
-		this.actTpe(false, true, true);
+		this.actBtnSrc(true, true);
+
+		this.actPrcDte(false, true, true); // Date process
+		this.actPrc(true, true, false); // Process
+		this.actPrcSte(false, true, true); // Location
+		this.actPrcSts(true, true, false); // Status
+		this.actPrcDteCls(true, true, false); // Date process close
+		this.actPrcCmm(false, true, false); // Comment
 
 		this.actBEgs(true, true, false);
-		this.actBLrs(true, true, false);
+		this.actBLrv(true, true, false);
 		this.actBAdl(true, true, false);
 		this.actGnrPrfAgn(true, true, false);
 
@@ -172,112 +207,130 @@ public class SitCtlGnr {
 		try {
 			this.cptAdd();
 			gnr = new SitTblGnr();
-			IYrId = 0;
-			ISteId = 0;
-			INmbId = 0;
-			gnr.setIGnrNmbEgsBrk(0);
-			gnr.setIGnrNmbEgsCpl(0);
-			gnr.setIGnrNmbEgsUsd(0);
-			gnr.setIGnrNmbEgsVlb(0);
-			gnr.setdGnrDteSet(Default.D_DAY_SUBTRACT(Default.dCurrentDate(), Default.I_DAYS_SBS()));
-			gnr.setdGnrDteClc(Default.dCurrentDate());
-			gnr.setdGnrRgsDte(Default.dCurrentDate());
+			gnrDtlLrv = new SitTblGnrDtl();
+			gnrDtlAdl = new SitTblGnrDtl();
+			ISteId = Default.I_DFL_VLE();
+			INmbId = Default.I_DFL_VLE();
+			gnr.setIGnrNmbEgsBrk(Default.I_DFL_VLE());
+			gnr.setIGnrNmbEgsCpl(Default.I_DFL_VLE());
+			gnr.setIGnrNmbEgsUsd(Default.I_DFL_VLE());
+			gnr.setIGnrNmbEgsVlb(Default.I_DFL_VLE());
+			gnr.setiGnrNmbEgsVlbNo(Default.I_DFL_VLE());
+			gnr.setdGnrDteSet(Default.D_DAY_SUBTRACT(Default.D_CURRENT_DATE(), Default.I_DAYS_SBS()));
+			gnr.setdGnrDteClc(Default.D_CURRENT_DATE());
+			gnr.setdGnrRgsDte(Default.D_CURRENT_DATE());
+			gnr.setdGnrDtePrcCls(Default.D_CURRENT_DATE());
+			gnr.setiPrcStsId(CodeSit.PROCESS_STATUS_OPEN.getICdeVle());
+			gnr.setITpeId(CodeSit.PROCESS_FIELD.getICdeVle());
 			this.newAdlSlc();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.LOAD, e.getMessage());
 		}
 	}
 
 	public void addCopy() {
-		this.actPrsPrf(false, true, true);
-		this.actPrj(false, true, true);
-		this.actSte(false, true, true);
-		this.actYr(false, true, true);
-		this.actEpi(false, true, true);
+		this.actTrpAgnFld(false, true, true);
+		this.actPrcSte(false, true, true);
 		this.actTrp(false, true, true);
-		this.actNmb(false, true, true);
-		this.actDteSet(false, true, true);
-		this.actDteClc(false, true, true);
+		this.actTrpNmb(false, true, true);
+		this.actTrpDteSet(false, true, true);
+		this.actTrpDteClc(false, true, true);
 		this.actTrpRcv(false, true, false);
 		this.actTrpSup(false, true, false);
+		Date DPrc = new Date();
+		Date DSet = new Date();
+		Date DClc = new Date();
+		int ISteId = 0;
+		int ITrpId = 0;
+		int IStsId = 0;
+		DPrc = gnr.getdGnrRgsDte();
+		DSet = gnr.getdGnrDteSet();
+		DClc = gnr.getdGnrDteClc();
+		ISteId = gnr.getSitTblNmb().getSitTblSte().getISteId();
+		ITrpId = gnr.getITrpId();
+		IStsId = gnr.getiPrcStsId();
 		gnr = new SitTblGnr();
-		gnr.setIGnrNmbEgsBrk(0);
-		gnr.setIGnrNmbEgsCpl(0);
-		gnr.setIGnrNmbEgsUsd(0);
-		gnr.setIGnrNmbEgsVlb(0);
-		this.actBEgs(false, true, false);
-		this.actBLrs(false, true, false);
-		this.actBAdl(false, true, false);
-		this.newLstLrsStg();
+		gnr.setIGnrNmbEgsBrk(Default.I_DFL_VLE());
+		gnr.setIGnrNmbEgsCpl(Default.I_DFL_VLE());
+		gnr.setIGnrNmbEgsUsd(Default.I_DFL_VLE());
+		gnr.setIGnrNmbEgsVlb(Default.I_DFL_VLE());
+		gnr.setiGnrNmbEgsVlbNo(Default.I_DFL_VLE());
+		gnr.setdGnrRgsDte(DPrc);
+		gnr.setdGnrDteSet(DSet);
+		gnr.setdGnrDteClc(DClc);
+		this.ISteId = ISteId;
+		gnr.setITrpId(ITrpId);
+		gnr.setdGnrDtePrcCls(Default.D_CURRENT_DATE());
+		gnr.setITpeId(CodeSit.PROCESS_FIELD.getICdeVle());
+		gnr.setiPrcStsId(IStsId);
+		this.newLstLrvStg();
 		this.newAdlSlc();
 		gnrDtlLrv = new SitTblGnrDtl();
 		gnrDtlAdl = new SitTblGnrDtl();
-		ILrsStgId = 0;
-		ISexId = 0;
-		ISpcId = 0;
+		ILrsStgId = Default.I_DFL_VLE();
+		ISexId = Default.I_DFL_VLE();
+		ISpcId = Default.I_DFL_VLE();
 		this.actGnrPrfAgn(false, true, false);
-		this.actGnrPrfTch(false, true, false);
 		this.actBtnSve(false, true);
 		this.actBtnAdd(true, true);
 		this.actBtnAddCpy(true, true);
-		this.actTpe(false, true, true);
 	}
 
 	private void cptSve() {
-		this.actPrj(true, true, false);
-		this.actSte(true, true, false);
-		this.actYr(true, true, false);
-		this.actEpi(true, true, false);
+		this.actPrcSte(true, true, false);
 		this.actTrp(true, true, false);
-		this.actNmb(true, true, false);
-		this.actDteSet(true, true, false);
-		this.actDteClc(true, true, false);
+		this.actTrpNmb(true, true, false);
+		this.actTrpDteSet(true, true, false);
+		this.actTrpDteClc(true, true, false);
 		this.actTrpRcv(true, true, false);
 		this.actTrpSup(true, true, false);
 
 		this.actBEgs(true, true, false);
-		BGnrEgs = false;
-		this.actGnrNmbCpl(true, true, false);
-		this.actGnrNmbBrk(true, true, false);
-		this.actGnrNmbUsd(true, true, false);
-		this.actGnrNmbVbl(true, true, false);
-		this.actGnrObsEgs(true, true, false);
+		this.actEgsNmbCpl(true, true, false);
+		this.actEgsNmbBrk(true, true, false);
+		this.actEgsNmbVbl(true, true, false);
+		this.actEgsNmbVblNo(true, true, false);
+		this.actEgsCmm(true, true, false);
 
-		this.actBLrs(true, true, false);
-		BGnrLrs = false;
-		this.actGnrNmbLrsPps(true, true, false);
-		this.actGnrDtlLrvStg(true, true, false);
-		this.actGnrDtlLrvNmbDied(true, true, false);
-		this.actGnrDtlLrvNmbLive(true, true, false);
-		this.actGnrObsLrv(true, true, false);
-		this.actBtnLrvAdd(true, true);
-		this.actBtnLrvNew(true, true);
-		this.actBtnLrvRst(true, true);
+		this.actBLrv(true, true, false);
+		this.actLrvNmbDied(true, true, false);
+		this.actLrvNmbLive(true, true, false);
+		this.actLrvCmm(true, true, false);
+		this.actLrvBtnAdd(true, true);
+		this.actLrvBtnNew(true, true);
+		this.actLrvBtnRst(true, true);
 
 		this.actBAdl(true, true, false);
-		BGnrAdl = false;
 		this.actAdlNmb(true, true, false);
 		this.actAdlNmbDd(true, true, false);
 		this.actAdlSex(true, true, false);
 		this.actAdlSpc(true, true, false);
-		this.actBtnAdlAdd(true, true);
-		this.actBtnAdlNew(true, true);
-		this.actBtnAdlRst(true, true);
+		this.actAdlCmm(true, true, false);
+		this.actAdlBtnAdd(true, true);
+		this.actAdlBtnNew(true, true);
+		this.actAdlBtnRst(true, true);
 
 		this.actGnrPrfAgn(true, true, false);
-		this.actGnrPrfTch(true, true, false);
+		this.actTrpAgnLab(true, true, false);
 
 		this.actBtnSve(true, true);
 		this.actBtnAdd(false, true);
 		this.actBtnAddCpy(false, true);
-		this.actTpe(true, true, false);
+		this.actPrc(true, true, false);
 	}
 
 	public void upd() {
 		try {
-
+			try {
+				gnr.setITrpId(ITrpId);
+				SGnr.update(gnr);
+				Message.msgInf(MessageForm.MSG_UPD_OK.getSLblNme());
+			} catch (Exception e) {
+				Message.msgErr(MessageForm.MSG_UPD_ERROR.getSLblNme());
+				Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.UPDATE, e.getMessage());
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.UPDATE, e.getMessage());
 		}
 	}
 
@@ -290,101 +343,240 @@ public class SitCtlGnr {
 		try {
 			this.loadPrl();
 
-			if (SGnr.sve(prl, gnr, nmb, ITrpId, BGnrTrpRcv, BGnrTrpSup, BGnrEgs, BGnrLrs, BGnrAdl, ITpeId) != false) {
+			if (SGnr.sve(prl, gnr, nmb, ITrpId) != false) {
 				try {
-					if (lstLrsStgSlc.size() > 0) {
+					if (lstLrsStgSlc.size() > Default.I_DFL_VLE()) {
 						for (SitTblGnrDtl gnrDtlLrvAux : lstLrsStgSlc) {
-							if (SGnrDtl.sve(gnrDtlLrvAux, gnr) != false) {
+							if (SGnrDtl.sve(prl, gnrDtlLrvAux, gnr) != false) {
 
 							} else {
-								this.msg.msgErr("Larvae: Information was not stored correctly");
+								Message.msgErr("Larvae: Information was not stored correctly");
 								break;
 							}
 						}
 					}
 				} catch (Exception e) {
 					LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
-					this.msg.msgWrn("No larvae information");
+					Message.msgWrn("No larvae information");
 				}
 
 				try {
-					if (lstAdlSlc.size() > 0) {
+					if (lstAdlSlc.size() > Default.I_DFL_VLE()) {
 						for (SitTblGnrDtl gnrDtlAdlAux : lstAdlSlc) {
-							if (SGnrDtl.sve(gnrDtlAdlAux, gnr) != false) {
+							if (SGnrDtl.sve(prl, gnrDtlAdlAux, gnr) != false) {
 							} else {
-								this.msg.msgErr("Adults: Information was not stored correctly");
+								Message.msgErr("Adults: Information was not stored correctly");
 								break;
 							}
 						}
 					}
 				} catch (Exception e) {
 					LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
-					this.msg.msgWrn("No adult information");
+					Message.msgWrn("No adult information");
 				}
 
 				try {
-					if (lstPrsPrfAgnAdd.size() > 0) {
+					if (lstPrsPrfAgnAdd.size() > Default.I_DFL_VLE()) {
 						for (ScrTblPrsRol prsPrfAux : lstPrsPrfAgnAdd) {
-							if (SGnrPrsPrf.sve(prsPrfAux, gnr) != false) {
+							if (SGnrPrsPrf.sve(prl, prsPrfAux, gnr) != false) {
 							} else {
-								this.msg.msgErr("Agent: Information was not stored correctly");
+								Message.msgErr("Agent: Information was not stored correctly");
 								break;
 							}
 						}
 					}
 				} catch (Exception e) {
 					LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
-					this.msg.msgWrn("No Field agent information");
+					Message.msgWrn("No Field agent information");
 				}
 
-				try {
-					if (lstPrsPrfTchAdd.size() > 0) {
-						for (ScrTblPrsRol prsPrfAux : lstPrsPrfTchAdd) {
-							if (SGnrPrsPrf.sve(prsPrfAux, gnr) != false) {
-							} else {
-								this.msg.msgErr("Technician: Information was not stored correctly");
-								break;
-							}
-						}
-					}
-				} catch (Exception e) {
-					LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
-					this.msg.msgWrn("No  Lab technician information");
-				}
-
-				this.msg.msgInf("Information stored correctly");
+				Message.msgInf("Information stored correctly");
 				this.cptSve();
-				this.loadGnr();
+
 			} else {
-				this.msg.msgErr("Information is not stored correctly");
+				Message.msgErr("Information is not stored correctly");
 			}
 
 		} catch (Exception e) {
-			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SAVE, e.getMessage());
+		}
+	}
+
+	public void src() {
+		try {
+			this.actSrcSte(false, true, true); // Location
+			this.actSrcPrc(false, true, true); // Process
+			this.actSrcPrm(false, true, true); // Parameter
+			this.actSrcDteSrt(false, true, true); // Date start
+			this.actSrcDteEnd(false, true, true); // Date end
+			this.actBtnSrcPrm(false, true); // Button search
+			this.actPgr(true, false);
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
 		}
 	}
 
 	public void edt() {
+		try {
+			this.actPgr(false, true);
+			this.actBtnHme(true, true);
+			this.actBtnAdd(true, true);
+			this.actBtnAddCpy(true, true);
+			this.actBtnSve(true, true);
+			this.actBtnUpd(false, true);
+			this.actBtnSrc(true, true);
+			this.actBtnDwn(true, true);
 
+			this.ISteId = Default.I_DFL_VLE(); // Site
+			this.ISteId = gnr.getSitTblNmb().getSitTblSte().getISteId(); // Site
+			this.ste = new SitTblSte();
+			ste = SSte.searchId(ISteId);
+			this.actPrcSte(false, true, true); // Site
+			this.actPrcSts(false, true, true); // Status
+			this.actPrcCmm(false, true, false); // Comment
+			this.ITrpId = gnr.getITrpId(); // Trap type
+			this.actTrp(false, true, true);
+			this.INmbId = gnr.getSitTblNmb().getINmbId();// Trap number
+			this.actTrpNmb(false, true, true);
+			this.actTrpDteSet(false, true, true); // Date set
+			this.actTrpDteClc(false, true, true); // Date collected
+			this.actTrpSup(false, true, false); // Set up
+			this.actTrpRcv(false, true, false); // Recover
+			try {
+				this.actGnrPrfAgn(false, true, true); // Field Agents
+				this.newPrsPrfAgnAdd();
+				this.newPrsPrfAgnSlc();
+				List<SitTblGnrPrsPrf> auxLstGnrPrsPrf = new ArrayList<SitTblGnrPrsPrf>();
+				auxLstGnrPrsPrf = SGnrPrsPrf.lstGnrPrsPrf(gnr, Code.I_TCH_FLD());
+				if (auxLstGnrPrsPrf.size() > 0) {
+					for (SitTblGnrPrsPrf auxGnrPrsPrf : auxLstGnrPrsPrf) {
+						this.lstPrsPrfAgnAdd.add(auxGnrPrsPrf.getScrTblPrsRol());
+						this.IPrsPrfAgnSlcId.add(auxGnrPrsPrf.getScrTblPrsRol().getIPrsRolId() + "");
+					}
+				}
+			} catch (Exception e) {
+				Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+			}
+
+			try {
+				this.actTrpAgnLab(false, true, false); // Lab Technician
+				this.newPrsPrfTchAdd();
+				this.newPrsPrfTchSlc();
+				List<SitTblGnrPrsPrf> auxLstGnrPrsPrf = new ArrayList<SitTblGnrPrsPrf>();
+				auxLstGnrPrsPrf = SGnrPrsPrf.lstGnrPrsPrf(gnr, Code.I_TCH_LAB());
+				if (auxLstGnrPrsPrf.size() > 0) {
+					for (SitTblGnrPrsPrf auxGnrPrsPrf : auxLstGnrPrsPrf) {
+						this.lstPrsPrfTchAdd.add(auxGnrPrsPrf.getScrTblPrsRol());
+						this.IPrsPrfTchSlcId.add(auxGnrPrsPrf.getScrTblPrsRol().getIPrsRolId() + "");
+					}
+				}
+			} catch (Exception e) {
+				Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+			}
+
+			// EGGS
+			this.actEgsNmbCpl(false, true, true);
+			this.actEgsNmbBrk(false, true, true);
+			this.actEgsNmbVbl(false, true, true);
+			this.actEgsNmbVblNo(false, true, true);
+			this.actEgsCmm(false, true, false);
+
+			// LARVAE
+			try {
+				this.actLrvCmm(false, true, false);
+				this.actLrvBtnNew(false, true);
+				this.actLrvBtnAdd(true, true);
+				this.actLrvBtnRst(true, true);
+				this.newLstLrvStg();
+				lstLrsStgSlc = SGnrDtl.lstGnrDtl(gnr, Code.I_SIT_LRV(), true);
+			} catch (Exception e) {
+				Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+			}
+
+			// ADULT
+			try {
+				this.actAdlCmm(false, true, false);
+				this.actAdlBtnNew(false, true);
+				this.actAdlBtnAdd(true, true);
+				this.actAdlBtnRst(true, true);
+				this.newAdlSlc();
+				lstAdlSlc = SGnrDtl.lstGnrDtl(gnr, Code.I_SIT_ADL(), true);
+			} catch (Exception e) {
+				Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+			}
+
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.EDIT, e.getMessage());
+		}
 	}
 
 	public void dlt() {
 		try {
-			if (SGnr.dlt(gnr)) {
-				this.msg.msgInf(msg.msgDltInf());
+			if (gnr.getiPrcStsId() == Code.I_SIT_PRC_STS_CLS()) {
+				Message.msgWrn(MessageForm.MSG_DLT_GNR_CLS.getSLblNme());
 			} else {
-				this.msg.msgErr(msg.msgErrDlt());
+				try {
+					// Delete Larvae
+					List<SitTblGnrDtl> auxLstGnrDtlLrv = new ArrayList<SitTblGnrDtl>();
+					auxLstGnrDtlLrv = SGnrDtl.lstGnrDtl(gnr, Code.I_SIT_LRV(), true);
+					if (auxLstGnrDtlLrv.size() > 0) {
+						for (SitTblGnrDtl auxGnrDtlLrv : auxLstGnrDtlLrv) {
+							SGnrDtl.dltLgc(auxGnrDtlLrv);
+						}
+					} else {
+						Message.msgWrn(MessageForm.MSG_DLT_GNR_DTL_LRV.getSLblNme());
+					}
+				} catch (Exception e) {
+					Print.LOG_INFO_CONTROLLER(this.getClass().getSimpleName(), Process.DELETE, e.getMessage());
+				}
+
+				try {
+					// Delete Adl
+					List<SitTblGnrDtl> auxLstGnrDtlAdl = new ArrayList<SitTblGnrDtl>();
+					auxLstGnrDtlAdl = SGnrDtl.lstGnrDtl(gnr, Code.I_SIT_ADL(), true);
+					if (auxLstGnrDtlAdl.size() > 0) {
+						for (SitTblGnrDtl auxGnrDtlAdl : auxLstGnrDtlAdl) {
+							SGnrDtl.dltLgc(auxGnrDtlAdl);
+						}
+					} else {
+						Message.msgWrn(MessageForm.MSG_DLT_GNR_DTL_ADL.getSLblNme());
+					}
+				} catch (Exception e) {
+					Print.LOG_INFO_CONTROLLER(this.getClass().getSimpleName(), Process.DELETE, e.getMessage());
+				}
+
+				try {
+					// Delete Tch
+					List<SitTblGnrPrsPrf> auxLstGnrPrsPrf = new ArrayList<SitTblGnrPrsPrf>();
+					auxLstGnrPrsPrf = SGnrPrsPrf.lstGnrPrsPrf(gnr, true);
+					if (auxLstGnrPrsPrf.size() > 0) {
+						for (SitTblGnrPrsPrf auxGnrPrsPrf : auxLstGnrPrsPrf) {
+							SGnrPrsPrf.dltLgc(auxGnrPrsPrf);
+						}
+					} else {
+						Message.msgWrn(MessageForm.MSG_DLT_GNR_PRS_PRF.getSLblNme());
+					}
+				} catch (Exception e) {
+					Print.LOG_INFO_CONTROLLER(this.getClass().getSimpleName(), Process.DELETE, e.getMessage());
+				}
+
+				if (SGnr.dltLgc(gnr)) {
+					Message.msgInf(MessageForm.MSG_DLT_OK.getSLblNme());
+				} else {
+					Message.msgErr(MessageForm.MSG_DLT_ERROR.getSLblNme());
+				}
 			}
-			this.init();
+			this.srcPrm();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Print.LOG_INFO_CONTROLLER(this.getClass().getSimpleName(), Process.DELETE, e.getMessage());
+			Message.msgErr(MessageForm.MSG_DLT_ERROR.getSLblNme() + ": " + e.getLocalizedMessage());
 		}
 	}
 
 	public List<SitTblGnrDtl> lstGnrDtl(SitTblGnr gnr, int ITpeDtl) {
 		try {
 			List<SitTblGnrDtl> auxLstGnrDtl = new ArrayList<SitTblGnrDtl>();
-			auxLstGnrDtl = SGnrDtl.lstGnrDtl(gnr, ITpeDtl);
+			auxLstGnrDtl = SGnrDtl.lstGnrDtl(gnr, ITpeDtl, true);
 			Collections.sort(auxLstGnrDtl, new Comparator<SitTblGnrDtl>() {
 				public int compare(SitTblGnrDtl o1, SitTblGnrDtl o2) {
 					return o1.getDGnrDtlDtePrc().compareTo(o2.getDGnrDtlDtePrc());
@@ -397,14 +589,86 @@ public class SitCtlGnr {
 		}
 	}
 
-	public List<SitTblGnrPrsPrf> lstGnrDtlPrs(SitTblGnr gnr) {
+	public List<SitTblGnrPrsPrf> lstGnrDtlPrs(SitTblGnr gnr, int IRolId) {
 		try {
 			List<SitTblGnrPrsPrf> auxLstGnrDtl = new ArrayList<SitTblGnrPrsPrf>();
-			auxLstGnrDtl = SGnrPrsPrf.lstGnrDtl(gnr);
+			auxLstGnrDtl = SGnrPrsPrf.lstGnrPrsPrf(gnr, IRolId);
 			return auxLstGnrDtl;
 		} catch (Exception e) {
-			e.printStackTrace();
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
 			return null;
+		}
+	}
+
+	public String STchAgn(SitTblGnr gnr, int IRolId) {
+		try {
+			List<SitTblGnrPrsPrf> auxLstGnrDtl = new ArrayList<SitTblGnrPrsPrf>();
+			auxLstGnrDtl = SGnrPrsPrf.lstGnrPrsPrf(gnr, IRolId);
+			String tch = "";
+			for (SitTblGnrPrsPrf auxPrsPrf : auxLstGnrDtl) {
+				tch = tch + auxPrsPrf.getScrTblPrsRol().getDtaTblPr().getSPrsNme().substring(0, 1)
+						+ auxPrsPrf.getScrTblPrsRol().getDtaTblPr().getSPrsLstNme().substring(0, 1) + ",";
+			}
+			tch = Optional.ofNullable(tch).filter(s -> s.length() != 0).map(s -> s.substring(0, s.length() - 1))
+					.orElse(tch);
+			return tch;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+			return null;
+		}
+	}
+
+	public int ITtlEgs(SitTblGnr gnr) {
+		try {
+			return (gnr.getIGnrNmbEgsCpl() + gnr.getIGnrNmbEgsBrk());
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public int ITtlLrvLive(SitTblGnr gnr) {
+		try {
+			List<SitTblGnrDtl> auxLstGnrDtl = new ArrayList<SitTblGnrDtl>();
+			auxLstGnrDtl = SGnrDtl.lstGnrDtlPrc(gnr, Code.I_SIT_LRV(), Code.I_SIT_PRC_FLD(), true);
+			int ttl = 0;
+			for (SitTblGnrDtl auxGnrDtl : auxLstGnrDtl) {
+				ttl = ttl + auxGnrDtl.getIGnrDtlNmb();
+			}
+			return ttl;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public int ITtlLrvDead(SitTblGnr gnr) {
+		try {
+			List<SitTblGnrDtl> auxLstGnrDtl = new ArrayList<SitTblGnrDtl>();
+			auxLstGnrDtl = SGnrDtl.lstGnrDtlPrc(gnr, Code.I_SIT_LRV(), Code.I_SIT_PRC_FLD(), true);
+			int ttl = 0;
+			for (SitTblGnrDtl auxGnrDtl : auxLstGnrDtl) {
+				ttl = ttl + auxGnrDtl.getiGnrDtlNmbDd();
+			}
+			return ttl;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public boolean vldDsbBtnTbl(SitTblGnr gnr) {
+		try {
+			boolean vlr = true;
+			if (prl.getIPrsRolId() == gnr.getScrTblPrsRol().getIPrsRolId()) { // Compare user session with user register
+				vlr = false;
+			} else {
+				vlr = true;
+			}
+			return vlr;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.VALIDATE, e.getMessage());
+			return false;
 		}
 	}
 
@@ -458,6 +722,14 @@ public class SitCtlGnr {
 		dsbBtnUpd = dsb;
 	}
 
+	private boolean vsbBtnSrc;
+	private boolean dsbBtnSrc;
+
+	private void actBtnSrc(boolean dsb, boolean vsb) {
+		vsbBtnSrc = vsb;
+		dsbBtnSrc = dsb;
+	}
+
 	private boolean vsbBtnRtr;
 	private boolean dsbBtnRtr;
 
@@ -484,91 +756,162 @@ public class SitCtlGnr {
 	}
 
 	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
+	/**
+	 * <h1>DECLARE OBJECTS AND METHODS --> SEARCH !</h1> 1. Declare objects <br/>
+	 * 2. Actions objects <br/>
+	 * 
+	 * @author DC
+	 * @param none
+	 * @return none
+	 * @version 1.0
+	 * @since 2022-03-23
+	 */
+	private boolean dsbSrcSte;
+	private boolean vsbSrcSte;
+	private boolean rqrSrcSte;
+	private int ISrcSteId;
+	private boolean dsbSrcPrc;
+	private boolean vsbSrcPrc;
+	private boolean rqrSrcPrc;
+	private int ISrcPrcId;
+	private boolean dsbSrcPrm;
+	private boolean vsbSrcPrm;
+	private boolean rqrSrcPrm;
+	private int ISrcPrmId;
+	private Date DSrcDteStr;
+	private Date DSrcDteEnd;
+	private boolean dsbSrcDteStr;
+	private boolean vsbSrcDteStr;
+	private boolean rqrSrcDteStr;
+	private boolean dsbSrcDteEnd;
+	private boolean vsbSrcDteEnd;
+	private boolean rqrSrcDteEnd;
+	private boolean dsbBtnSrcPrm;
+	private boolean vsbBtnSrcPrm;
 
-	private boolean dsbYr;
-	private boolean vsbYr;
-	private boolean rqrYr;
-
-	private void actYr(boolean dsb, boolean vsb, boolean rqr) {
-		dsbYr = dsb;
-		vsbYr = vsb;
-		rqrYr = rqr;
+	private void actSrcSte(boolean dsb, boolean vsb, boolean rqr) {
+		this.dsbSrcSte = dsb;
+		this.vsbSrcSte = vsb;
+		this.rqrSrcSte = rqr;
 	}
 
-	private int IYrId;
+	private void actSrcPrc(boolean dsb, boolean vsb, boolean rqr) {
+		this.dsbSrcPrc = dsb;
+		this.vsbSrcPrc = vsb;
+		this.rqrSrcPrc = rqr;
+	}
 
-	public void chsYr() {
+	private void actSrcPrm(boolean dsb, boolean vsb, boolean rqr) {
+		this.dsbSrcPrm = dsb;
+		this.vsbSrcPrm = vsb;
+		this.rqrSrcPrm = rqr;
+	}
+
+	private void actSrcDteSrt(boolean dsb, boolean vsb, boolean rqr) {
+		this.dsbSrcDteStr = dsb;
+		this.vsbSrcDteStr = vsb;
+		this.rqrSrcDteStr = rqr;
+	}
+
+	private void actSrcDteEnd(boolean dsb, boolean vsb, boolean rqr) {
+		this.dsbSrcDteEnd = dsb;
+		this.vsbSrcDteEnd = vsb;
+		this.rqrSrcDteEnd = rqr;
+	}
+
+	private void actBtnSrcPrm(boolean dsb, boolean vsb) {
+		this.dsbBtnSrcPrm = dsb;
+		this.vsbBtnSrcPrm = vsb;
+	}
+
+	/**
+	 * <h1>METHOD --> SEARCH PARAM !</h1> Search for parameter <br/>
+	 * 
+	 * @author DC
+	 * @param none
+	 * @return SitTblGnr
+	 * @version 1.0
+	 * @since 2022-03-23
+	 */
+	public void srcPrm() {
 		try {
-			this.actEpi(false, true, true);
+			this.newGnr();
+			this.actBtnDwn(false, true);
+			if (ISrcSteId == Default.I_DFL_SLC_VLE() && ISrcPrcId != Default.I_DFL_SLC_VLE()) {
+				if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
+					lstGnr = SGnr.lstGnrPrmNoStePrc(prl.getIPrjId(), ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
+					lstGnr = SGnr.lstGnrPrmNoSteSet(prl.getIPrjId(), ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
+					lstGnr = SGnr.lstGnrPrmNoSteClc(prl.getIPrjId(), ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+				}
+			} else if (ISrcSteId == Default.I_DFL_SLC_VLE() && ISrcPrcId == Default.I_DFL_SLC_VLE()) {
+				if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
+					lstGnr = SGnr.lstGnrPrmNoStePrcPrc(prl.getIPrjId(), DSrcDteStr, DSrcDteEnd, true);
+				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
+					lstGnr = SGnr.lstGnrPrmNoStePrcSet(prl.getIPrjId(), DSrcDteStr, DSrcDteEnd, true);
+				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
+					lstGnr = SGnr.lstGnrPrmNoStePrcClc(prl.getIPrjId(), DSrcDteStr, DSrcDteEnd, true);
+				}
+			} else if (ISrcSteId != Default.I_DFL_SLC_VLE() && ISrcPrcId == Default.I_DFL_SLC_VLE()) {
+				SitTblSte steAux = new SitTblSte();
+				steAux = SSte.searchId(ISrcSteId);
+				if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
+					lstGnr = SGnr.lstGnrPrmNoPrcPrc(prl.getIPrjId(), steAux, DSrcDteStr, DSrcDteEnd, true);
+				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
+					lstGnr = SGnr.lstGnrPrmNoPrcSet(prl.getIPrjId(), steAux, DSrcDteStr, DSrcDteEnd, true);
+				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
+					lstGnr = SGnr.lstGnrPrmNoPrcClc(prl.getIPrjId(), steAux, DSrcDteStr, DSrcDteEnd, true);
+				}
+			} else {
+				SitTblSte steAux = new SitTblSte();
+				steAux = SSte.searchId(ISrcSteId);
+				if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
+					lstGnr = SGnr.lstGnrPrmPrc(prl.getIPrjId(), steAux, ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
+					lstGnr = SGnr.lstGnrPrmSet(prl.getIPrjId(), steAux, ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
+					lstGnr = SGnr.lstGnrPrmClc(prl.getIPrjId(), steAux, ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+				}
+			}
+			this.cptSrcPrm();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+		}
+	}
+
+	private void cptSrcPrm() {
+		try {
+		} catch (Exception e) {
+			Print.LOG_INFO_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
 		}
 	}
 
 	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
+	/**
+	 * <h1>DECLARE OBJECTS AND METHODS --> DOWNLOAD !</h1> 1. Declare objects <br/>
+	 * 2. Actions objects <br/>
+	 * 
+	 * @author DC
+	 * @param none
+	 * @return none
+	 * @version 1.0
+	 * @since 2022-03-23
+	 */
+	private boolean dsbBtnDwn;
+	private boolean vsbBtnDwn;
 
-	private boolean dsbEpi;
-	private boolean vsbEpi;
-	private boolean rqrEpi;
-
-	private void actEpi(boolean dsb, boolean vsb, boolean rqr) {
-		dsbEpi = dsb;
-		vsbEpi = vsb;
-		rqrEpi = rqr;
+	private void actBtnDwn(boolean dsb, boolean vsb) {
+		this.dsbBtnDwn = dsb;
+		this.vsbBtnDwn = vsb;
 	}
 
 	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
-	private boolean dsbPrj;
-	private boolean vsbPrj;
-	private boolean rqrPrj;
-
-	private void actPrj(boolean dsb, boolean vsb, boolean rqr) {
-		dsbPrj = dsb;
-		vsbPrj = vsb;
-		rqrPrj = rqr;
-	}
-
-	private int IPrjId;
-
-	public void chsPrj() {
-		try {
-			this.actSte(false, true, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
-	private boolean dsbTrp;
-	private boolean vsbTrp;
-	private boolean rqrTrp;
-
-	private void actTrp(boolean dsb, boolean vsb, boolean rqr) {
-		dsbTrp = dsb;
-		vsbTrp = vsb;
-		rqrTrp = rqr;
-	}
-
-	@EJB
-	protected SitSrvOPt SOtp;
-
-	private int ITrpId;
-
 	public void chsTrp() {
-		this.actNmb(false, true, true);
+		this.actTrpNmb(false, true, true);
 	}
 
 	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
-
-	private boolean dsbSte;
-	private boolean vsbSte;
-	private boolean rqrSte;
-
-	private void actSte(boolean dsb, boolean vsb, boolean rqr) {
-		dsbSte = dsb;
-		vsbSte = vsb;
-		rqrSte = rqr;
-	}
 
 	@EJB
 	protected SitSrvSte SSte;
@@ -580,110 +923,133 @@ public class SitCtlGnr {
 			ste = new SitTblSte();
 			ste = SSte.searchId(ISteId);
 			this.actTrp(false, true, true);
-
-			this.BGnrTrpRcv = false;
-			this.BGnrTrpSup = false;
-
 			this.actTrpRcv(false, true, false);
 			this.actTrpSup(false, true, false);
-
 			this.actGnrPrfAgn(false, true, true);
-			this.actBtnRstPrfTch(false, true);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
+	/** ++++++++++++++++++++++++++++PROCESS+++++++++++++++++++++++++++++++ **/
+
+	private boolean dsbPrcDte;
+	private boolean vsbPrcDte;
+	private boolean rqrPrcDte;
 
 	private boolean dsbTpe;
 	private boolean vsbTpe;
 	private boolean rqrTpe;
 	private int ITpeId;
 
-	private void actTpe(boolean dsb, boolean vsb, boolean rqr) {
+	private boolean dsbSte;
+	private boolean vsbSte;
+	private boolean rqrSte;
+
+	private boolean dsbPrcSts;
+	private boolean vsbPrcSts;
+	private boolean rqrPrcSts;
+
+	private boolean dsbPrcDteCls;
+	private boolean vsbPrcDteCls;
+	private boolean rqrPrcDteCls;
+
+	private boolean dsbPrcCmm;
+	private boolean vsbPrcCmm;
+	private boolean rqrPrcCmm;
+
+	private void actPrcDte(boolean dsb, boolean vsb, boolean rqr) {
+		dsbPrcDte = dsb;
+		vsbPrcDte = vsb;
+		rqrPrcDte = rqr;
+	}
+
+	private void actPrc(boolean dsb, boolean vsb, boolean rqr) {
 		dsbTpe = dsb;
 		vsbTpe = vsb;
 		rqrTpe = rqr;
 	}
 
-	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
-
-	private boolean dsbNmb;
-	private boolean vsbNmb;
-	private boolean rqrNmb;
-
-	private void actNmb(boolean dsb, boolean vsb, boolean rqr) {
-		dsbNmb = dsb;
-		vsbNmb = vsb;
-		rqrNmb = rqr;
+	private void actPrcSte(boolean dsb, boolean vsb, boolean rqr) {
+		dsbSte = dsb;
+		vsbSte = vsb;
+		rqrSte = rqr;
 	}
+
+	private void actPrcSts(boolean dsb, boolean vsb, boolean rqr) {
+		dsbPrcSts = dsb;
+		vsbPrcSts = vsb;
+		rqrPrcSts = rqr;
+	}
+
+	private void actPrcDteCls(boolean dsb, boolean vsb, boolean rqr) {
+		dsbPrcDteCls = dsb;
+		vsbPrcDteCls = vsb;
+		rqrPrcDteCls = rqr;
+	}
+
+	private void actPrcCmm(boolean dsb, boolean vsb, boolean rqr) {
+		dsbPrcCmm = dsb;
+		vsbPrcCmm = vsb;
+		rqrPrcCmm = rqr;
+	}
+
+	public void chsPrcSts() {
+		try {
+			if (gnr.getiPrcStsId() == Code.I_SIT_PRC_STS_CLS()) {
+				this.actPrcDteCls(false, true, true);
+			} else {
+				this.actPrcDteCls(true, true, false);
+			}
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.VALIDATE, e.getMessage());
+		}
+	}
+
+	/** ++++++++++++++++++++++++++++TRAP+++++++++++++++++++++++++++++++ **/
 
 	@EJB
 	protected SitSrvNmb SNmb;
 	private int INmbId;
 	private SitTblNmb nmb;
 
-	public void chsNmb() {
-		try {
-			nmb = new SitTblNmb();
-			nmb = SNmb.searchId(INmbId);
-			this.actDteSet(false, true, true);
-			this.actDteClc(false, true, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
+	private boolean dsbNmb;
+	private boolean vsbNmb;
+	private boolean rqrNmb;
 
 	private boolean dsbDteSet;
 	private boolean vsbDteSet;
 	private boolean rqrDteSet;
 
-	private void actDteSet(boolean dsb, boolean vsb, boolean rqr) {
+	private boolean dsbDteClc;
+	private boolean vsbDteClc;
+	private boolean rqrDteClc;
+
+	private boolean dsbTrpRcv;
+	private boolean vsbTrpRcv;
+	private boolean rqrTrpRcv;
+
+	private boolean dsbTrpSup;
+	private boolean vsbTrpSup;
+	private boolean rqrTrpSup;
+
+	private void actTrpNmb(boolean dsb, boolean vsb, boolean rqr) {
+		dsbNmb = dsb;
+		vsbNmb = vsb;
+		rqrNmb = rqr;
+	}
+
+	private void actTrpDteSet(boolean dsb, boolean vsb, boolean rqr) {
 		dsbDteSet = dsb;
 		vsbDteSet = vsb;
 		rqrDteSet = rqr;
 	}
 
-	private boolean dsbDteClc;
-	private boolean vsbDteClc;
-	private boolean rqrDteClc;
-
-	private void actDteClc(boolean dsb, boolean vsb, boolean rqr) {
+	private void actTrpDteClc(boolean dsb, boolean vsb, boolean rqr) {
 		dsbDteClc = dsb;
 		vsbDteClc = vsb;
 		rqrDteClc = rqr;
 	}
-
-	public void chsClc() {
-		try {
-			if (mth.vldDte(gnr.getdGnrDteSet(), gnr.getdGnrDteClc()) == -1) { // # FECHA FIN > FECHA INICIO
-				if (mth.vldDte(gnr.getdGnrDteSet(), gnr.getdGnrDteClc()) == 0) { // # FECHA FIN = FECHA INICIO
-				} else {
-					this.actBEgs(false, true, false);
-					this.actBLrs(false, true, false);
-					this.actBAdl(false, true, false);
-					this.actTrpRcv(false, true, false);
-					this.actTrpSup(false, true, false);
-					this.actGnrPrfAgn(false, true, false);
-				}
-			} else if (mth.vldDte(gnr.getdGnrDteSet(), gnr.getdGnrDteClc()) == 1) {// # FECHA FIN < FECHA INICIO
-				this.msg.msgWrn("La fecha ingresada es incorrecta");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
-
-	private boolean dsbTrpRcv;
-	private boolean vsbTrpRcv;
-	private boolean rqrTrpRcv;
 
 	private void actTrpRcv(boolean dsb, boolean vsb, boolean rqr) {
 		dsbTrpRcv = dsb;
@@ -691,26 +1057,82 @@ public class SitCtlGnr {
 		rqrTrpRcv = rqr;
 	}
 
-	private boolean dsbTrpSup;
-	private boolean vsbTrpSup;
-	private boolean rqrTrpSup;
-
 	private void actTrpSup(boolean dsb, boolean vsb, boolean rqr) {
 		dsbTrpSup = dsb;
 		vsbTrpSup = vsb;
 		rqrTrpSup = rqr;
 	}
 
+	public void chsNmb() {
+		try {
+			nmb = new SitTblNmb();
+			nmb = SNmb.searchId(INmbId);
+			this.actTrpDteSet(false, true, true);
+			this.actTrpDteClc(false, true, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void chsClc() {
+		try {
+			if (mth.vldDte(gnr.getdGnrDteSet(), gnr.getdGnrDteClc()) == -1) { // # FECHA FIN > FECHA INICIO
+				if (mth.vldDte(gnr.getdGnrDteSet(), gnr.getdGnrDteClc()) == Default.I_DFL_VLE()) { // # FECHA FIN =
+																									// FECHA INICIO
+				} else {
+					this.actBEgs(false, true, false);
+					this.actBLrv(false, true, false);
+					this.actBAdl(false, true, false);
+					this.actTrpRcv(false, true, false);
+					this.actTrpSup(false, true, false);
+					this.actGnrPrfAgn(false, true, false);
+				}
+			} else if (mth.vldDte(gnr.getdGnrDteSet(), gnr.getdGnrDteClc()) == 1) {// # FECHA FIN < FECHA INICIO
+				Message.msgWrn("La fecha ingresada es incorrecta");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void chsTrpRcv() {
+		if (gnr.getBGnrTrpRcv() == false) {
+			this.actBEgs(true, true, false);
+			this.actBLrv(true, true, false);
+			this.actBAdl(true, true, false);
+		} else {
+			this.actBEgs(false, true, false);
+			this.actBLrv(false, true, false);
+			this.actBAdl(false, true, false);
+		}
+	}
+
+	/** +++++++++++++++++++++++++++EGGS++++++++++++++++++++++++++++ **/
+
 	private boolean dsbBEgs;
 	private boolean vsbBEgs;
 	private boolean rqrBEgs;
-	private boolean dsbBLrs;
-	private boolean vsbBLrs;
-	private boolean rqrBLrs;
 
-	private boolean dsbBAdl;
-	private boolean vsbBAdl;
-	private boolean rqrBAdl;
+	private boolean dsbEgsNmbCpl;
+	private boolean vsbEgsNmbCpl;
+	private boolean rqrEgsNmbCpl;
+
+	private boolean dsbEgsNmbBrk;
+	private boolean vsbEgsNmbBrk;
+	private boolean rqrEgsNmbBrk;
+
+	private boolean dsbEgsNmbVbl;
+	private boolean vsbEgsNmbVbl;
+	private boolean rqrEgsNmbVbl;
+
+	private boolean dsbEgsNmbVblNo;
+	private boolean vsbEgsNmbVblNo;
+	private boolean rqrEgsNmbVblNo;
+
+	private boolean dsbEgsCmm;
+	private boolean vsbEgsCmm;
+	private boolean rqrEgsCmm;
 
 	private void actBEgs(boolean dsb, boolean vsb, boolean rqr) {
 		dsbBEgs = dsb;
@@ -718,7 +1140,129 @@ public class SitCtlGnr {
 		rqrBEgs = rqr;
 	}
 
-	private void actBLrs(boolean dsb, boolean vsb, boolean rqr) {
+	private void actEgsNmbCpl(boolean dsb, boolean vsb, boolean rqr) {
+		dsbEgsNmbCpl = dsb;
+		vsbEgsNmbCpl = vsb;
+		rqrEgsNmbCpl = rqr;
+	}
+
+	private void actEgsNmbBrk(boolean dsb, boolean vsb, boolean rqr) {
+		dsbEgsNmbBrk = dsb;
+		vsbEgsNmbBrk = vsb;
+		rqrEgsNmbBrk = rqr;
+	}
+
+	private void actEgsNmbVblNo(boolean dsb, boolean vsb, boolean rqr) {
+		dsbEgsNmbVblNo = dsb;
+		vsbEgsNmbVblNo = vsb;
+		rqrEgsNmbVblNo = rqr;
+	}
+
+	private void actEgsNmbVbl(boolean dsb, boolean vsb, boolean rqr) {
+		dsbEgsNmbVbl = dsb;
+		vsbEgsNmbVbl = vsb;
+		rqrEgsNmbVbl = rqr;
+	}
+
+	private void actEgsCmm(boolean dsb, boolean vsb, boolean rqr) {
+		dsbEgsCmm = dsb;
+		vsbEgsCmm = vsb;
+		rqrEgsCmm = rqr;
+	}
+
+	public void chsEgs() {
+		if (gnr.getBGnrEgs() != false) {
+			this.actEgsNmbCpl(false, true, true);
+			this.actEgsNmbBrk(false, true, true);
+			this.actEgsNmbVbl(false, true, true);
+			this.actEgsNmbVblNo(false, true, true);
+			this.actEgsCmm(false, true, false);
+		} else {
+			this.actEgsNmbCpl(true, true, false);
+			this.actEgsNmbBrk(true, true, false);
+			this.actEgsNmbVbl(true, true, false);
+			this.actEgsNmbVblNo(true, true, false);
+			this.actEgsCmm(true, true, false);
+		}
+	}
+
+	/** +++++++++++++++++++++++++++LARVAE++++++++++++++++++++++++++++ **/
+
+	private boolean dsbBLrs;
+	private boolean vsbBLrs;
+	private boolean rqrBLrs;
+
+	private boolean dsbLrvCmm;
+	private boolean vsbLrvCmm;
+	private boolean rqrLrvCmm;
+
+	private boolean dsbAdlCmm;
+	private boolean vsbAdlCmm;
+	private boolean rqrAdlCmm;
+
+	private boolean dsbLrvNmbLive;
+	private boolean vsbLrvNmbLive;
+	private boolean rqrLrvNmbLive;
+
+	private boolean dsbLrvNmbDied;
+	private boolean vsbLrvNmbDied;
+	private boolean rqrLrvNmbDied;
+
+	private boolean dsbLrvBtnAdd;
+	private boolean vsbLrvBtnAdd;
+
+	private boolean dsbLrvBtnNew;
+	private boolean vsbLrvBtnNew;
+
+	private boolean dsbLrvBtnRst;
+	private boolean vsbLrvBtnRst;
+
+	private void actLrvBtnRst(boolean dsb, boolean vsb) {
+		dsbLrvBtnRst = dsb;
+		vsbLrvBtnRst = vsb;
+	}
+
+	private void actLrvBtnNew(boolean dsb, boolean vsb) {
+		dsbLrvBtnNew = dsb;
+		vsbLrvBtnNew = vsb;
+	}
+
+	private void actLrvBtnAdd(boolean dsb, boolean vsb) {
+		dsbLrvBtnAdd = dsb;
+		vsbLrvBtnAdd = vsb;
+	}
+
+	private void actLrvNmbDied(boolean dsb, boolean vsb, boolean rqr) {
+		dsbLrvNmbDied = dsb;
+		vsbLrvNmbDied = vsb;
+		rqrLrvNmbDied = rqr;
+	}
+
+	private void actLrvNmbLive(boolean dsb, boolean vsb, boolean rqr) {
+		dsbLrvNmbLive = dsb;
+		vsbLrvNmbLive = vsb;
+		rqrLrvNmbLive = rqr;
+	}
+
+	private void actLrvCmm(boolean dsb, boolean vsb, boolean rqr) {
+		dsbLrvCmm = dsb;
+		vsbLrvCmm = vsb;
+		rqrLrvCmm = rqr;
+	}
+
+	private void actAdlCmm(boolean dsb, boolean vsb, boolean rqr) {
+		dsbAdlCmm = dsb;
+		vsbAdlCmm = vsb;
+		rqrAdlCmm = rqr;
+	}
+
+	/** +++++++++++++++++++++++++++ADULTS++++++++++++++++++++++++++++ **/
+
+	private boolean dsbBAdl;
+	private boolean vsbBAdl;
+	private boolean rqrBAdl;
+
+	private void actBLrv(boolean dsb, boolean vsb, boolean rqr) {
 		dsbBLrs = dsb;
 		vsbBLrs = vsb;
 		rqrBLrs = rqr;
@@ -730,232 +1274,8 @@ public class SitCtlGnr {
 		rqrBAdl = rqr;
 	}
 
-	private boolean BGnrTrpRcv;
-	private boolean BGnrTrpSup;
-	private SitTblGnr gnr;
-	private SitTblGnrDtl gnrDtl;
-	private List<SitTblGnr> lstGnr;
-	@EJB
-	protected SitSrvGnr SGnr;
-	private boolean BGnrEgs;
-	private boolean BGnrLrs;
-	private boolean BGnrAdl;
-	private boolean dsbGnrNmbCpl;
-	private boolean vsbGnrNmbCpl;
-	private boolean rqrGnrNmbCpl;
-	private boolean dsbGnrNmbBrk;
-	private boolean vsbGnrNmbBrk;
-	private boolean rqrGnrNmbBrk;
-	private boolean dsbGnrNmbUsd;
-	private boolean vsbGnrNmbUsd;
-	private boolean rqrGnrNmbUsd;
-	private boolean dsbGnrNmbVbl;
-	private boolean vsbGnrNmbVbl;
-	private boolean rqrGnrNmbVbl;
-	private boolean dsbGnrNmbLrsPps;
-	private boolean vsbGnrNmbLrsPps;
-	private boolean rqrGnrNmbLrsPps;
-	private boolean dsbGnrEgs;
-	private boolean vsbGnrEgs;
-	private boolean rqrGnrEgs;
-	private boolean dsbGnrLrv;
-	private boolean vsbGnrLrv;
-	private boolean rqrGnrLrv;
-	private int IEgsTtl;
-
-	private boolean dsbGnrObsEgs;
-	private boolean vsbGnrObsEgs;
-	private boolean rqrGnrObsEgs;
-
-	private boolean dsbGnrObsLrv;
-	private boolean vsbGnrObsLrv;
-	private boolean rqrGnrObsLrv;
-
-	private boolean dsbGnrObsAdl;
-	private boolean vsbGnrObsAdl;
-	private boolean rqrGnrObsAdl;
-
-	private boolean dsbGnrDtlLrvNmb;
-	private boolean vsbGnrDtlLrvNmb;
-	private boolean rqrGnrDtlLrvNmb;
-
-	private boolean dsbGnrDtlLrvStg;
-	private boolean vsbGnrDtlLrvStg;
-	private boolean rqrGnrDtlLrvStg;
-
-	private boolean dsbGnrDtlLrvSex;
-	private boolean vsbGnrDtlLrvSex;
-	private boolean rqrGnrDtlLrvSex;
-
-	private boolean dsbGnrDtlLrvSpc;
-	private boolean vsbGnrDtlLrvSpc;
-	private boolean rqrGnrDtlLrvSpc;
-
-	private boolean dsbGnrDtlLrvNmbLive;
-	private boolean vsbGnrDtlLrvNmbLive;
-	private boolean rqrGnrDtlLrvNmbLive;
-
-	private boolean dsbGnrDtlLrvNmbDied;
-	private boolean vsbGnrDtlLrvNmbDied;
-	private boolean rqrGnrDtlLrvNmbDied;
-
-	private boolean dsbBtnLrvAdd;
-	private boolean vsbBtnLrvAdd;
-
-	private boolean dsbBtnLrvNew;
-	private boolean vsbBtnLrvNew;
-
-	private boolean dsbBtnLrvRst;
-	private boolean vsbBtnLrvRst;
-
-	private void actBtnLrvRst(boolean dsb, boolean vsb) {
-		dsbBtnLrvRst = dsb;
-		vsbBtnLrvRst = vsb;
-	}
-
-	private void actBtnLrvNew(boolean dsb, boolean vsb) {
-		dsbBtnLrvNew = dsb;
-		vsbBtnLrvNew = vsb;
-	}
-
-	private void actBtnLrvAdd(boolean dsb, boolean vsb) {
-		dsbBtnLrvAdd = dsb;
-		vsbBtnLrvAdd = vsb;
-	}
-
-	private void actGnrDtlLrvNmbDied(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrDtlLrvNmbDied = dsb;
-		vsbGnrDtlLrvNmbDied = vsb;
-		rqrGnrDtlLrvNmbDied = rqr;
-	}
-
-	private void actGnrDtlLrvNmbLive(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrDtlLrvNmbLive = dsb;
-		vsbGnrDtlLrvNmbLive = vsb;
-		rqrGnrDtlLrvNmbLive = rqr;
-	}
-
-	private void actGnrDtlLrvSpc(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrDtlLrvSpc = dsb;
-		vsbGnrDtlLrvSpc = vsb;
-		rqrGnrDtlLrvSpc = rqr;
-	}
-
-	private void actGnrDtlLrvSex(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrDtlLrvSex = dsb;
-		vsbGnrDtlLrvSex = vsb;
-		rqrGnrDtlLrvSex = rqr;
-	}
-
-	private void actGnrDtlLrvStg(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrDtlLrvStg = dsb;
-		vsbGnrDtlLrvStg = vsb;
-		rqrGnrDtlLrvStg = rqr;
-	}
-
-	private void actGnrDtlLrvNmb(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrDtlLrvNmb = dsb;
-		vsbGnrDtlLrvNmb = vsb;
-		rqrGnrDtlLrvNmb = rqr;
-	}
-
-	private void actGnrObsEgs(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrObsEgs = dsb;
-		vsbGnrObsEgs = vsb;
-		rqrGnrObsEgs = rqr;
-	}
-
-	private void actGnrObsLrv(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrObsLrv = dsb;
-		vsbGnrObsLrv = vsb;
-		rqrGnrObsLrv = rqr;
-	}
-
-	private void actGnrObsAdl(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrObsAdl = dsb;
-		vsbGnrObsAdl = vsb;
-		rqrGnrObsAdl = rqr;
-	}
-
-	private void actGnrNmbCpl(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrNmbCpl = dsb;
-		vsbGnrNmbCpl = vsb;
-		rqrGnrNmbCpl = rqr;
-	}
-
-	private void actGnrNmbBrk(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrNmbBrk = dsb;
-		vsbGnrNmbBrk = vsb;
-		rqrGnrNmbBrk = rqr;
-	}
-
-	private void actGnrNmbUsd(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrNmbUsd = dsb;
-		vsbGnrNmbUsd = vsb;
-		rqrGnrNmbUsd = rqr;
-	}
-
-	private void actGnrNmbVbl(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrNmbVbl = dsb;
-		vsbGnrNmbVbl = vsb;
-		rqrGnrNmbVbl = rqr;
-	}
-
-	private void actGnrNmbLrsPps(boolean dsb, boolean vsb, boolean rqr) {
-		dsbGnrNmbLrsPps = dsb;
-		vsbGnrNmbLrsPps = vsb;
-		rqrGnrNmbLrsPps = rqr;
-	}
-
 	private void newGnr() {
 		lstGnr = new ArrayList<SitTblGnr>();
-	}
-
-	private void loadGnr() {
-		try {
-			this.newGnr();
-			this.loadPrl();
-			lstGnr = SGnr.lstPrsRol(prl.getIPrjId());
-			Collections.sort(lstGnr, new Comparator<SitTblGnr>() {
-				public int compare(SitTblGnr o1, SitTblGnr o2) {
-					return o2.getdGnrDteClc().compareTo(o1.getdGnrDteClc());
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void chsTrpRcv() {
-		if (this.BGnrTrpRcv == false) {
-			this.actBEgs(true, true, false);
-			this.actBLrs(true, true, false);
-			this.actBAdl(true, true, false);
-		} else {
-			this.actBEgs(false, true, false);
-			this.actBLrs(false, true, false);
-			this.actBAdl(false, true, false);
-		}
-	}
-
-	public void chsTrpSup() {
-
-	}
-
-	public void chsEgs() {
-		if (BGnrEgs != false) {
-			this.actGnrNmbCpl(false, true, true);
-			this.actGnrNmbBrk(false, true, true);
-			this.actGnrNmbUsd(false, true, true);
-			this.actGnrNmbVbl(false, true, true);
-			this.actGnrObsEgs(false, true, false);
-		} else {
-			this.actGnrNmbCpl(true, true, false);
-			this.actGnrNmbBrk(true, true, false);
-			this.actGnrNmbUsd(true, true, false);
-			this.actGnrNmbVbl(true, true, false);
-			this.actGnrObsEgs(true, true, false);
-		}
 	}
 
 	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
@@ -963,7 +1283,7 @@ public class SitCtlGnr {
 	private boolean vsbPrsPrf;
 	private boolean rqrPrsPrf;
 
-	private void actPrsPrf(boolean dsb, boolean vsb, boolean rqr) {
+	private void actTrpAgnFld(boolean dsb, boolean vsb, boolean rqr) {
 		dsbPrsPrf = dsb;
 		vsbPrsPrf = vsb;
 		rqrPrsPrf = rqr;
@@ -981,7 +1301,7 @@ public class SitCtlGnr {
 
 	public void chsPrsPrf() {
 		try {
-			this.actPrj(false, true, true);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1006,6 +1326,13 @@ public class SitCtlGnr {
 	/****************************************************************************/
 	/* +++++++++++++++++++++++++++++++ Larvae +++++++++++++++++++++++++++ */
 	/****************************************************************************/
+	private boolean dsbGnrDtlLrvPrc;
+	private boolean vsbGnrDtlLrvPrc;
+	private boolean rqrGnrDtlLrvPrc;
+
+	private boolean dsbGnrDtlLrvPrcDte;
+	private boolean vsbGnrDtlLrvPrcDte;
+	private boolean rqrGnrDtlLrvPrcDte;
 
 	private boolean dsbLrsStg;
 	private boolean vsbLrsStg;
@@ -1021,85 +1348,97 @@ public class SitCtlGnr {
 	private SitTblGnrDtl gnrDtlLrv;
 
 	public void chsLrs() {
-		this.newLrsStg();
-		if (BGnrLrs != false) {
-			this.actGnrNmbLrsPps(false, true, true);
-			this.actLrsStg(false, true, true);
-			this.actLrsCtn(false, true, false);
-			this.actBtnLrvAdd(false, true);
-			this.actGnrDtlLrvNmbDied(false, true, true);
+		this.newLrvStg();
+		if (gnr.getBGnrLrs() != false) {
+			this.actLrvStg(false, true, true);
+			this.actLrvCtn(false, true, false);
+			this.actLrvBtnAdd(false, true);
+			this.actLrvNmbLive(false, true, true);
+			this.actLrvNmbDied(false, true, true);
 		} else {
-			this.actGnrNmbLrsPps(true, true, false);
-			this.actGnrDtlLrvNmbDied(true, true, false);
-			this.actLrsStg(true, true, false);
-			this.actLrsCtn(true, true, false);
-			this.actBtnLrvAdd(true, true);
+			this.actLrvNmbLive(true, true, false);
+			this.actLrvNmbDied(true, true, false);
+			this.actLrvStg(true, true, false);
+			this.actLrvCtn(true, true, false);
+			this.actLrvBtnAdd(true, true);
 		}
-		this.newLstLrsStg();
+		this.newLstLrvStg();
 	}
 
-	private void actLrsStg(boolean dsb, boolean vsb, boolean rqr) {
+	private void actLrvPrc(boolean dsb, boolean vsb, boolean rqr) {
+		dsbGnrDtlLrvPrc = dsb;
+		vsbGnrDtlLrvPrc = vsb;
+		rqrGnrDtlLrvPrc = rqr;
+	}
+
+	private void actLrvPrcDte(boolean dsb, boolean vsb, boolean rqr) {
+		dsbGnrDtlLrvPrcDte = dsb;
+		vsbGnrDtlLrvPrcDte = vsb;
+		rqrGnrDtlLrvPrcDte = rqr;
+	}
+
+	private void actLrvStg(boolean dsb, boolean vsb, boolean rqr) {
 		dsbLrsStg = dsb;
 		vsbLrsStg = vsb;
 		rqrLrsStg = rqr;
 	}
 
-	private void actLrsCtn(boolean dsb, boolean vsb, boolean rqr) {
+	private void actLrvCtn(boolean dsb, boolean vsb, boolean rqr) {
 		dsbLrsCtn = dsb;
 		vsbLrsCtn = vsb;
 		rqrLrsCtn = rqr;
 	}
 
-	public void newLstLrsStg() {
+	public void newLstLrvStg() {
 		lstLrsStgSlc = new ArrayList<SitTblGnrDtl>();
 	}
 
-	public void newLrsStg() {
-		ILrsStgId = 0;
+	public void newLrvStg() {
+		ILrsStgId = Default.I_DFL_VLE();
 		gnrDtlLrv = new SitTblGnrDtl();
-		gnrDtlLrv.setIGnrDtlNmb(0);
-		gnrDtlLrv.setiGnrDtlNmbDd(0);
-		this.actGnrNmbLrsPps(false, true, true);
-		this.actGnrDtlLrvNmbDied(false, true, true);
-		this.actLrsStg(false, true, true);
-		this.actLrsCtn(false, true, false);
-		this.actBtnLrvAdd(false, true);
-		this.actBtnLrvNew(true, true);
-		this.actBtnLrvRst(false, true);
+		gnrDtlLrv.setIGnrDtlNmb(Default.I_DFL_VLE());
+		gnrDtlLrv.setiGnrDtlNmbDd(Default.I_DFL_VLE());
+		gnrDtlLrv.setITpeDtl(Code.I_SIT_LRV());
+		this.actLrvNmbLive(false, true, true);
+		this.actLrvNmbDied(false, true, true);
+		this.actLrvStg(false, true, true);
+		this.actLrvCtn(false, true, false);
+		this.actLrvBtnAdd(false, true);
+		this.actLrvBtnNew(true, true);
+		this.actLrvBtnRst(false, true);
+		this.actLrvPrc(false, true, true);
+		this.actLrvPrcDte(false, true, true);
 	}
 
-	public void addLrsStg() {
+	public void addLrvStg() {
 		try {
-			if (ITpeId == Code.I_SIT_TPE_FLD()) {
-				gnrDtlLrv.setIStgId(ILrsStgId);
-				gnrDtlLrv.setITpeDtl(cde.sitLrv());
-				gnrDtlLrv.setIGnsId(dfl.IDflVle());
-				gnrDtlLrv.setISexId(dfl.IDflVle());
-				gnrDtlLrv.setIPrcId(ITpeId);
-				gnrDtlLrv.setDGnrDtlDtePrc(gnr.getdGnrRgsDte());
-				if (gnrDtlLrv.getIGnrDtlNmb() == 0 && gnrDtlLrv.getiGnrDtlNmbDd() == 0) {
-					this.msg.msgWrn(Message.S_MSG_FRMO1_INPUT_DST_ZERO);
+			if (gnr.getITpeId() == Code.I_SIT_TPE_FLD()) {
+				gnrDtlLrv.setIGnsId(Default.I_DFL_SLC_VLE());
+				gnrDtlLrv.setISexId(Default.I_DFL_SLC_VLE());
+				if (gnrDtlLrv.getIGnrDtlNmb() == Default.I_DFL_VLE()
+						&& gnrDtlLrv.getiGnrDtlNmbDd() == Default.I_DFL_VLE()) {
+					Message.msgWrn(Message.S_MSG_FRMO1_INPUT_DST_ZERO);
 				} else {
 					lstLrsStgSlc.add(gnrDtlLrv);
-					this.actGnrObsLrv(false, true, false);
-					this.actGnrDtlLrvNmbDied(true, true, false);
-					this.actBtnLrvAdd(true, true);
-					this.actBtnLrvNew(false, true);
-					this.actBtnLrvRst(true, true);
-					this.actGnrNmbLrsPps(true, true, false);
-					this.actLrsStg(true, true, false);
-					this.actLrsCtn(true, true, false);
-
+					this.actLrvCmm(false, true, false);
+					this.actLrvNmbLive(true, true, false);
+					this.actLrvNmbDied(true, true, false);
+					this.actLrvBtnAdd(true, true);
+					this.actLrvBtnNew(false, true);
+					this.actLrvBtnRst(true, true);
+					this.actLrvStg(true, true, false);
+					this.actLrvCtn(true, true, false);
+					this.actLrvPrc(true, true, false);
+					this.actLrvPrcDte(true, true, false);
 				}
 			}
-
 		} catch (Exception e) {
-			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.ADD, e.getMessage());
 		}
 
 	}
 
-	public void dltLrsStg() {
+	public void dltLrvStg() {
 		try {
 			lstLrsStgSlc.remove(gnrDtlLrv);
 		} catch (Exception e) {
@@ -1107,19 +1446,18 @@ public class SitCtlGnr {
 		}
 	}
 
-	public void rstLrsStg() {
+	public void rstLrvStg() {
 		try {
-			this.actBtnLrvAdd(true, true);
-			this.actBtnLrvNew(false, true);
-			this.actBtnLrvRst(true, true);
-			ILrsStgId = 0;
+			this.actLrvBtnAdd(true, true);
+			this.actLrvBtnNew(false, true);
+			this.actLrvBtnRst(true, true);
+			ILrsStgId = Default.I_DFL_VLE();
 			gnrDtlLrv = new SitTblGnrDtl();
-			gnrDtlLrv.setIGnrDtlNmb(0);
-			gnrDtlLrv.setiGnrDtlNmbDd(0);
-			this.actGnrDtlLrvNmbDied(true, true, false);
-			this.actGnrNmbLrsPps(true, true, false);
-			this.actLrsStg(true, true, false);
-			this.actLrsCtn(true, true, false);
+			gnrDtlLrv.setIGnrDtlNmb(Default.I_DFL_VLE());
+			gnrDtlLrv.setiGnrDtlNmbDd(Default.I_DFL_VLE());
+			this.actLrvNmbDied(true, true, false);
+			this.actLrvStg(true, true, false);
+			this.actLrvCtn(true, true, false);
 		} catch (Exception e) {
 			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
 		}
@@ -1128,6 +1466,14 @@ public class SitCtlGnr {
 	/****************************************************************************/
 	/* +++++++++++++++++++++++++++++++ Adult +++++++++++++++++++++++++++ */
 	/****************************************************************************/
+
+	private boolean dsbAdlPrc;
+	private boolean vsbAdlPrc;
+	private boolean rqrAdlPrc;
+
+	private boolean dsbAdlPrcDte;
+	private boolean vsbAdlPrcDte;
+	private boolean rqrAdlPrcDte;
 
 	private boolean dsbAdlNmb;
 	private boolean vsbAdlNmb;
@@ -1159,6 +1505,18 @@ public class SitCtlGnr {
 	private int ISexId;
 	private int ISpcId;
 
+	private void actAdlPrc(boolean dsb, boolean vsb, boolean rqr) {
+		dsbAdlPrc = dsb;
+		vsbAdlPrc = vsb;
+		rqrAdlPrc = rqr;
+	}
+
+	private void actAdlPrcDte(boolean dsb, boolean vsb, boolean rqr) {
+		dsbAdlPrcDte = dsb;
+		vsbAdlPrcDte = vsb;
+		rqrAdlPrcDte = rqr;
+	}
+
 	private void newAdlSlc() {
 		lstAdlSlc = new ArrayList<SitTblGnrDtl>();
 	}
@@ -1166,17 +1524,20 @@ public class SitCtlGnr {
 	public void newAdl() {
 		try {
 			gnrDtlAdl = new SitTblGnrDtl();
-			ISexId = 0;
-			ISpcId = 0;
-			gnrDtlAdl.setIGnrDtlNmb(0);
-			gnrDtlAdl.setiGnrDtlNmbDd(0);
-			this.actBtnAdlAdd(false, true);
-			this.actBtnAdlRst(false, true);
-			this.actBtnAdlNew(true, true);
+			ISexId = Default.I_DFL_VLE();
+			ISpcId = Default.I_DFL_VLE();
+			gnrDtlAdl.setITpeDtl(Code.I_SIT_ADL());
+			gnrDtlAdl.setIGnrDtlNmb(Default.I_DFL_VLE());
+			gnrDtlAdl.setiGnrDtlNmbDd(Default.I_DFL_VLE());
+			this.actAdlBtnAdd(false, true);
+			this.actAdlBtnRst(false, true);
+			this.actAdlBtnNew(true, true);
 			this.actAdlNmb(false, true, true);
 			this.actAdlNmbDd(false, true, true);
 			this.actAdlSex(false, true, true);
 			this.actAdlSpc(false, true, true);
+			this.actAdlPrc(false, true, true);
+			this.actAdlPrcDte(false, true, true);
 		} catch (Exception e) {
 			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
 		}
@@ -1184,20 +1545,20 @@ public class SitCtlGnr {
 
 	public void chsAdl() {
 		this.newAdl();
-		this.actGnrObsAdl(false, true, false);
-		if (BGnrAdl != false) {
+		this.actAdlCmm(false, true, false);
+		if (gnr.getBGnrAdl() != false) {
 			this.actAdlNmb(false, true, true);
 			this.actAdlNmbDd(false, true, true);
 			this.actAdlSex(false, true, true);
 			this.actAdlSpc(false, true, true);
-			this.actBtnAdlAdd(false, true);
-			this.actBtnAdlRst(false, true);
+			this.actAdlBtnAdd(false, true);
+			this.actAdlBtnRst(false, true);
 		} else {
 			this.actAdlNmb(true, true, false);
 			this.actAdlNmbDd(true, true, false);
 			this.actAdlSex(true, true, false);
 			this.actAdlSpc(true, true, false);
-			this.actBtnAdlAdd(true, true);
+			this.actAdlBtnAdd(true, true);
 		}
 
 	}
@@ -1205,26 +1566,25 @@ public class SitCtlGnr {
 	public void addAdl() {
 		try {
 
-			if (ITpeId == Code.I_SIT_TPE_FLD()) {
-				if (gnrDtlAdl.getIGnrDtlNmb() == 0 && gnrDtlAdl.getiGnrDtlNmbDd() == 0) {
-					this.msg.msgWrn(Message.S_MSG_FRMO1_INPUT_DST_ZERO);
+			if (gnr.getITpeId() == Code.I_SIT_TPE_FLD()) {
+				if (gnrDtlAdl.getIGnrDtlNmb() == Default.I_DFL_VLE()
+						&& gnrDtlAdl.getiGnrDtlNmbDd() == Default.I_DFL_VLE()) {
+					Message.msgWrn(Message.S_MSG_FRMO1_INPUT_DST_ZERO);
 				} else {
-					gnrDtlAdl.setIGnsId(ISpcId);
-					gnrDtlAdl.setISexId(ISexId);
-					gnrDtlAdl.setITpeDtl(cde.sitAdl());
-					gnrDtlAdl.setIStgId(dfl.IDflVle());
-					gnrDtlAdl.setICtnId(dfl.IDflVle());
-					gnrDtlAdl.setIPrcId(ITpeId);
+					gnrDtlAdl.setITpeDtl(Code.I_SIT_ADL());
+					gnrDtlAdl.setIStgId(Default.I_DFL_SLC_VLE());
+					gnrDtlAdl.setICtnId(Default.I_DFL_SLC_VLE());
 					gnrDtlAdl.setDGnrDtlDtePrc(gnr.getdGnrRgsDte());
 					lstAdlSlc.add(gnrDtlAdl);
-
 					this.actAdlNmb(true, true, false);
 					this.actAdlNmbDd(true, true, false);
 					this.actAdlSex(true, true, false);
 					this.actAdlSpc(true, true, false);
-					this.actBtnAdlAdd(true, true);
-					this.actBtnAdlNew(false, true);
-					this.actBtnAdlRst(true, true);
+					this.actAdlBtnAdd(true, true);
+					this.actAdlBtnNew(false, true);
+					this.actAdlBtnRst(true, true);
+					this.actAdlPrc(true, true, false);
+					this.actAdlPrcDte(true, true, false);
 				}
 			}
 
@@ -1235,14 +1595,14 @@ public class SitCtlGnr {
 
 	public void rstAdl() {
 		try {
-			this.actBtnAdlAdd(true, true);
-			this.actBtnAdlNew(false, true);
-			this.actBtnAdlRst(true, true);
+			this.actAdlBtnAdd(true, true);
+			this.actAdlBtnNew(false, true);
+			this.actAdlBtnRst(true, true);
 			gnrDtlAdl = new SitTblGnrDtl();
-			ISexId = 0;
-			ISpcId = 0;
-			gnrDtlAdl.setIGnrDtlNmb(0);
-			gnrDtlAdl.setiGnrDtlNmbDd(0);
+			ISexId = Default.I_DFL_VLE();
+			ISpcId = Default.I_DFL_VLE();
+			gnrDtlAdl.setIGnrDtlNmb(Default.I_DFL_VLE());
+			gnrDtlAdl.setiGnrDtlNmbDd(Default.I_DFL_VLE());
 			this.actAdlNmb(true, true, false);
 			this.actAdlNmbDd(true, true, false);
 			this.actAdlSex(true, true, false);
@@ -1252,17 +1612,25 @@ public class SitCtlGnr {
 		}
 	}
 
-	private void actBtnAdlRst(boolean dsb, boolean vsb) {
+	public void dltAdl() {
+		try {
+			lstAdlSlc.remove(gnrDtlAdl);
+		} catch (Exception e) {
+			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
+		}
+	}
+
+	private void actAdlBtnRst(boolean dsb, boolean vsb) {
 		dsbBtnAdlRst = dsb;
 		vsbBtnAdlRst = vsb;
 	}
 
-	private void actBtnAdlNew(boolean dsb, boolean vsb) {
+	private void actAdlBtnNew(boolean dsb, boolean vsb) {
 		dsbBtnAdlNew = dsb;
 		vsbBtnAdlNew = vsb;
 	}
 
-	private void actBtnAdlAdd(boolean dsb, boolean vsb) {
+	private void actAdlBtnAdd(boolean dsb, boolean vsb) {
 		dsbBtnAdlAdd = dsb;
 		vsbBtnAdlAdd = vsb;
 	}
@@ -1298,9 +1666,13 @@ public class SitCtlGnr {
 	private boolean dsbGnrPrfAgn;
 	private boolean vsbGnrPrfAgn;
 	private boolean rqrGnrPrfAgn;
+
 	private boolean dsbGnrPrfTch;
 	private boolean vsbGnrPrfTch;
 	private boolean rqrGnrPrfTch;
+
+	private boolean dsbBtnRstPrfAgn;
+	private boolean vsbBtnRstPrfAgn;
 
 	private boolean dsbBtnRstPrfTch;
 	private boolean vsbBtnRstPrfTch;
@@ -1331,14 +1703,16 @@ public class SitCtlGnr {
 
 	public void chsPrsPrfAgn() {
 		try {
-			if (IPrsPrfAgnSlcId.size() > 0) {
+			if (IPrsPrfAgnSlcId.size() > Default.I_DFL_VLE()) {
 				this.newPrsPrfAgnAdd();
 				for (String prsPrfAux : IPrsPrfAgnSlcId) {
 					lstPrsPrfAgnAdd.add(SPrsPrf.searchId(Integer.valueOf(prsPrfAux)));
 				}
+				this.actBtnRstPrfAgn(false, true);
 			} else {
 				this.newPrsPrfAgnSlc();
 				this.newPrsPrfAgnAdd();
+				this.actBtnRstPrfAgn(true, true);
 			}
 
 		} catch (Exception e) {
@@ -1346,10 +1720,19 @@ public class SitCtlGnr {
 		}
 	}
 
-	public void rstTchAgn() {
+	public void rstTchFld() {
 		try {
 			this.newPrsPrfAgnSlc();
 			this.newPrsPrfAgnAdd();
+		} catch (Exception e) {
+			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
+		}
+	}
+
+	public void rstTchAgn() {
+		try {
+			this.newPrsPrfTchSlc();
+			this.newPrsPrfTchAdd();
 		} catch (Exception e) {
 			LOG.log(Level.WARNING, Message.S_LOG_NME_CTL + e.getMessage());
 		}
@@ -1388,7 +1771,7 @@ public class SitCtlGnr {
 		rqrGnrPrfAgn = rqr;
 	}
 
-	private void actGnrPrfTch(boolean dsb, boolean vsb, boolean rqr) {
+	private void actTrpAgnLab(boolean dsb, boolean vsb, boolean rqr) {
 		dsbGnrPrfTch = dsb;
 		vsbGnrPrfTch = vsb;
 		rqrGnrPrfTch = rqr;
@@ -1399,15 +1782,12 @@ public class SitCtlGnr {
 		vsbBtnRstPrfTch = vsb;
 	}
 
+	private void actBtnRstPrfAgn(boolean dsb, boolean vsb) {
+		dsbBtnRstPrfAgn = dsb;
+		vsbBtnRstPrfAgn = vsb;
+	}
+
 	/** +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ **/
-
-	public int getIYrId() {
-		return IYrId;
-	}
-
-	public void setIYrId(int iYrId) {
-		IYrId = iYrId;
-	}
 
 	public int getISteId() {
 		return ISteId;
@@ -1425,140 +1805,12 @@ public class SitCtlGnr {
 		this.ste = ste;
 	}
 
-	public boolean isBGnrTrpRcv() {
-		return BGnrTrpRcv;
-	}
-
-	public void setBGnrTrpRcv(boolean bGnrTrpRcv) {
-		BGnrTrpRcv = bGnrTrpRcv;
-	}
-
-	public boolean isBGnrTrpSup() {
-		return BGnrTrpSup;
-	}
-
-	public void setBGnrTrpSup(boolean bGnrTrpSup) {
-		BGnrTrpSup = bGnrTrpSup;
-	}
-
 	public SitTblGnr getGnr() {
 		return gnr;
 	}
 
 	public void setGnr(SitTblGnr gnr) {
 		this.gnr = gnr;
-	}
-
-	public boolean isBGnrEgs() {
-		return BGnrEgs;
-	}
-
-	public void setBGnrEgs(boolean bGnrEgs) {
-		BGnrEgs = bGnrEgs;
-	}
-
-	public boolean isBGnrLrs() {
-		return BGnrLrs;
-	}
-
-	public void setBGnrLrs(boolean bGnrLrs) {
-		BGnrLrs = bGnrLrs;
-	}
-
-	public boolean isDsbGnrNmbCpl() {
-		return dsbGnrNmbCpl;
-	}
-
-	public void setDsbGnrNmbCpl(boolean dsbGnrNmbCpl) {
-		this.dsbGnrNmbCpl = dsbGnrNmbCpl;
-	}
-
-	public boolean isVsbGnrNmbCpl() {
-		return vsbGnrNmbCpl;
-	}
-
-	public void setVsbGnrNmbCpl(boolean vsbGnrNmbCpl) {
-		this.vsbGnrNmbCpl = vsbGnrNmbCpl;
-	}
-
-	public boolean isRqrGnrNmbCpl() {
-		return rqrGnrNmbCpl;
-	}
-
-	public void setRqrGnrNmbCpl(boolean rqrGnrNmbCpl) {
-		this.rqrGnrNmbCpl = rqrGnrNmbCpl;
-	}
-
-	public boolean isDsbGnrNmbBrk() {
-		return dsbGnrNmbBrk;
-	}
-
-	public void setDsbGnrNmbBrk(boolean dsbGnrNmbBrk) {
-		this.dsbGnrNmbBrk = dsbGnrNmbBrk;
-	}
-
-	public boolean isVsbGnrNmbBrk() {
-		return vsbGnrNmbBrk;
-	}
-
-	public void setVsbGnrNmbBrk(boolean vsbGnrNmbBrk) {
-		this.vsbGnrNmbBrk = vsbGnrNmbBrk;
-	}
-
-	public boolean isRqrGnrNmbBrk() {
-		return rqrGnrNmbBrk;
-	}
-
-	public void setRqrGnrNmbBrk(boolean rqrGnrNmbBrk) {
-		this.rqrGnrNmbBrk = rqrGnrNmbBrk;
-	}
-
-	public boolean isDsbGnrNmbVbl() {
-		return dsbGnrNmbVbl;
-	}
-
-	public void setDsbGnrNmbVbl(boolean dsbGnrNmbVbl) {
-		this.dsbGnrNmbVbl = dsbGnrNmbVbl;
-	}
-
-	public boolean isVsbGnrNmbVbl() {
-		return vsbGnrNmbVbl;
-	}
-
-	public void setVsbGnrNmbVbl(boolean vsbGnrNmbVbl) {
-		this.vsbGnrNmbVbl = vsbGnrNmbVbl;
-	}
-
-	public boolean isRqrGnrNmbVbl() {
-		return rqrGnrNmbVbl;
-	}
-
-	public void setRqrGnrNmbVbl(boolean rqrGnrNmbVbl) {
-		this.rqrGnrNmbVbl = rqrGnrNmbVbl;
-	}
-
-	public boolean isDsbGnrNmbLrsPps() {
-		return dsbGnrNmbLrsPps;
-	}
-
-	public void setDsbGnrNmbLrsPps(boolean dsbGnrNmbLrsPps) {
-		this.dsbGnrNmbLrsPps = dsbGnrNmbLrsPps;
-	}
-
-	public boolean isVsbGnrNmbLrsPps() {
-		return vsbGnrNmbLrsPps;
-	}
-
-	public void setVsbGnrNmbLrsPps(boolean vsbGnrNmbLrsPps) {
-		this.vsbGnrNmbLrsPps = vsbGnrNmbLrsPps;
-	}
-
-	public boolean isRqrGnrNmbLrsPps() {
-		return rqrGnrNmbLrsPps;
-	}
-
-	public void setRqrGnrNmbLrsPps(boolean rqrGnrNmbLrsPps) {
-		this.rqrGnrNmbLrsPps = rqrGnrNmbLrsPps;
 	}
 
 	public List<SitTblGnr> getLstGnr() {
@@ -1575,54 +1827,6 @@ public class SitCtlGnr {
 
 	public void setIPrsPrfId(int iPrsPrfId) {
 		IPrsPrfId = iPrsPrfId;
-	}
-
-	public boolean isDsbGnrEgs() {
-		return dsbGnrEgs;
-	}
-
-	public void setDsbGnrEgs(boolean dsbGnrEgs) {
-		this.dsbGnrEgs = dsbGnrEgs;
-	}
-
-	public boolean isVsbGnrEgs() {
-		return vsbGnrEgs;
-	}
-
-	public void setVsbGnrEgs(boolean vsbGnrEgs) {
-		this.vsbGnrEgs = vsbGnrEgs;
-	}
-
-	public boolean isRqrGnrEgs() {
-		return rqrGnrEgs;
-	}
-
-	public void setRqrGnrEgs(boolean rqrGnrEgs) {
-		this.rqrGnrEgs = rqrGnrEgs;
-	}
-
-	public boolean isDsbGnrLrv() {
-		return dsbGnrLrv;
-	}
-
-	public void setDsbGnrLrv(boolean dsbGnrLrv) {
-		this.dsbGnrLrv = dsbGnrLrv;
-	}
-
-	public boolean isVsbGnrLrv() {
-		return vsbGnrLrv;
-	}
-
-	public void setVsbGnrLrv(boolean vsbGnrLrv) {
-		this.vsbGnrLrv = vsbGnrLrv;
-	}
-
-	public boolean isRqrGnrLrv() {
-		return rqrGnrLrv;
-	}
-
-	public void setRqrGnrLrv(boolean rqrGnrLrv) {
-		this.rqrGnrLrv = rqrGnrLrv;
 	}
 
 	public boolean isDsbPrsPrf() {
@@ -1647,54 +1851,6 @@ public class SitCtlGnr {
 
 	public void setRqrPrsPrf(boolean rqrPrsPrf) {
 		this.rqrPrsPrf = rqrPrsPrf;
-	}
-
-	public boolean isDsbYr() {
-		return dsbYr;
-	}
-
-	public void setDsbYr(boolean dsbYr) {
-		this.dsbYr = dsbYr;
-	}
-
-	public boolean isVsbYr() {
-		return vsbYr;
-	}
-
-	public void setVsbYr(boolean vsbYr) {
-		this.vsbYr = vsbYr;
-	}
-
-	public boolean isRqrYr() {
-		return rqrYr;
-	}
-
-	public void setRqrYr(boolean rqrYr) {
-		this.rqrYr = rqrYr;
-	}
-
-	public boolean isDsbEpi() {
-		return dsbEpi;
-	}
-
-	public void setDsbEpi(boolean dsbEpi) {
-		this.dsbEpi = dsbEpi;
-	}
-
-	public boolean isVsbEpi() {
-		return vsbEpi;
-	}
-
-	public void setVsbEpi(boolean vsbEpi) {
-		this.vsbEpi = vsbEpi;
-	}
-
-	public boolean isRqrEpi() {
-		return rqrEpi;
-	}
-
-	public void setRqrEpi(boolean rqrEpi) {
-		this.rqrEpi = rqrEpi;
 	}
 
 	public boolean isDsbTrp() {
@@ -1977,294 +2133,6 @@ public class SitCtlGnr {
 		this.nmb = nmb;
 	}
 
-	public boolean isBGnrAdl() {
-		return BGnrAdl;
-	}
-
-	public void setBGnrAdl(boolean bGnrAdl) {
-		BGnrAdl = bGnrAdl;
-	}
-
-	public boolean isDsbPrj() {
-		return dsbPrj;
-	}
-
-	public void setDsbPrj(boolean dsbPrj) {
-		this.dsbPrj = dsbPrj;
-	}
-
-	public boolean isVsbPrj() {
-		return vsbPrj;
-	}
-
-	public void setVsbPrj(boolean vsbPrj) {
-		this.vsbPrj = vsbPrj;
-	}
-
-	public boolean isRqrPrj() {
-		return rqrPrj;
-	}
-
-	public void setRqrPrj(boolean rqrPrj) {
-		this.rqrPrj = rqrPrj;
-	}
-
-	public int getIPrjId() {
-		return IPrjId;
-	}
-
-	public void setIPrjId(int iPrjId) {
-		IPrjId = iPrjId;
-	}
-
-	public int getIEgsTtl() {
-		return IEgsTtl;
-	}
-
-	public void setIEgsTtl(int iEgsTtl) {
-		IEgsTtl = iEgsTtl;
-	}
-
-	public boolean isDsbGnrObsEgs() {
-		return dsbGnrObsEgs;
-	}
-
-	public void setDsbGnrObsEgs(boolean dsbGnrObsEgs) {
-		this.dsbGnrObsEgs = dsbGnrObsEgs;
-	}
-
-	public boolean isVsbGnrObsEgs() {
-		return vsbGnrObsEgs;
-	}
-
-	public void setVsbGnrObsEgs(boolean vsbGnrObsEgs) {
-		this.vsbGnrObsEgs = vsbGnrObsEgs;
-	}
-
-	public boolean isRqrGnrObsEgs() {
-		return rqrGnrObsEgs;
-	}
-
-	public void setRqrGnrObsEgs(boolean rqrGnrObsEgs) {
-		this.rqrGnrObsEgs = rqrGnrObsEgs;
-	}
-
-	public boolean isDsbGnrObsLrv() {
-		return dsbGnrObsLrv;
-	}
-
-	public void setDsbGnrObsLrv(boolean dsbGnrObsLrv) {
-		this.dsbGnrObsLrv = dsbGnrObsLrv;
-	}
-
-	public boolean isVsbGnrObsLrv() {
-		return vsbGnrObsLrv;
-	}
-
-	public void setVsbGnrObsLrv(boolean vsbGnrObsLrv) {
-		this.vsbGnrObsLrv = vsbGnrObsLrv;
-	}
-
-	public boolean isRqrGnrObsLrv() {
-		return rqrGnrObsLrv;
-	}
-
-	public void setRqrGnrObsLrv(boolean rqrGnrObsLrv) {
-		this.rqrGnrObsLrv = rqrGnrObsLrv;
-	}
-
-	public boolean isDsbGnrObsAdl() {
-		return dsbGnrObsAdl;
-	}
-
-	public void setDsbGnrObsAdl(boolean dsbGnrObsAdl) {
-		this.dsbGnrObsAdl = dsbGnrObsAdl;
-	}
-
-	public boolean isVsbGnrObsAdl() {
-		return vsbGnrObsAdl;
-	}
-
-	public void setVsbGnrObsAdl(boolean vsbGnrObsAdl) {
-		this.vsbGnrObsAdl = vsbGnrObsAdl;
-	}
-
-	public boolean isRqrGnrObsAdl() {
-		return rqrGnrObsAdl;
-	}
-
-	public void setRqrGnrObsAdl(boolean rqrGnrObsAdl) {
-		this.rqrGnrObsAdl = rqrGnrObsAdl;
-	}
-
-	public boolean isDsbGnrDtlLrvNmb() {
-		return dsbGnrDtlLrvNmb;
-	}
-
-	public void setDsbGnrDtlLrvNmb(boolean dsbGnrDtlLrvNmb) {
-		this.dsbGnrDtlLrvNmb = dsbGnrDtlLrvNmb;
-	}
-
-	public boolean isVsbGnrDtlLrvNmb() {
-		return vsbGnrDtlLrvNmb;
-	}
-
-	public void setVsbGnrDtlLrvNmb(boolean vsbGnrDtlLrvNmb) {
-		this.vsbGnrDtlLrvNmb = vsbGnrDtlLrvNmb;
-	}
-
-	public boolean isRqrGnrDtlLrvNmb() {
-		return rqrGnrDtlLrvNmb;
-	}
-
-	public void setRqrGnrDtlLrvNmb(boolean rqrGnrDtlLrvNmb) {
-		this.rqrGnrDtlLrvNmb = rqrGnrDtlLrvNmb;
-	}
-
-	public boolean isDsbGnrDtlLrvStg() {
-		return dsbGnrDtlLrvStg;
-	}
-
-	public void setDsbGnrDtlLrvStg(boolean dsbGnrDtlLrvStg) {
-		this.dsbGnrDtlLrvStg = dsbGnrDtlLrvStg;
-	}
-
-	public boolean isVsbGnrDtlLrvStg() {
-		return vsbGnrDtlLrvStg;
-	}
-
-	public void setVsbGnrDtlLrvStg(boolean vsbGnrDtlLrvStg) {
-		this.vsbGnrDtlLrvStg = vsbGnrDtlLrvStg;
-	}
-
-	public boolean isRqrGnrDtlLrvStg() {
-		return rqrGnrDtlLrvStg;
-	}
-
-	public void setRqrGnrDtlLrvStg(boolean rqrGnrDtlLrvStg) {
-		this.rqrGnrDtlLrvStg = rqrGnrDtlLrvStg;
-	}
-
-	public boolean isDsbGnrDtlLrvSex() {
-		return dsbGnrDtlLrvSex;
-	}
-
-	public void setDsbGnrDtlLrvSex(boolean dsbGnrDtlLrvSex) {
-		this.dsbGnrDtlLrvSex = dsbGnrDtlLrvSex;
-	}
-
-	public boolean isVsbGnrDtlLrvSex() {
-		return vsbGnrDtlLrvSex;
-	}
-
-	public void setVsbGnrDtlLrvSex(boolean vsbGnrDtlLrvSex) {
-		this.vsbGnrDtlLrvSex = vsbGnrDtlLrvSex;
-	}
-
-	public boolean isRqrGnrDtlLrvSex() {
-		return rqrGnrDtlLrvSex;
-	}
-
-	public void setRqrGnrDtlLrvSex(boolean rqrGnrDtlLrvSex) {
-		this.rqrGnrDtlLrvSex = rqrGnrDtlLrvSex;
-	}
-
-	public boolean isDsbGnrDtlLrvSpc() {
-		return dsbGnrDtlLrvSpc;
-	}
-
-	public void setDsbGnrDtlLrvSpc(boolean dsbGnrDtlLrvSpc) {
-		this.dsbGnrDtlLrvSpc = dsbGnrDtlLrvSpc;
-	}
-
-	public boolean isVsbGnrDtlLrvSpc() {
-		return vsbGnrDtlLrvSpc;
-	}
-
-	public void setVsbGnrDtlLrvSpc(boolean vsbGnrDtlLrvSpc) {
-		this.vsbGnrDtlLrvSpc = vsbGnrDtlLrvSpc;
-	}
-
-	public boolean isRqrGnrDtlLrvSpc() {
-		return rqrGnrDtlLrvSpc;
-	}
-
-	public void setRqrGnrDtlLrvSpc(boolean rqrGnrDtlLrvSpc) {
-		this.rqrGnrDtlLrvSpc = rqrGnrDtlLrvSpc;
-	}
-
-	public boolean isDsbGnrDtlLrvNmbDied() {
-		return dsbGnrDtlLrvNmbDied;
-	}
-
-	public void setDsbGnrDtlLrvNmbDied(boolean dsbGnrDtlLrvNmbDied) {
-		this.dsbGnrDtlLrvNmbDied = dsbGnrDtlLrvNmbDied;
-	}
-
-	public boolean isVsbGnrDtlLrvNmbDied() {
-		return vsbGnrDtlLrvNmbDied;
-	}
-
-	public void setVsbGnrDtlLrvNmbDied(boolean vsbGnrDtlLrvNmbDied) {
-		this.vsbGnrDtlLrvNmbDied = vsbGnrDtlLrvNmbDied;
-	}
-
-	public boolean isRqrGnrDtlLrvNmbDied() {
-		return rqrGnrDtlLrvNmbDied;
-	}
-
-	public void setRqrGnrDtlLrvNmbDied(boolean rqrGnrDtlLrvNmbDied) {
-		this.rqrGnrDtlLrvNmbDied = rqrGnrDtlLrvNmbDied;
-	}
-
-	public boolean isDsbBtnLrvAdd() {
-		return dsbBtnLrvAdd;
-	}
-
-	public void setDsbBtnLrvAdd(boolean dsbBtnLrvAdd) {
-		this.dsbBtnLrvAdd = dsbBtnLrvAdd;
-	}
-
-	public boolean isVsbBtnLrvAdd() {
-		return vsbBtnLrvAdd;
-	}
-
-	public void setVsbBtnLrvAdd(boolean vsbBtnLrvAdd) {
-		this.vsbBtnLrvAdd = vsbBtnLrvAdd;
-	}
-
-	public boolean isDsbBtnLrvNew() {
-		return dsbBtnLrvNew;
-	}
-
-	public void setDsbBtnLrvNew(boolean dsbBtnLrvNew) {
-		this.dsbBtnLrvNew = dsbBtnLrvNew;
-	}
-
-	public boolean isVsbBtnLrvNew() {
-		return vsbBtnLrvNew;
-	}
-
-	public void setVsbBtnLrvNew(boolean vsbBtnLrvNew) {
-		this.vsbBtnLrvNew = vsbBtnLrvNew;
-	}
-
-	public boolean isDsbBtnLrvRst() {
-		return dsbBtnLrvRst;
-	}
-
-	public void setDsbBtnLrvRst(boolean dsbBtnLrvRst) {
-		this.dsbBtnLrvRst = dsbBtnLrvRst;
-	}
-
-	public boolean isVsbBtnLrvRst() {
-		return vsbBtnLrvRst;
-	}
-
-	public void setVsbBtnLrvRst(boolean vsbBtnLrvRst) {
-		this.vsbBtnLrvRst = vsbBtnLrvRst;
-	}
-
 	public boolean isDsbBtnAdlAdd() {
 		return dsbBtnAdlAdd;
 	}
@@ -2375,30 +2243,6 @@ public class SitCtlGnr {
 
 	public void setITchId(String iTchId) {
 		ITchId = iTchId;
-	}
-
-	public boolean isDsbGnrDtlLrvNmbLive() {
-		return dsbGnrDtlLrvNmbLive;
-	}
-
-	public void setDsbGnrDtlLrvNmbLive(boolean dsbGnrDtlLrvNmbLive) {
-		this.dsbGnrDtlLrvNmbLive = dsbGnrDtlLrvNmbLive;
-	}
-
-	public boolean isVsbGnrDtlLrvNmbLive() {
-		return vsbGnrDtlLrvNmbLive;
-	}
-
-	public void setVsbGnrDtlLrvNmbLive(boolean vsbGnrDtlLrvNmbLive) {
-		this.vsbGnrDtlLrvNmbLive = vsbGnrDtlLrvNmbLive;
-	}
-
-	public boolean isRqrGnrDtlLrvNmbLive() {
-		return rqrGnrDtlLrvNmbLive;
-	}
-
-	public void setRqrGnrDtlLrvNmbLive(boolean rqrGnrDtlLrvNmbLive) {
-		this.rqrGnrDtlLrvNmbLive = rqrGnrDtlLrvNmbLive;
 	}
 
 	public SitTblGnrDtl getGnrDtl() {
@@ -2599,30 +2443,6 @@ public class SitCtlGnr {
 
 	public void setGnrDtlAdl(SitTblGnrDtl gnrDtlAdl) {
 		this.gnrDtlAdl = gnrDtlAdl;
-	}
-
-	public boolean isDsbGnrNmbUsd() {
-		return dsbGnrNmbUsd;
-	}
-
-	public void setDsbGnrNmbUsd(boolean dsbGnrNmbUsd) {
-		this.dsbGnrNmbUsd = dsbGnrNmbUsd;
-	}
-
-	public boolean isVsbGnrNmbUsd() {
-		return vsbGnrNmbUsd;
-	}
-
-	public void setVsbGnrNmbUsd(boolean vsbGnrNmbUsd) {
-		this.vsbGnrNmbUsd = vsbGnrNmbUsd;
-	}
-
-	public boolean isRqrGnrNmbUsd() {
-		return rqrGnrNmbUsd;
-	}
-
-	public void setRqrGnrNmbUsd(boolean rqrGnrNmbUsd) {
-		this.rqrGnrNmbUsd = rqrGnrNmbUsd;
 	}
 
 	public SitTblGnrDtl getGnrDtlLrv() {
@@ -2879,6 +2699,686 @@ public class SitCtlGnr {
 
 	public void setRqrLrsCtn(boolean rqrLrsCtn) {
 		this.rqrLrsCtn = rqrLrsCtn;
+	}
+
+	public boolean isDsbPrcDte() {
+		return dsbPrcDte;
+	}
+
+	public void setDsbPrcDte(boolean dsbPrcDte) {
+		this.dsbPrcDte = dsbPrcDte;
+	}
+
+	public boolean isVsbPrcDte() {
+		return vsbPrcDte;
+	}
+
+	public void setVsbPrcDte(boolean vsbPrcDte) {
+		this.vsbPrcDte = vsbPrcDte;
+	}
+
+	public boolean isRqrPrcDte() {
+		return rqrPrcDte;
+	}
+
+	public void setRqrPrcDte(boolean rqrPrcDte) {
+		this.rqrPrcDte = rqrPrcDte;
+	}
+
+	public boolean isDsbPrcDteCls() {
+		return dsbPrcDteCls;
+	}
+
+	public void setDsbPrcDteCls(boolean dsbPrcDteCls) {
+		this.dsbPrcDteCls = dsbPrcDteCls;
+	}
+
+	public boolean isVsbPrcDteCls() {
+		return vsbPrcDteCls;
+	}
+
+	public void setVsbPrcDteCls(boolean vsbPrcDteCls) {
+		this.vsbPrcDteCls = vsbPrcDteCls;
+	}
+
+	public boolean isRqrPrcDteCls() {
+		return rqrPrcDteCls;
+	}
+
+	public void setRqrPrcDteCls(boolean rqrPrcDteCls) {
+		this.rqrPrcDteCls = rqrPrcDteCls;
+	}
+
+	public boolean isDsbPrcSts() {
+		return dsbPrcSts;
+	}
+
+	public void setDsbPrcSts(boolean dsbPrcSts) {
+		this.dsbPrcSts = dsbPrcSts;
+	}
+
+	public boolean isVsbPrcSts() {
+		return vsbPrcSts;
+	}
+
+	public void setVsbPrcSts(boolean vsbPrcSts) {
+		this.vsbPrcSts = vsbPrcSts;
+	}
+
+	public boolean isRqrPrcSts() {
+		return rqrPrcSts;
+	}
+
+	public void setRqrPrcSts(boolean rqrPrcSts) {
+		this.rqrPrcSts = rqrPrcSts;
+	}
+
+	public boolean isDsbPrcCmm() {
+		return dsbPrcCmm;
+	}
+
+	public void setDsbPrcCmm(boolean dsbPrcCmm) {
+		this.dsbPrcCmm = dsbPrcCmm;
+	}
+
+	public boolean isVsbPrcCmm() {
+		return vsbPrcCmm;
+	}
+
+	public void setVsbPrcCmm(boolean vsbPrcCmm) {
+		this.vsbPrcCmm = vsbPrcCmm;
+	}
+
+	public boolean isRqrPrcCmm() {
+		return rqrPrcCmm;
+	}
+
+	public void setRqrPrcCmm(boolean rqrPrcCmm) {
+		this.rqrPrcCmm = rqrPrcCmm;
+	}
+
+	public boolean isDsbGnrDtlLrvPrc() {
+		return dsbGnrDtlLrvPrc;
+	}
+
+	public void setDsbGnrDtlLrvPrc(boolean dsbGnrDtlLrvPrc) {
+		this.dsbGnrDtlLrvPrc = dsbGnrDtlLrvPrc;
+	}
+
+	public boolean isVsbGnrDtlLrvPrc() {
+		return vsbGnrDtlLrvPrc;
+	}
+
+	public void setVsbGnrDtlLrvPrc(boolean vsbGnrDtlLrvPrc) {
+		this.vsbGnrDtlLrvPrc = vsbGnrDtlLrvPrc;
+	}
+
+	public boolean isRqrGnrDtlLrvPrc() {
+		return rqrGnrDtlLrvPrc;
+	}
+
+	public void setRqrGnrDtlLrvPrc(boolean rqrGnrDtlLrvPrc) {
+		this.rqrGnrDtlLrvPrc = rqrGnrDtlLrvPrc;
+	}
+
+	public boolean isDsbGnrDtlLrvPrcDte() {
+		return dsbGnrDtlLrvPrcDte;
+	}
+
+	public void setDsbGnrDtlLrvPrcDte(boolean dsbGnrDtlLrvPrcDte) {
+		this.dsbGnrDtlLrvPrcDte = dsbGnrDtlLrvPrcDte;
+	}
+
+	public boolean isVsbGnrDtlLrvPrcDte() {
+		return vsbGnrDtlLrvPrcDte;
+	}
+
+	public void setVsbGnrDtlLrvPrcDte(boolean vsbGnrDtlLrvPrcDte) {
+		this.vsbGnrDtlLrvPrcDte = vsbGnrDtlLrvPrcDte;
+	}
+
+	public boolean isRqrGnrDtlLrvPrcDte() {
+		return rqrGnrDtlLrvPrcDte;
+	}
+
+	public void setRqrGnrDtlLrvPrcDte(boolean rqrGnrDtlLrvPrcDte) {
+		this.rqrGnrDtlLrvPrcDte = rqrGnrDtlLrvPrcDte;
+	}
+
+	public boolean isDsbEgsNmbCpl() {
+		return dsbEgsNmbCpl;
+	}
+
+	public void setDsbEgsNmbCpl(boolean dsbEgsNmbCpl) {
+		this.dsbEgsNmbCpl = dsbEgsNmbCpl;
+	}
+
+	public boolean isVsbEgsNmbCpl() {
+		return vsbEgsNmbCpl;
+	}
+
+	public void setVsbEgsNmbCpl(boolean vsbEgsNmbCpl) {
+		this.vsbEgsNmbCpl = vsbEgsNmbCpl;
+	}
+
+	public boolean isRqrEgsNmbCpl() {
+		return rqrEgsNmbCpl;
+	}
+
+	public void setRqrEgsNmbCpl(boolean rqrEgsNmbCpl) {
+		this.rqrEgsNmbCpl = rqrEgsNmbCpl;
+	}
+
+	public boolean isDsbEgsNmbBrk() {
+		return dsbEgsNmbBrk;
+	}
+
+	public void setDsbEgsNmbBrk(boolean dsbEgsNmbBrk) {
+		this.dsbEgsNmbBrk = dsbEgsNmbBrk;
+	}
+
+	public boolean isVsbEgsNmbBrk() {
+		return vsbEgsNmbBrk;
+	}
+
+	public void setVsbEgsNmbBrk(boolean vsbEgsNmbBrk) {
+		this.vsbEgsNmbBrk = vsbEgsNmbBrk;
+	}
+
+	public boolean isRqrEgsNmbBrk() {
+		return rqrEgsNmbBrk;
+	}
+
+	public void setRqrEgsNmbBrk(boolean rqrEgsNmbBrk) {
+		this.rqrEgsNmbBrk = rqrEgsNmbBrk;
+	}
+
+	public boolean isDsbEgsNmbVbl() {
+		return dsbEgsNmbVbl;
+	}
+
+	public void setDsbEgsNmbVbl(boolean dsbEgsNmbVbl) {
+		this.dsbEgsNmbVbl = dsbEgsNmbVbl;
+	}
+
+	public boolean isVsbEgsNmbVbl() {
+		return vsbEgsNmbVbl;
+	}
+
+	public void setVsbEgsNmbVbl(boolean vsbEgsNmbVbl) {
+		this.vsbEgsNmbVbl = vsbEgsNmbVbl;
+	}
+
+	public boolean isRqrEgsNmbVbl() {
+		return rqrEgsNmbVbl;
+	}
+
+	public void setRqrEgsNmbVbl(boolean rqrEgsNmbVbl) {
+		this.rqrEgsNmbVbl = rqrEgsNmbVbl;
+	}
+
+	public boolean isDsbEgsNmbVblNo() {
+		return dsbEgsNmbVblNo;
+	}
+
+	public void setDsbEgsNmbVblNo(boolean dsbEgsNmbVblNo) {
+		this.dsbEgsNmbVblNo = dsbEgsNmbVblNo;
+	}
+
+	public boolean isVsbEgsNmbVblNo() {
+		return vsbEgsNmbVblNo;
+	}
+
+	public void setVsbEgsNmbVblNo(boolean vsbEgsNmbVblNo) {
+		this.vsbEgsNmbVblNo = vsbEgsNmbVblNo;
+	}
+
+	public boolean isRqrEgsNmbVblNo() {
+		return rqrEgsNmbVblNo;
+	}
+
+	public void setRqrEgsNmbVblNo(boolean rqrEgsNmbVblNo) {
+		this.rqrEgsNmbVblNo = rqrEgsNmbVblNo;
+	}
+
+	public boolean isDsbEgsCmm() {
+		return dsbEgsCmm;
+	}
+
+	public void setDsbEgsCmm(boolean dsbEgsCmm) {
+		this.dsbEgsCmm = dsbEgsCmm;
+	}
+
+	public boolean isVsbEgsCmm() {
+		return vsbEgsCmm;
+	}
+
+	public void setVsbEgsCmm(boolean vsbEgsCmm) {
+		this.vsbEgsCmm = vsbEgsCmm;
+	}
+
+	public boolean isRqrEgsCmm() {
+		return rqrEgsCmm;
+	}
+
+	public void setRqrEgsCmm(boolean rqrEgsCmm) {
+		this.rqrEgsCmm = rqrEgsCmm;
+	}
+
+	public boolean isDsbLrvCmm() {
+		return dsbLrvCmm;
+	}
+
+	public void setDsbLrvCmm(boolean dsbLrvCmm) {
+		this.dsbLrvCmm = dsbLrvCmm;
+	}
+
+	public boolean isVsbLrvCmm() {
+		return vsbLrvCmm;
+	}
+
+	public void setVsbLrvCmm(boolean vsbLrvCmm) {
+		this.vsbLrvCmm = vsbLrvCmm;
+	}
+
+	public boolean isRqrLrvCmm() {
+		return rqrLrvCmm;
+	}
+
+	public void setRqrLrvCmm(boolean rqrLrvCmm) {
+		this.rqrLrvCmm = rqrLrvCmm;
+	}
+
+	public boolean isDsbAdlCmm() {
+		return dsbAdlCmm;
+	}
+
+	public void setDsbAdlCmm(boolean dsbAdlCmm) {
+		this.dsbAdlCmm = dsbAdlCmm;
+	}
+
+	public boolean isVsbAdlCmm() {
+		return vsbAdlCmm;
+	}
+
+	public void setVsbAdlCmm(boolean vsbAdlCmm) {
+		this.vsbAdlCmm = vsbAdlCmm;
+	}
+
+	public boolean isRqrAdlCmm() {
+		return rqrAdlCmm;
+	}
+
+	public void setRqrAdlCmm(boolean rqrAdlCmm) {
+		this.rqrAdlCmm = rqrAdlCmm;
+	}
+
+	public boolean isDsbLrvNmbLive() {
+		return dsbLrvNmbLive;
+	}
+
+	public void setDsbLrvNmbLive(boolean dsbLrvNmbLive) {
+		this.dsbLrvNmbLive = dsbLrvNmbLive;
+	}
+
+	public boolean isVsbLrvNmbLive() {
+		return vsbLrvNmbLive;
+	}
+
+	public void setVsbLrvNmbLive(boolean vsbLrvNmbLive) {
+		this.vsbLrvNmbLive = vsbLrvNmbLive;
+	}
+
+	public boolean isRqrLrvNmbLive() {
+		return rqrLrvNmbLive;
+	}
+
+	public void setRqrLrvNmbLive(boolean rqrLrvNmbLive) {
+		this.rqrLrvNmbLive = rqrLrvNmbLive;
+	}
+
+	public boolean isDsbLrvNmbDied() {
+		return dsbLrvNmbDied;
+	}
+
+	public void setDsbLrvNmbDied(boolean dsbLrvNmbDied) {
+		this.dsbLrvNmbDied = dsbLrvNmbDied;
+	}
+
+	public boolean isVsbLrvNmbDied() {
+		return vsbLrvNmbDied;
+	}
+
+	public void setVsbLrvNmbDied(boolean vsbLrvNmbDied) {
+		this.vsbLrvNmbDied = vsbLrvNmbDied;
+	}
+
+	public boolean isRqrLrvNmbDied() {
+		return rqrLrvNmbDied;
+	}
+
+	public void setRqrLrvNmbDied(boolean rqrLrvNmbDied) {
+		this.rqrLrvNmbDied = rqrLrvNmbDied;
+	}
+
+	public boolean isDsbLrvBtnAdd() {
+		return dsbLrvBtnAdd;
+	}
+
+	public void setDsbLrvBtnAdd(boolean dsbLrvBtnAdd) {
+		this.dsbLrvBtnAdd = dsbLrvBtnAdd;
+	}
+
+	public boolean isVsbLrvBtnAdd() {
+		return vsbLrvBtnAdd;
+	}
+
+	public void setVsbLrvBtnAdd(boolean vsbLrvBtnAdd) {
+		this.vsbLrvBtnAdd = vsbLrvBtnAdd;
+	}
+
+	public boolean isDsbLrvBtnNew() {
+		return dsbLrvBtnNew;
+	}
+
+	public void setDsbLrvBtnNew(boolean dsbLrvBtnNew) {
+		this.dsbLrvBtnNew = dsbLrvBtnNew;
+	}
+
+	public boolean isVsbLrvBtnNew() {
+		return vsbLrvBtnNew;
+	}
+
+	public void setVsbLrvBtnNew(boolean vsbLrvBtnNew) {
+		this.vsbLrvBtnNew = vsbLrvBtnNew;
+	}
+
+	public boolean isDsbLrvBtnRst() {
+		return dsbLrvBtnRst;
+	}
+
+	public void setDsbLrvBtnRst(boolean dsbLrvBtnRst) {
+		this.dsbLrvBtnRst = dsbLrvBtnRst;
+	}
+
+	public boolean isVsbLrvBtnRst() {
+		return vsbLrvBtnRst;
+	}
+
+	public void setVsbLrvBtnRst(boolean vsbLrvBtnRst) {
+		this.vsbLrvBtnRst = vsbLrvBtnRst;
+	}
+
+	public boolean isDsbAdlPrc() {
+		return dsbAdlPrc;
+	}
+
+	public void setDsbAdlPrc(boolean dsbAdlPrc) {
+		this.dsbAdlPrc = dsbAdlPrc;
+	}
+
+	public boolean isVsbAdlPrc() {
+		return vsbAdlPrc;
+	}
+
+	public void setVsbAdlPrc(boolean vsbAdlPrc) {
+		this.vsbAdlPrc = vsbAdlPrc;
+	}
+
+	public boolean isRqrAdlPrc() {
+		return rqrAdlPrc;
+	}
+
+	public void setRqrAdlPrc(boolean rqrAdlPrc) {
+		this.rqrAdlPrc = rqrAdlPrc;
+	}
+
+	public boolean isDsbAdlPrcDte() {
+		return dsbAdlPrcDte;
+	}
+
+	public void setDsbAdlPrcDte(boolean dsbAdlPrcDte) {
+		this.dsbAdlPrcDte = dsbAdlPrcDte;
+	}
+
+	public boolean isVsbAdlPrcDte() {
+		return vsbAdlPrcDte;
+	}
+
+	public void setVsbAdlPrcDte(boolean vsbAdlPrcDte) {
+		this.vsbAdlPrcDte = vsbAdlPrcDte;
+	}
+
+	public boolean isRqrAdlPrcDte() {
+		return rqrAdlPrcDte;
+	}
+
+	public void setRqrAdlPrcDte(boolean rqrAdlPrcDte) {
+		this.rqrAdlPrcDte = rqrAdlPrcDte;
+	}
+
+	public boolean isDsbBtnRstPrfAgn() {
+		return dsbBtnRstPrfAgn;
+	}
+
+	public void setDsbBtnRstPrfAgn(boolean dsbBtnRstPrfAgn) {
+		this.dsbBtnRstPrfAgn = dsbBtnRstPrfAgn;
+	}
+
+	public boolean isVsbBtnRstPrfAgn() {
+		return vsbBtnRstPrfAgn;
+	}
+
+	public void setVsbBtnRstPrfAgn(boolean vsbBtnRstPrfAgn) {
+		this.vsbBtnRstPrfAgn = vsbBtnRstPrfAgn;
+	}
+
+	public boolean isDsbBtnSrc() {
+		return dsbBtnSrc;
+	}
+
+	public void setDsbBtnSrc(boolean dsbBtnSrc) {
+		this.dsbBtnSrc = dsbBtnSrc;
+	}
+
+	public boolean isVsbBtnSrc() {
+		return vsbBtnSrc;
+	}
+
+	public void setVsbBtnSrc(boolean vsbBtnSrc) {
+		this.vsbBtnSrc = vsbBtnSrc;
+	}
+
+	public boolean isDsbSrcSte() {
+		return dsbSrcSte;
+	}
+
+	public void setDsbSrcSte(boolean dsbSrcSte) {
+		this.dsbSrcSte = dsbSrcSte;
+	}
+
+	public boolean isVsbSrcSte() {
+		return vsbSrcSte;
+	}
+
+	public void setVsbSrcSte(boolean vsbSrcSte) {
+		this.vsbSrcSte = vsbSrcSte;
+	}
+
+	public boolean isRqrSrcSte() {
+		return rqrSrcSte;
+	}
+
+	public void setRqrSrcSte(boolean rqrSrcSte) {
+		this.rqrSrcSte = rqrSrcSte;
+	}
+
+	public int getISrcSteId() {
+		return ISrcSteId;
+	}
+
+	public void setISrcSteId(int iSrcSteId) {
+		ISrcSteId = iSrcSteId;
+	}
+
+	public boolean isDsbSrcPrc() {
+		return dsbSrcPrc;
+	}
+
+	public void setDsbSrcPrc(boolean dsbSrcPrc) {
+		this.dsbSrcPrc = dsbSrcPrc;
+	}
+
+	public boolean isVsbSrcPrc() {
+		return vsbSrcPrc;
+	}
+
+	public void setVsbSrcPrc(boolean vsbSrcPrc) {
+		this.vsbSrcPrc = vsbSrcPrc;
+	}
+
+	public boolean isRqrSrcPrc() {
+		return rqrSrcPrc;
+	}
+
+	public void setRqrSrcPrc(boolean rqrSrcPrc) {
+		this.rqrSrcPrc = rqrSrcPrc;
+	}
+
+	public int getISrcPrcId() {
+		return ISrcPrcId;
+	}
+
+	public void setISrcPrcId(int iSrcPrcId) {
+		ISrcPrcId = iSrcPrcId;
+	}
+
+	public boolean isDsbSrcPrm() {
+		return dsbSrcPrm;
+	}
+
+	public void setDsbSrcPrm(boolean dsbSrcPrm) {
+		this.dsbSrcPrm = dsbSrcPrm;
+	}
+
+	public boolean isVsbSrcPrm() {
+		return vsbSrcPrm;
+	}
+
+	public void setVsbSrcPrm(boolean vsbSrcPrm) {
+		this.vsbSrcPrm = vsbSrcPrm;
+	}
+
+	public boolean isRqrSrcPrm() {
+		return rqrSrcPrm;
+	}
+
+	public void setRqrSrcPrm(boolean rqrSrcPrm) {
+		this.rqrSrcPrm = rqrSrcPrm;
+	}
+
+	public int getISrcPrmId() {
+		return ISrcPrmId;
+	}
+
+	public void setISrcPrmId(int iSrcPrmId) {
+		ISrcPrmId = iSrcPrmId;
+	}
+
+	public Date getDSrcDteStr() {
+		return DSrcDteStr;
+	}
+
+	public void setDSrcDteStr(Date dSrcDteStr) {
+		DSrcDteStr = dSrcDteStr;
+	}
+
+	public Date getDSrcDteEnd() {
+		return DSrcDteEnd;
+	}
+
+	public void setDSrcDteEnd(Date dSrcDteEnd) {
+		DSrcDteEnd = dSrcDteEnd;
+	}
+
+	public boolean isDsbSrcDteStr() {
+		return dsbSrcDteStr;
+	}
+
+	public void setDsbSrcDteStr(boolean dsbSrcDteStr) {
+		this.dsbSrcDteStr = dsbSrcDteStr;
+	}
+
+	public boolean isVsbSrcDteStr() {
+		return vsbSrcDteStr;
+	}
+
+	public void setVsbSrcDteStr(boolean vsbSrcDteStr) {
+		this.vsbSrcDteStr = vsbSrcDteStr;
+	}
+
+	public boolean isRqrSrcDteStr() {
+		return rqrSrcDteStr;
+	}
+
+	public void setRqrSrcDteStr(boolean rqrSrcDteStr) {
+		this.rqrSrcDteStr = rqrSrcDteStr;
+	}
+
+	public boolean isDsbSrcDteEnd() {
+		return dsbSrcDteEnd;
+	}
+
+	public void setDsbSrcDteEnd(boolean dsbSrcDteEnd) {
+		this.dsbSrcDteEnd = dsbSrcDteEnd;
+	}
+
+	public boolean isVsbSrcDteEnd() {
+		return vsbSrcDteEnd;
+	}
+
+	public void setVsbSrcDteEnd(boolean vsbSrcDteEnd) {
+		this.vsbSrcDteEnd = vsbSrcDteEnd;
+	}
+
+	public boolean isRqrSrcDteEnd() {
+		return rqrSrcDteEnd;
+	}
+
+	public void setRqrSrcDteEnd(boolean rqrSrcDteEnd) {
+		this.rqrSrcDteEnd = rqrSrcDteEnd;
+	}
+
+	public boolean isDsbBtnSrcPrm() {
+		return dsbBtnSrcPrm;
+	}
+
+	public void setDsbBtnSrcPrm(boolean dsbBtnSrcPrm) {
+		this.dsbBtnSrcPrm = dsbBtnSrcPrm;
+	}
+
+	public boolean isVsbBtnSrcPrm() {
+		return vsbBtnSrcPrm;
+	}
+
+	public void setVsbBtnSrcPrm(boolean vsbBtnSrcPrm) {
+		this.vsbBtnSrcPrm = vsbBtnSrcPrm;
+	}
+
+	public boolean isDsbBtnDwn() {
+		return dsbBtnDwn;
+	}
+
+	public void setDsbBtnDwn(boolean dsbBtnDwn) {
+		this.dsbBtnDwn = dsbBtnDwn;
+	}
+
+	public boolean isVsbBtnDwn() {
+		return vsbBtnDwn;
+	}
+
+	public void setVsbBtnDwn(boolean vsbBtnDwn) {
+		this.vsbBtnDwn = vsbBtnDwn;
 	}
 
 }

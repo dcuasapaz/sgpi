@@ -24,8 +24,8 @@ public class InsSrvEnt extends SrvDb<InsTblEnt> {
 	public boolean save(InsTblEnt ent, int ILvlId, int ITpeId, int ICnrId) {
 		try {
 			InsTblEnt aux = new InsTblEnt();
-			aux.setSEntTmeRgs(dfl.currentTime());
-			aux.setDEntDteRgs(dfl.dCurrentDate());
+			aux.setSEntTmeRgs(dfl.S_CURRENT_TIME());
+			aux.setDEntDteRgs(dfl.D_CURRENT_DATE());
 			aux.setSEntNme(ent.getSEntNme());
 			aux.setSEntCde(ent.getSEntCde());
 			aux.setSEntAcr(ent.getSEntAcr());

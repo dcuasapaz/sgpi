@@ -25,8 +25,8 @@ public class InsSrvApn extends SrvDb<InsTblApn> {
 
 	public boolean save(InsTblApn apn, InsTblUnt unt) {
 		try {
-			apn.setSApnTmeRgs(dfl.currentTime());
-			apn.setDApnDteRgs(dfl.dCurrentDate());
+			apn.setSApnTmeRgs(dfl.S_CURRENT_TIME());
+			apn.setDApnDteRgs(dfl.D_CURRENT_DATE());
 			apn.setInsTblUnt(unt);
 			this.insert(apn);
 			return true;

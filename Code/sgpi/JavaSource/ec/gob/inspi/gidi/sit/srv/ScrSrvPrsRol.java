@@ -25,8 +25,8 @@ public class ScrSrvPrsRol extends SrvDb<ScrTblPrsRol> {
 	public boolean save(DtaTblPr prs, int IPrfId, int ISttCde, boolean vlr, int IPrjId) {
 		try {
 			ScrTblPrsRol prl = new ScrTblPrsRol();
-			prl.setSPrsRolTmeRgs(dfl.currentTime());
-			prl.setDPrsRolDteRgs(dfl.dCurrentDate());
+			prl.setSPrsRolTmeRgs(dfl.S_CURRENT_TIME());
+			prl.setDPrsRolDteRgs(dfl.D_CURRENT_DATE());
 			prl.setIRolId(IPrfId);
 			prl.setDtaTblPr(prs);
 			prl.setISttId(ISttCde);

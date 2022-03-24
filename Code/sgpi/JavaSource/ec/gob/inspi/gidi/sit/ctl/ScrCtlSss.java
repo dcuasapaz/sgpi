@@ -57,7 +57,7 @@ public class ScrCtlSss implements ScrItfSss {
 	@Override
 	public void clsSss() {
 		try {
-			if (sPrl.update(prl, cde.sctSttNoSss()) && sSss.update(sss, msg.txtEndSss(dfl.currentTime()))) {
+			if (sPrl.update(prl, cde.sctSttNoSss()) && sSss.update(sss, msg.txtEndSss(dfl.S_CURRENT_TIME()))) {
 				httpServletRequest.getSession().removeAttribute("sss");
 				httpServletRequest.getSession().removeAttribute("prl");
 				FacesContext contex = FacesContext.getCurrentInstance();

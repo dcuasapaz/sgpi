@@ -19,8 +19,8 @@ public class DtaSrvPrs extends SrvDb<DtaTblPr> {
 
 	public boolean save(DtaTblPr prs, int IIdnId, int IGrtId, DpaTblCnr cnr, int IGndId) {
 		try {
-			prs.setSPrsTmeRgs(dfl.currentTime());
-			prs.setDPrsDteRgs(dfl.dCurrentDate());
+			prs.setSPrsTmeRgs(dfl.S_CURRENT_TIME());
+			prs.setDPrsDteRgs(dfl.D_CURRENT_DATE());
 			prs.setDpaTblCnr(cnr);
 			prs.setIIdnId(IIdnId);
 			prs.setIGrtId(IGrtId);

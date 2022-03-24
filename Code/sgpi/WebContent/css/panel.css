@@ -3,7 +3,7 @@
 }
 
 .pnl-border {
-	border-right: 1px #34373c solid;
+	border-right: 1px #888787 solid;
 }
 
 .pnl-project {
@@ -17,5 +17,103 @@
 	width: 80%;
 	margin: 0 auto;
 	border: 2px #dadada solid;
-	border-radius: 3px;
+	border-radius: 10px;
+}
+
+.pnl-process {
+	width: 80%;
+	margin: 0 auto;
+	border: 2px #dadada solid;
+	border-radius: 10px;
+}
+
+.pnl-trap {
+	width: 80%;
+	margin: 0 auto;
+	border: 2px #dadada solid;
+	border-radius: 10px;
+}
+
+.pnl-eggs {
+	width: 80%;
+	margin: 0 auto;
+	border: 2px #dadada solid;
+	border-radius: 10px;
+}
+
+.pnl-larvae {
+	width: 60%;
+	margin: 0 auto;
+	border: 2px #dadada solid;
+	border-radius: 10px;
+}
+
+.pnl-adults {
+	width: 60%;
+	margin: 0 auto;
+	border: 2px #dadada solid;
+	border-radius: 10px;
+}
+
+.pnl-search {
+	width: 80%;
+	margin: 0 auto;
+	border: 2px #dadada solid;
+	border-radius: 10px;
+}
+
+.pnl-title {
+	border-radius: 10px;
+	transform: translateX(-50%);
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+	width: 100px;
+}
+
+.pnl-title-view {
+	border-radius: 10px;
+	transform: translateX(-50%);
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+	width: 100px;
+	position: absolute;
+	margin-top: -25px;
+	border: solid 1px #eaeaea;
+}
+
+.pnl-cmm {
+	background: #fff;
+	height: 40px;
+	width: 100%;
+	text-align: left;
+	border-radius: 5px;
+	border: solid 1px #d5d5d5;
+	padding: 5px;
+	font-size: 11px;
+}
+
+.pnl-mnu-lne {
+	width: 100%;
+	height: 4px;
+	background: #6d8690;
+	position: relative;
+	top: -4px;
+	border-radius: 0px;
+}
+
+.pnl-src-prm {
+	width: 55%;
+	margin: 0 auto;
+	background: aquamarine;
+	padding: 5px;
+	border-radius: 5px;
+	border: solid 1px #445646;
+}
+
+.pnl-div {
+	width: 100%;
+	height: 2px;
+	background: #618590;
 }

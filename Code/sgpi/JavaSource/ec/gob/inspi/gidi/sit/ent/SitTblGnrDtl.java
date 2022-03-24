@@ -4,62 +4,67 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 /**
  * The persistent class for the sit_tbl_gnr_dtl database table.
  * 
  */
 @Entity
-@Table(name="sit_tbl_gnr_dtl")
-@NamedQuery(name="SitTblGnrDtl.findAll", query="SELECT s FROM SitTblGnrDtl s")
+@Table(name = "sit_tbl_gnr_dtl")
+@NamedQuery(name = "SitTblGnrDtl.findAll", query = "SELECT s FROM SitTblGnrDtl s")
 public class SitTblGnrDtl implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="i_gnr_dtl_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "i_gnr_dtl_id")
 	private Integer iGnrDtlId;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="d_gnr_dtl_dte_rgs")
+	@Column(name = "d_gnr_dtl_dte_rgs")
 	private Date dGnrDtlDteRgs;
-	
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="d_gnr_dtl_dte_prc")
+	@Column(name = "d_gnr_dtl_dte_prc")
 	private Date DGnrDtlDtePrc;
 
-	@Column(name="i_gnr_dtl_nmb")
+	@Column(name = "i_gnr_dtl_nmb")
 	private Integer iGnrDtlNmb;
-	
-	@Column(name="i_gnr_dtl_nmb_dd")
+
+	@Column(name = "i_gnr_dtl_nmb_dd")
 	private Integer iGnrDtlNmbDd;
 
+	@Column(name = "b_gnr_dtl_stt")
+	private Boolean BGnrDtlStt;
 
-	@Column(name="i_gns_id")
+	@Column(name = "i_gns_id")
 	private Integer iGnsId;
 
-	@Column(name="i_sex_id")
+	@Column(name = "i_sex_id")
 	private Integer iSexId;
 
-	@Column(name="i_stg_id")
+	@Column(name = "i_stg_id")
 	private Integer iStgId;
 
-	@Column(name="i_tpe_dtl")
+	@Column(name = "i_tpe_dtl")
 	private Integer iTpeDtl;
-	
-	@Column(name="i_ctn_id")
+
+	@Column(name = "i_ctn_id")
 	private Integer ICtnId;
-	
-	@Column(name="i_prc_id")
+
+	@Column(name = "i_prc_id")
 	private Integer IPrcId;
-	
-	@Column(name="s_gnr_dtl_tme_rgs")
+
+	@Column(name = "s_gnr_dtl_tme_rgs")
 	private String sGnrDtlTmeRgs;
 
-	//bi-directional many-to-one association to SitTblGnr
+	// bi-directional many-to-one association to SitTblGnr
 	@ManyToOne
-	@JoinColumn(name="i_gnr_id")
+	@JoinColumn(name = "i_gnr_id")
 	private SitTblGnr sitTblGnr;
+
+	@ManyToOne
+	@JoinColumn(name = "i_gnr_dtl_rgs_prs_rol_id")
+	private ScrTblPrsRol scrTblPrsRol;
 
 	public SitTblGnrDtl() {
 	}
@@ -166,6 +171,22 @@ public class SitTblGnrDtl implements Serializable {
 
 	public void setiGnrDtlNmbDd(Integer iGnrDtlNmbDd) {
 		this.iGnrDtlNmbDd = iGnrDtlNmbDd;
+	}
+
+	public Boolean getBGnrDtlStt() {
+		return BGnrDtlStt;
+	}
+
+	public void setBGnrDtlStt(Boolean bGnrDtlStt) {
+		BGnrDtlStt = bGnrDtlStt;
+	}
+
+	public ScrTblPrsRol getScrTblPrsRol() {
+		return scrTblPrsRol;
+	}
+
+	public void setScrTblPrsRol(ScrTblPrsRol scrTblPrsRol) {
+		this.scrTblPrsRol = scrTblPrsRol;
 	}
 
 }

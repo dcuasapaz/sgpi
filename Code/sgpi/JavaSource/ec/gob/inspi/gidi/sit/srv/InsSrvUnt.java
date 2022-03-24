@@ -25,8 +25,8 @@ public class InsSrvUnt extends SrvDb<InsTblUnt> {
 
 	public void save(InsTblEnt ent, int ILvlId, int IUntCde, InsTblUnt unt) {
 		try {
-			unt.setDUntDteRgs(dfl.dCurrentDate());
-			unt.setSUntTmeRgs(dfl.currentTime());
+			unt.setDUntDteRgs(dfl.D_CURRENT_DATE());
+			unt.setSUntTmeRgs(dfl.S_CURRENT_TIME());
 			unt.setSUntAcr(unt.getSUntAcr().toUpperCase());
 			unt.setInsTblEnt(ent);
 			unt.setILvlId(ILvlId);
