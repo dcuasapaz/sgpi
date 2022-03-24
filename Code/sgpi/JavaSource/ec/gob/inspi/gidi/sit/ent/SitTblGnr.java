@@ -20,6 +20,9 @@ public class SitTblGnr implements Serializable {
 	@Column(name = "i_gnr_id")
 	private Integer iGnrId;
 
+	@Column(name = "i_prc_sts_id")
+	private Integer iPrcStsId;
+
 	@Column(name = "b_gnr_adl")
 	private Boolean bGnrAdl;
 
@@ -53,6 +56,10 @@ public class SitTblGnr implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "d_gnr_rgs_dte")
 	private Date dGnrRgsDte;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "d_gnr_dte_prc_cls")
+	private Date dGnrDtePrcCls;
 
 	@Column(name = "i_gnr_nmb_egs_brk")
 	private Integer iGnrNmbEgsBrk;
@@ -353,6 +360,22 @@ public class SitTblGnr implements Serializable {
 
 	public void setdGnrRgsDte(Date dGnrRgsDte) {
 		this.dGnrRgsDte = dGnrRgsDte;
+	}
+
+	public Date getdGnrDtePrcCls() {
+		return dGnrDtePrcCls;
+	}
+
+	public void setdGnrDtePrcCls(Date dGnrDtePrcCls) {
+		this.dGnrDtePrcCls = dGnrDtePrcCls;
+	}
+
+	public Integer getiPrcStsId() {
+		return iPrcStsId;
+	}
+
+	public void setiPrcStsId(Integer iPrcStsId) {
+		this.iPrcStsId = iPrcStsId;
 	}
 
 }

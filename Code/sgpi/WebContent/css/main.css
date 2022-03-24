@@ -42,6 +42,7 @@ html {
 .sit-tbl {
 	width: 100%;
 	font-size: 10px;
+	text-align: left;
 }
 
 .main-100 {
@@ -52,6 +53,12 @@ html {
 
 .main-90 {
 	width: 90%;
+	margin: 0 auto;
+	border-spacing: 0px;
+}
+
+.main-85 {
+	width: 85%;
 	margin: 0 auto;
 	border-spacing: 0px;
 }
@@ -82,6 +89,12 @@ html {
 
 .main-40 {
 	width: 40%;
+	margin: 0 auto;
+	border-spacing: 0px;
+}
+
+.main-35 {
+	width: 35%;
 	margin: 0 auto;
 	border-spacing: 0px;
 }
@@ -248,4 +261,9 @@ html {
 .txt-gnr {
 	font-style: italic;
 	font-size: 11px;
+}
+
+.txt-area-dsp {
+	font-size: 9px;
+	text-align: right;
 }

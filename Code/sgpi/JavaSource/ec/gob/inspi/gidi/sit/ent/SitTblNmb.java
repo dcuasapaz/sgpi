@@ -30,6 +30,12 @@ public class SitTblNmb implements Serializable {
 	@Column(name = "s_nmb_trap")
 	private String sNmbTrap;
 
+	@Column(name = "s_nmb_blc")
+	private String sNmbBlc;
+
+	@Column(name = "s_nmb_hse")
+	private String sNmbHse;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "d_nmb_rgs_dte")
 	private Date dNmbRgsDte;
@@ -148,6 +154,22 @@ public class SitTblNmb implements Serializable {
 
 	public void setScrTblPrsRol(ScrTblPrsRol scrTblPrsRol) {
 		this.scrTblPrsRol = scrTblPrsRol;
+	}
+
+	public String getsNmbBlc() {
+		return sNmbBlc;
+	}
+
+	public void setsNmbBlc(String sNmbBlc) {
+		this.sNmbBlc = sNmbBlc;
+	}
+
+	public String getsNmbHse() {
+		return sNmbHse;
+	}
+
+	public void setsNmbHse(String sNmbHse) {
+		this.sNmbHse = sNmbHse;
 	}
 
 }

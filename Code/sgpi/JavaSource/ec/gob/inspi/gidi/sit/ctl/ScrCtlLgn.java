@@ -136,7 +136,7 @@ public class ScrCtlLgn implements ScrItfLgn {
 			}
 
 			try {
-				session.setAttribute("sss", SSss.save(prlSlc, msg.txtStrSss(dfl.currentTime())));
+				session.setAttribute("sss", SSss.save(prlSlc, msg.txtStrSss(dfl.S_CURRENT_TIME())));
 			} catch (Exception e) {
 				LOG.log(Level.SEVERE, e.getMessage());
 				this.log.impMsg(Message.M_LGN_LOG_MTH_VLD_SSS_SSS, e.getLocalizedMessage());

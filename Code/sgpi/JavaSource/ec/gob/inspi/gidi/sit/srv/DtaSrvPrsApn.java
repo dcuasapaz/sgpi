@@ -28,8 +28,8 @@ public class DtaSrvPrsApn extends SrvDb<DtaTblPrsApn> {
 	public boolean save(DtaTblPr prs, InsTblApn apn, int ISttCde) {
 		try {
 			DtaTblPrsApn prsApn = new DtaTblPrsApn();
-			prsApn.setSPrsApnTmeRgs(dfl.currentTime());
-			prsApn.setDPrsApnDteRgs(dfl.dCurrentDate());
+			prsApn.setSPrsApnTmeRgs(dfl.S_CURRENT_TIME());
+			prsApn.setDPrsApnDteRgs(dfl.D_CURRENT_DATE());
 			prsApn.setDtaTblPr(prs);
 			prsApn.setInsTblApn(apn);
 			prsApn.setISttCde(ISttCde);

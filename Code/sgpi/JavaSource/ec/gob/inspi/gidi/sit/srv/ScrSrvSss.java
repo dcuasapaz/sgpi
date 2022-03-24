@@ -20,9 +20,9 @@ public class ScrSrvSss extends SrvDb<ScrTblSss> {
 		try {
 			ScrTblSss sss = new ScrTblSss();
 			sss.setIPrsRolId(prl.getIPrsRolId());
-			sss.setDSssDte(dfl.dCurrentDate());
-			sss.setSSssTmeSrt(dfl.currentTime());
-			sss.setSSssTmeEnd(dfl.currentTime());
+			sss.setDSssDte(dfl.D_CURRENT_DATE());
+			sss.setSSssTmeSrt(dfl.S_CURRENT_TIME());
+			sss.setSSssTmeEnd(dfl.S_CURRENT_TIME());
 			sss.setSSssTmeDsc(msg);
 			this.insert(sss);
 			return sss;
@@ -34,7 +34,7 @@ public class ScrSrvSss extends SrvDb<ScrTblSss> {
 
 	public boolean update(ScrTblSss sss, String msg) {
 		try {
-			sss.setSSssTmeEnd(dfl.currentTime());
+			sss.setSSssTmeEnd(dfl.S_CURRENT_TIME());
 			sss.setSSssTmeDsc(sss.getSSssTmeDsc() + msg);
 			this.update(sss);
 			return true;

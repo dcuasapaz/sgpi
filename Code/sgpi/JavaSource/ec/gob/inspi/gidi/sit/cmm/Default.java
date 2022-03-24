@@ -9,6 +9,8 @@ import java.util.GregorianCalendar;
 
 import javax.faces.bean.ManagedBean;
 
+import ec.gob.inspi.gidi.sit.enm.I_Default;
+
 @ManagedBean
 public class Default {
 
@@ -16,7 +18,7 @@ public class Default {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int IDflVle() {
+	public static int I_DFL_SLC_VLE() {
 		return -99;
 	}
 
@@ -24,9 +26,8 @@ public class Default {
 		return "sgpi";
 	}
 
-	/** TASK **/
-	public int tskRslCtd() {
-		return 0;
+	public static int I_DFL_VLE() {
+		return I_Default.I_DFL_VALUE.getICdeVle();
 	}
 
 	/** PAGINAS SISTEMA **/
@@ -39,7 +40,7 @@ public class Default {
 	}
 
 	/** RETORNA LA HORA ACTUAL **/
-	public String currentTime() {
+	public static String S_CURRENT_TIME() {
 		DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
 		Calendar clnTme = GregorianCalendar.getInstance();
 		Date fch = new Date();
@@ -48,7 +49,7 @@ public class Default {
 	}
 
 	/** RETORNA LA FECHA ACTUAL **/
-	public static Date dCurrentDate() {
+	public static Date D_CURRENT_DATE() {
 		return new Date();
 	}
 

@@ -551,11 +551,9 @@ label {
 }
 
 .brr-mnu {
-	width: 100%;
+	width: 80%;
 	position: fixed;
 	z-index: 100;
-	background: #eaeaea;
-	border: 1px solid #d9d9d9;
 }
 
 .bdy-ctt {

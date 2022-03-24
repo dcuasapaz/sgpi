@@ -2,13 +2,39 @@ package ec.gob.inspi.gidi.sit.cmm;
 
 import javax.faces.bean.ManagedBean;
 
+import ec.gob.inspi.gidi.sit.enm.CodeSit;
+
 @ManagedBean
 public class Code {
+
+	/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+	// AUTOR | DATE | OBJECT | DESCRIPTION
+	// --------------------------------------------------------------
+	// Diego Cuasapaz | 2022-03-06 | Code | enum --> status process
+
 	public Code() {
 
 	}
 
-	
+	public static int I_SIT_PRC_STS() {
+		return CodeSit.PROCESS_STATUS.getICdeVle();
+	}
+
+	public static int I_SIT_PRC() {
+		return CodeSit.PROCESS.getICdeVle();
+	}
+
+	public static int I_SIT_PRC_STS_OPN() {
+		return CodeSit.PROCESS_STATUS_OPEN.getICdeVle();
+	}
+
+	public static int I_SIT_PRC_STS_CLS() {
+		return CodeSit.PROCESS_STATUS_CLOSE.getICdeVle();
+	}
+
+	public static int I_SIT_PRC_FLD() {
+		return CodeSit.PROCESS_FIELD.getICdeVle();
+	}
 
 	/****************************************************************************/
 	/* +++++++++++++++++++++++++++++++ MDL: SCR +++++++++++++++++++++++++++++++ */
@@ -34,12 +60,12 @@ public class Code {
 		return 102;
 	}
 
-	public int dtaPrfAgn() {
-		return 103;
+	public static int I_TCH_FLD() {
+		return CodeSit.TCH_FIELD.getICdeVle();
 	}
 
-	public int dtaPrfTch() {
-		return 104;
+	public static int I_TCH_LAB() {
+		return CodeSit.TCH_LAB.getICdeVle();
 	}
 
 	/****************************************************************************/
@@ -81,12 +107,28 @@ public class Code {
 		return 9;
 	}
 
-	public int sitLrv() {
-		return 301;
+	public static int I_SIT_LRV() {
+		return CodeSit.LARVAE.getICdeVle();
 	}
 
-	public int sitAdl() {
-		return 302;
+	public static int I_SIT_ADL() {
+		return CodeSit.ADULT.getICdeVle();
+	}
+
+	public static int I_SIT_SRC_DTE() {
+		return CodeSit.DATE_FILTER.getICdeVle();
+	}
+
+	public static int I_SIT_SRC_DTE_PRC() {
+		return CodeSit.DATE_FILTER_PRC.getICdeVle();
+	}
+
+	public static int I_SIT_SRC_DTE_SET() {
+		return CodeSit.DATE_FILTER_SET.getICdeVle();
+	}
+
+	public static int I_SIT_SRC_DTE_CLC() {
+		return CodeSit.DATE_FILTER_CLC.getICdeVle();
 	}
 
 	/****************************************************************************/

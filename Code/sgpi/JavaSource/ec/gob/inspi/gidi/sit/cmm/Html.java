@@ -2,32 +2,61 @@ package ec.gob.inspi.gidi.sit.cmm;
 
 import javax.faces.bean.ManagedBean;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.FillPatternType;
+
 import ec.gob.inspi.gidi.sit.enm.LabelAdt;
+import ec.gob.inspi.gidi.sit.enm.LabelEgs;
+import ec.gob.inspi.gidi.sit.enm.LabelLrv;
+import ec.gob.inspi.gidi.sit.enm.LabelPrc;
 import ec.gob.inspi.gidi.sit.enm.LabelPrj;
+import ec.gob.inspi.gidi.sit.enm.LabelTableExport;
+import ec.gob.inspi.gidi.sit.enm.LabelTrp;
+import ec.gob.inspi.gidi.sit.enm.HtmlButton;
+import ec.gob.inspi.gidi.sit.enm.HtmlObject;
+import ec.gob.inspi.gidi.sit.enm.LabelAdl;
 
 @ManagedBean
 public class Html {
 	/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 	// AUTOR | DATE | OBJECT | DESCRIPTION
 	// --------------------------------------------------------------
+	// Diego Cuasapaz | 2022-02-28 | Panel view | Title
 	// Diego Cuasapaz | 2022-03-06 | Label | panel project
 	// Diego Cuasapaz | 2022-03-06 | Label | panel audit
 	// Diego Cuasapaz | 2022-03-06 | Spacer | default
+	// Diego Cuasapaz | 2022-03-06 | Label | panel trap
+	// Diego Cuasapaz | 2022-03-06 | Label | panel process
+	// Diego Cuasapaz | 2022-03-06 | HTML | placeholder
+	// Diego Cuasapaz | 2022-03-07 | HTML | button table
 	// --------------------------------------------------------------
 
 	public Html() {
 
 	}
 
+	// --------------------------------------------------------------
+
 	public static String S_LBL_PRJ_NME() {
 		return LabelPrj.NAME.getSLblNme() + Print.S_OBJ_PNT_TWO;
+	}
+
+	public static String S_LBL_PRJ_NME_TBL() {
+		return LabelPrj.NAME.getSLblNme();
 	}
 
 	public static String S_LBL_PRJ_EPI() {
 		return LabelPrj.EPI_WEEK.getSLblNme();
 	}
 
-	public static String S_LBL_ADT_RCR_DTE() {
+	// --------------------------------------------------------------
+	public static String D_LBL_ADT_RCR_DTE() {
 		return LabelAdt.RECORD_DATE.getSLblNme();
 	}
 
@@ -43,9 +72,538 @@ public class Html {
 		return LabelAdt.RECORD_EMAIL.getSLblNme();
 	}
 
-	public static int I_PNL_SPC() {
-		return 5;
+	// --------------------------------------------------------------
+	public static String D_LBL_PRC_DTE() {
+		return LabelPrc.DATE_PROCESS.getSLblNme();
 	}
+
+	public static String S_LBL_PRC_NME() {
+		return LabelPrc.PROCESS.getSLblNme();
+	}
+
+	public static String S_LBL_PRC_LCT() {
+		return LabelPrc.LOCATION.getSLblNme();
+	}
+
+	public static String S_LBL_PRC_STS() {
+		return LabelPrc.STATUS_PROCESS.getSLblNme();
+	}
+
+	public static String D_LBL_PRC_DTE_CLS() {
+		return LabelPrc.DATE_PROCESS_CLOSE.getSLblNme();
+	}
+
+	public static String S_LBL_PRC_CMM() {
+		return LabelPrc.COMMENT.getSLblNme();
+	}
+
+	// --------------------------------------------------------------
+
+	public static String S_LBL_TRP_TPE() {
+		return LabelTrp.TRAP.getSLblNme();
+	}
+
+	public static String S_LBL_TRP_NMB() {
+		return LabelTrp.NUMBER.getSLblNme();
+	}
+
+	public static String D_LBL_TRP_DTE_SET() {
+		return LabelTrp.DATE_OVITRAP_SET.getSLblNme();
+	}
+
+	public static String D_LBL_TRP_DTE_CLC() {
+		return LabelTrp.DATE_OVITRAP_COLECTED.getSLblNme();
+	}
+
+	public static String S_LBL_TRP_RCV() {
+		return LabelTrp.TRAP_RECOVERED.getSLblNme();
+	}
+
+	public static String S_LBL_TRP_SUP() {
+		return LabelTrp.TRAP_SET_UP.getSLblNme();
+	}
+
+	public static String S_LBL_TRP_FLD_AGN() {
+		return LabelTrp.FIELD_AGENT.getSLblNme();
+	}
+
+	public static String S_LBL_TRP_LAB_TCH() {
+		return LabelTrp.LAB_TECHNICIAN.getSLblNme();
+	}
+
+	// --------------------------------------------------------------
+
+	public static String B_LBL_EGS_CLC() {
+		return LabelEgs.COLECTED.getSLblNme();
+	}
+
+	public static String S_LBL_EGS_N_WHL() {
+		return LabelEgs.N_WHOLE.getSLblNme();
+	}
+
+	public static String S_LBL_EGS_N_BRK() {
+		return LabelEgs.N_BROKEN.getSLblNme();
+	}
+
+	public static String S_LBL_EGS_N_VLB() {
+		return LabelEgs.N_VIABLE.getSLblNme();
+	}
+
+	public static String S_LBL_EGS_N_NO_VLB() {
+		return LabelEgs.N_NO_VIABLE.getSLblNme();
+	}
+
+	public static String S_LBL_EGS_CMM() {
+		return LabelEgs.COMMENT.getSLblNme();
+	}
+
+	// --------------------------------------------------------------
+
+	public static String B_LBL_LRV_CLC() {
+		return LabelLrv.COLECTED.getSLblNme();
+	}
+
+	public static String D_LBL_LRV_PRC_DTE() {
+		return LabelLrv.DATE_PROCESS.getSLblNme();
+	}
+
+	public static String S_LBL_LRV_PRC() {
+		return LabelLrv.PROCESS.getSLblNme();
+	}
+
+	public static String S_LBL_LRV_CTT() {
+		return LabelLrv.CONTAINT.getSLblNme();
+	}
+
+	public static String S_LBL_LRV_STG() {
+		return LabelLrv.STAGE.getSLblNme();
+	}
+
+	public static String I_LBL_LRV_N_LVE() {
+		return LabelLrv.N_LIVE.getSLblNme();
+	}
+
+	public static String I_LBL_LRV_N_DD() {
+		return LabelLrv.N_DEAD.getSLblNme();
+	}
+
+	public static String S_LBL_LRV_CMM() {
+		return LabelLrv.COMMENT.getSLblNme();
+	}
+
+	// --------------------------------------------------------------
+
+	public static String B_LBL_ADL_CLC() {
+		return LabelAdl.COLECTED.getSLblNme();
+	}
+
+	public static String D_LBL_ADL_PRC_DTE() {
+		return LabelAdl.DATE_PROCESS.getSLblNme();
+	}
+
+	public static String S_LBL_ADL_PRC() {
+		return LabelAdl.PROCESS.getSLblNme();
+	}
+
+	public static String S_LBL_ADL_SEX() {
+		return LabelAdl.SEX.getSLblNme();
+	}
+
+	public static String S_LBL_ADL_GNS() {
+		return LabelAdl.GENUS_SPECIE.getSLblNme();
+	}
+
+	public static String I_LBL_ADL_N_LVE() {
+		return LabelAdl.N_LIVE.getSLblNme();
+	}
+
+	public static String I_LBL_ADL_N_DD() {
+		return LabelAdl.N_DEAD.getSLblNme();
+	}
+
+	public static String S_LBL_ADL_CMM() {
+		return LabelAdl.COMMENT.getSLblNme();
+	}
+
+	// --------------------------------------------------------------
+
+	public static String S_HTML_PLC_CMM() {
+		return HtmlObject.PLACEHOLDER_COMMENT.getSLblNme();
+	}
+
+	public static String S_HTML_PLC_RCN() {
+		return HtmlObject.PLACEHOLDER_RECOUNT.getSLblNme();
+	}
+
+	public static int I_PNL_SPC() {
+		return 2;
+	}
+
+	public static int I_HTML_PLC_SZE() {
+		return 300;
+	}
+
+	public static int I_HTML_SZE_CMB() {
+		return 60;
+	}
+
+	public static int I_HTML_SZE_TXT_AREA_CLS() {
+		return 30;
+	}
+
+	public static int I_HTML_SZE_TXT_AREA_ROWS() {
+		return 2;
+	}
+
+	public static int I_HTML_SZE_CLN() {
+		return 80;
+	}
+
+	public static String S_TBL_OPT() {
+		return HtmlObject.OPTIONS.getSLblNme();
+	}
+
+	// --------------------------------------------------------------
+
+	public static int I_BTN_MNU_HME() {
+		return HtmlButton.BTN_MNU_HME.getIClrId();
+	}
+
+	public static String S_BTN_MNU_HME() {
+		return HtmlButton.BTN_MNU_HME.getSBtnNme();
+	}
+
+	public static String S_BTN_MNU_HME_STL() {
+		return HtmlButton.BTN_MNU_HME.getSBtnStl();
+	}
+
+	public static int I_BTN_MNU_NEW() {
+		return HtmlButton.BTN_MNU_NEW.getIClrId();
+	}
+
+	public static String S_BTN_MNU_NEW() {
+		return HtmlButton.BTN_MNU_NEW.getSBtnNme();
+	}
+
+	public static int I_BTN_MNU_CPY() {
+		return HtmlButton.BTN_MNU_CPY.getIClrId();
+	}
+
+	public static String S_BTN_MNU_CPY() {
+		return HtmlButton.BTN_MNU_CPY.getSBtnNme();
+	}
+
+	public static int I_BTN_MNU_SVE() {
+		return HtmlButton.BTN_MNU_SVE.getIClrId();
+	}
+
+	public static String S_BTN_MNU_SVE() {
+		return HtmlButton.BTN_MNU_SVE.getSBtnNme();
+	}
+
+	public static int I_BTN_MNU_UPD() {
+		return HtmlButton.BTN_MNU_UPD.getIClrId();
+	}
+
+	public static String S_BTN_MNU_UPD() {
+		return HtmlButton.BTN_MNU_UPD.getSBtnNme();
+	}
+
+	public static int I_BTN_MNU_SRC() {
+		return HtmlButton.BTN_MNU_SRC.getIClrId();
+	}
+
+	public static String S_BTN_MNU_SRC() {
+		return HtmlButton.BTN_MNU_SRC.getSBtnNme();
+	}
+
+	public static int I_BTN_MNU_DWN() {
+		return HtmlButton.BTN_MNU_DWN.getIClrId();
+	}
+
+	public static String S_BTN_MNU_DWN() {
+		return HtmlButton.BTN_MNU_DWN.getSBtnNme();
+	}
+
+	public static int I_BTN_MNU_RST() {
+		return HtmlButton.BTN_MNU_RST.getIClrId();
+	}
+
+	public static String S_BTN_MNU_RST() {
+		return HtmlButton.BTN_MNU_RST.getSBtnNme();
+	}
+
+	public static String S_BTN_TBL_NEW() {
+		return HtmlButton.BTN_TBL_NEW.getSBtnNme();
+	}
+
+	public static String S_BTN_TBL_NEW_STL() {
+		return HtmlButton.BTN_TBL_NEW.getSBtnStl();
+	}
+
+	public static int I_BTN_TBL_NEW_CLR() {
+		return HtmlButton.BTN_TBL_NEW.getIClrId();
+	}
+
+	public static String S_BTN_TBL_ADD() {
+		return HtmlButton.BTN_TBL_ADD.getSBtnNme();
+	}
+
+	public static String S_BTN_TBL_ADD_STL() {
+		return HtmlButton.BTN_TBL_ADD.getSBtnStl();
+	}
+
+	public static int I_BTN_TBL_ADD_CLR() {
+		return HtmlButton.BTN_TBL_ADD.getIClrId();
+	}
+
+	public static String S_BTN_TBL_RST() {
+		return HtmlButton.BTN_TBL_RST.getSBtnNme();
+	}
+
+	public static String S_BTN_TBL_RST_STL() {
+		return HtmlButton.BTN_TBL_RST.getSBtnStl();
+	}
+
+	public static int I_BTN_TBL_RST_CLR() {
+		return HtmlButton.BTN_TBL_RST.getIClrId();
+	}
+
+	public static String S_BTN_TBL_EDT() {
+		return HtmlButton.BTN_TBL_EDT.getSBtnNme();
+	}
+
+	public static String S_BTN_TBL_EDT_STL() {
+		return HtmlButton.BTN_TBL_EDT.getSBtnStl();
+	}
+
+	public static int I_BTN_TBL_EDT_CLR() {
+		return HtmlButton.BTN_TBL_EDT.getIClrId();
+	}
+
+	public static String S_BTN_TBL_DLT() {
+		return HtmlButton.BTN_TBL_DLT.getSBtnNme();
+	}
+
+	public static String S_BTN_TBL_DLT_STL() {
+		return HtmlButton.BTN_TBL_DLT.getSBtnStl();
+	}
+
+	public static int I_BTN_TBL_DLT_CLR() {
+		return HtmlButton.BTN_TBL_DLT.getIClrId();
+	}
+
+	public static String S_BTN_DLG_CNF_YES() {
+		return HtmlButton.BTN_DLG_YES.getSBtnNme();
+	}
+
+	public static String S_BTN_DLG_CNF_YES_STL() {
+		return HtmlButton.BTN_DLG_YES.getSBtnStl();
+	}
+
+	public static int I_BTN_DLG_CNF_YES_CLR() {
+		return HtmlButton.BTN_DLG_YES.getIClrId();
+	}
+
+	public static String S_BTN_DLG_CNF_NO() {
+		return HtmlButton.BTN_DLG_NO.getSBtnNme();
+	}
+
+	public static String S_BTN_DLG_CNF_NO_STL() {
+		return HtmlButton.BTN_DLG_NO.getSBtnStl();
+	}
+
+	public static int I_BTN_DLG_CNF_NO_CLR() {
+		return HtmlButton.BTN_DLG_NO.getIClrId();
+	}
+
+	// --------------------------------------------------------------
+	public static String S_PNL_SRC_PRM_DTE() {
+		return HtmlObject.PARAM_DATE.getSLblNme();
+	}
+
+	public static String S_PNL_SRC_PRM_DTE_STR() {
+		return HtmlObject.DATE_START.getSLblNme();
+	}
+
+	public static String S_PNL_SRC_PRM_DTE_END() {
+		return HtmlObject.DATE_END.getSLblNme();
+	}
+
+	// --------------------------------------------------------------
+	public static String S_NME_FILE_DWN() {
+		return "SGPI_SIT_Summary_";
+	}
+
+	public void postProcessXLS(Object document) {
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+		HSSFSheet sheet = wb.getSheetAt(0);
+		HSSFRow header = sheet.getRow(0);
+		HSSFFont fnt = wb.createFont();
+		fnt.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+		fnt.setItalic(false);
+		fnt.setFontHeightInPoints((short) 10);
+		fnt.setBold(true);
+		HSSFCellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.DARK_BLUE.getIndex());
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		cellStyle.setFont(fnt);
+		for (int i = 0; i < header.getPhysicalNumberOfCells(); i++) {
+			HSSFCell cell = header.getCell(i);
+			cell.setCellStyle(cellStyle);
+		}
+	}
+
+	// --------------------------------------------------------------
+	public static String D_LBL_TBL_PRC_DTE() {
+		return LabelTableExport.DATE_PROCESS.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_PRC_NME() {
+		return LabelTableExport.PROCESS.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_YR() {
+		return LabelTableExport.YEAR.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_MTH() {
+		return LabelTableExport.MONTH.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_SSN() {
+		return LabelTableExport.SEASON.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_EPI_WEK() {
+		return LabelTableExport.EPI_WEEK.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_TRP_CDE_UNQ() {
+		return LabelTableExport.TRAP_CODE_UNQ.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_TRP_CDE_UNN() {
+		return LabelTableExport.TRAP_CODE_UNN.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_STE_LTR() {
+		return LabelTableExport.LOCATION_LETTER.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_STE_NME() {
+		return LabelTableExport.LOCATION.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_STE_BLC() {
+		return LabelTableExport.TRAP_BLOCK.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_STE_HSE() {
+		return LabelTableExport.TRAP_HOUSE.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_TRP_NMB() {
+		return LabelTableExport.TRAP_NUMBER.getSLblNme();
+	}
+
+	public static String D_LBL_TBL_TRP_DTE_SET() {
+		return LabelTableExport.DATE_OVITRAP_SET.getSLblNme();
+	}
+
+	public static String D_LBL_TBL_TRP_DTE_CLC() {
+		return LabelTableExport.DATE_OVITRAP_COLECTED.getSLblNme();
+	}
+
+	public static String B_LBL_TBL_TRP_SUP() {
+		return LabelTableExport.TRAP_SET_UP.getSLblNme();
+	}
+
+	public static String B_LBL_TBL_TRP_RCV() {
+		return LabelTableExport.TRAP_RECOVERED.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_TRP_AGN() {
+		return LabelTableExport.FIELD_AGENT.getSLblNme();
+	}
+
+	public static String B_LBL_TBL_EGS_CLC() {
+		return LabelTableExport.COLECTED_EGS.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_EGS_CLC() {
+		return LabelTableExport.N_COLLECTED.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_EGS_WHL() {
+		return LabelTableExport.N_WHOLE.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_EGS_BRK() {
+		return LabelTableExport.N_BROKEN.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_EGS_VLB() {
+		return LabelTableExport.N_VIABLE.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_EGS_VLB_NO() {
+		return LabelTableExport.N_NO_VIABLE.getSLblNme();
+	}
+
+	public static String B_LBL_TBL_LRV_CLC() {
+		return LabelTableExport.COLECTED_LRV.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_LRV_CLC_LIVE() {
+		return LabelTableExport.N_LARVAE_DEAD.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_LRV_CLC_DEAD() {
+		return LabelTableExport.N_LARVAE_LIVE.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_PRC_CMM() {
+		return LabelTableExport.COMMENT.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_EGS_CMM() {
+		return LabelTableExport.COMMENT_EGS.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_LRV_CMM() {
+		return LabelTableExport.COMMENT_LRV.getSLblNme();
+	}
+	// --------------------------------------------------------------
+
+	public static String FRM_VW_TTL_SCR() {
+		return "SECURITY";
+	}
+
+	public static String FRM_VW_TTL_PRJ() {
+		return "PROJECT";
+	}
+
+	public static String FRM_VW_TTL_PRC() {
+		return "PROCESS";
+	}
+
+	public static String FRM_VW_TTL_TRP() {
+		return "TRAP";
+	}
+
+	public static String FRM_VW_TTL_EGS() {
+		return "EGGS";
+	}
+
+	public static String FRM_VW_TTL_LRV() {
+		return "REGISTER LARVAES";
+	}
+
+	public static String FRM_VW_TTL_ADL() {
+		return "REGISTER ADULTS";
+	}
+	// --------------------------------------------------------------
 
 	/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 	// Date: 2022-02-09
@@ -185,7 +743,11 @@ public class Html {
 	}
 
 	public static String S_ITM_SLC() {
-		return "Selected";
+		return HtmlObject.SELECTED.getSLblNme();
+	}
+
+	public static String S_ITM_ALL() {
+		return HtmlObject.ALL.getSLblNme();
 	}
 
 	/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -523,7 +1085,7 @@ public class Html {
 	}
 
 	public static int FRM_DLG_CNF_SZE() {
-		return 250;
+		return 300;
 	}
 
 	/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */

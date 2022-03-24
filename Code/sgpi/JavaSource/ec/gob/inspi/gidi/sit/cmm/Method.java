@@ -10,6 +10,9 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 
+import ec.gob.inspi.gidi.sit.enm.I_Default;
+import ec.gob.inspi.gidi.sit.enm.Process;
+import ec.gob.inspi.gidi.sit.enm.S_Default;
 import ec.gob.inspi.gidi.sit.ent.DteTblDay;
 
 @ManagedBean
@@ -166,7 +169,8 @@ public class Method {
 			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 			return fmt.format(dte);
 		} catch (Exception e) {
-			return "NO DATO";
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getLocalizedMessage());
+			return S_Default.S_DLF_NO_DATA.getSLblNme();
 		}
 	}
 
@@ -228,8 +232,8 @@ public class Method {
 				return "No";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getLocalizedMessage());
+			return S_Default.S_DLF_NO_DATA.getSLblNme();
 		}
 	}
 
@@ -242,10 +246,38 @@ public class Method {
 			int numberWeekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
 			return numberWeekOfYear;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return 0;
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getLocalizedMessage());
+			return I_Default.I_DFL_NO_DATA.getICdeVle();
 		}
 
+	}
+
+	public static int YEAR(Date dteClc) {
+		try {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setFirstDayOfWeek(Calendar.MONDAY);
+			calendar.setMinimalDaysInFirstWeek(4);
+			calendar.setTime(dteClc);
+			int numberWeekOfYear = calendar.get(Calendar.YEAR);
+			return numberWeekOfYear;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(Method.class.getSimpleName(), Process.CALCULATE, e.getLocalizedMessage());
+			return I_Default.I_DFL_NO_DATA.getICdeVle();
+		}
+	}
+
+	public static String MONTH(Date dteClc) {
+		try {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setFirstDayOfWeek(Calendar.MONDAY);
+			calendar.setMinimalDaysInFirstWeek(4);
+			calendar.setTime(dteClc);
+			String mth = new SimpleDateFormat("MMMM").format(calendar.getTime());
+			return mth.substring(0, 1).toUpperCase() + mth.substring(1);
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(Method.class.getSimpleName(), Process.CALCULATE, e.getLocalizedMessage());
+			return S_Default.S_DLF_NO_DATA.getSLblNme();
+		}
 	}
 
 }

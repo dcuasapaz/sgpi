@@ -23,8 +23,7 @@
 					"postgresql.dd.plain.string": "false",
 					"postgresql.dd.tag.string": "false"
 				},
-				"auth-model": "native",
-				"handlers": {}
+				"auth-model": "native"
 			}
 		},
 		"postgres-jdbc-17f55f5254c-532a0951b1d517a9": {
@@ -38,6 +37,31 @@
 				"port": "5432",
 				"database": "sgpi_dvl",
 				"url": "jdbc:postgresql://localhost:5432/sgpi_dvl",
+				"type": "dev",
+				"provider-properties": {
+					"@dbeaver-show-non-default-db@": "false",
+					"@dbeaver-show-template-db@": "false",
+					"@dbeaver-show-unavailable-db@": "false",
+					"show-database-statistics": "false",
+					"@dbeaver-read-all-data-types-db@": "false",
+					"@dbeaver-use-prepared-statements-db@": "false",
+					"postgresql.dd.plain.string": "false",
+					"postgresql.dd.tag.string": "false"
+				},
+				"auth-model": "native"
+			}
+		},
+		"postgres-jdbc-17f6a51149e-2ef765e4bb73cdf2": {
+			"provider": "postgresql",
+			"driver": "postgres-jdbc",
+			"name": "sit",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "5432",
+				"database": "sit",
+				"url": "jdbc:postgresql://localhost:5432/sit",
 				"type": "dev",
 				"provider-properties": {
 					"@dbeaver-show-non-default-db@": "false",

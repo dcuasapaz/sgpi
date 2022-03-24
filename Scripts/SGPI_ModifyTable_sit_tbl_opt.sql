@@ -21,10 +21,10 @@ COMMENT ON COLUMN sit_tbl_opt.b_opt_stt IS 'Activo/No activo';
 COMMENT ON COLUMN sit_tbl_opt.i_opt_rgs_prs_rol_id IS 'FK --> Usuario que registra';
 
 COMMENT ON COLUMN sit_tbl_opt.i_opt_id IS 'ID'; 
-COMMENT ON COLUMN sit_tbl_opt.i_opt_fth IS 'FK --> Código padre'; 
-COMMENT ON COLUMN sit_tbl_opt.s_opt_nme IS 'Nombre opción'; 
-COMMENT ON COLUMN sit_tbl_opt.s_opt_acr IS 'Acronimo opción'; 
-COMMENT ON COLUMN sit_tbl_opt.s_opt_dsc IS 'Descripción opción'; 
+COMMENT ON COLUMN sit_tbl_opt.i_opt_fth IS 'FK --> Cï¿½digo padre'; 
+COMMENT ON COLUMN sit_tbl_opt.s_opt_nme IS 'Nombre opciï¿½n'; 
+COMMENT ON COLUMN sit_tbl_opt.s_opt_acr IS 'Acronimo opciï¿½n'; 
+COMMENT ON COLUMN sit_tbl_opt.s_opt_dsc IS 'Descripciï¿½n opciï¿½n'; 
 
 CREATE INDEX CONCURRENTLY b_idx_sit_opt_stt_t ON sit_tbl_opt USING btree(b_opt_stt) WHERE b_opt_stt IS TRUE;
 CREATE INDEX CONCURRENTLY b_idx_sit_opt_stt_f ON sit_tbl_opt USING btree(b_opt_stt) WHERE b_opt_stt IS FALSE;
@@ -64,4 +64,8 @@ UPDATE sit_tbl_opt SET i_opt_ctg = 1 WHERE i_opt_id = 601;
 UPDATE sit_tbl_opt SET i_opt_ctg = 2 WHERE i_opt_id = 602;
 UPDATE sit_tbl_opt SET i_opt_ctg = 3 WHERE i_opt_id = 603;
 UPDATE sit_tbl_opt SET i_opt_ctg = 4 WHERE i_opt_id = 604;
+
+
+SELECT * FROM sit_tbl_opt AS sto ORDER BY 1;
+
 

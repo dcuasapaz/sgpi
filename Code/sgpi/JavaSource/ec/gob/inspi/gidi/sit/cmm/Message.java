@@ -81,7 +81,7 @@ public class Message {
 	public static String I_MSG_FRM01_LRP_STG() {
 		return "Stage";
 	}
-	
+
 	public static String I_MSG_FRM01_LRP_CTN() {
 		return "Contain";
 	}
@@ -116,17 +116,17 @@ public class Message {
 		return "<b>Nota: </b>Es recomendable cambiar la contrase�a para que pueda recordarla. ";
 	}
 
-	public void msgInf(String msg) {
+	public static void msgInf(String msg) {
 		FacesContext aux = FacesContext.getCurrentInstance();
 		aux.addMessage(Message.T_MSG_PRJ, new FacesMessage(FacesMessage.SEVERITY_INFO, Message.T_MSG_PRJ, msg));
 	}
 
-	public void msgWrn(String msg) {
+	public static void msgWrn(String msg) {
 		FacesContext aux = FacesContext.getCurrentInstance();
 		aux.addMessage(Message.T_MSG_PRJ, new FacesMessage(FacesMessage.SEVERITY_WARN, Message.T_MSG_PRJ, msg));
 	}
 
-	public void msgErr(String msg) {
+	public static void msgErr(String msg) {
 		FacesContext aux = FacesContext.getCurrentInstance();
 		aux.addMessage(Message.T_MSG_PRJ, new FacesMessage(FacesMessage.SEVERITY_ERROR, Message.T_MSG_PRJ, msg));
 	}
@@ -145,31 +145,31 @@ public class Message {
 		}
 	}
 
-	public String msgSaveInf() {
+	public static String msgSaveInf() {
 		return "Record Stored Correctly ";
 	}
 
-	public String msgUpdInf() {
+	public static String msgUpdInf() {
 		return "Record Updated Correctly";
 	}
 
-	public String msgDltInf() {
+	public static String msgDltInf() {
 		return "Record Deleted Correctly";
 	}
 
-	public String msgSaveErr() {
+	public static String msgSaveErr() {
 		return "There was a problem storing the data ";
 	}
 
-	public String msgUpdErr() {
+	public static String msgUpdErr() {
 		return "There was a problem updating the data ";
 	}
 
-	public String msgDltErr() {
+	public static String msgDltErr() {
 		return "Ocurrio un problema al eliminar los datos o el registro se encuentra asociado a un item";
 	}
 
-	public String msgDateErr() {
+	public static String msgDateErr() {
 		return "! The Selected Date must be after the Start Date !";
 	}
 
@@ -395,7 +395,7 @@ public class Message {
 		return "! Ocurrio un Inconveniente al Almacenar el Registro !";
 	}
 
-	public String msgErrDlt() {
+	public static String msgErrDlt() {
 		return "! Ocurrio un Inconveniente al Eliminar el Registro !";
 	}
 
