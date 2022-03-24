@@ -14,6 +14,7 @@
 			<p:growl id="grw-sit" redisplay="true" showDetail="true"
 				showSummary="true" />
 			<h:panelGroup id="pgr-sit-mnu" layout="block" styleClass="brr-mnu">
+				
 				<h:panelGrid columns="10"
 					columnClasses="main-10, main-10, main-10, main-10, main-10, main-10, main-10, main-10">
 					<h:panelGroup layout="block" styleClass="brr-mnu-item">
@@ -561,7 +562,7 @@
 												required="#{sitCtlGnr.rqrGnrPrfTch}"
 												requiredMessage="#{html.S_LBL_TRP_LAB_TCH()}">
 												<f:selectItems
-													value="#{scrCtlPrsRol.lstPrsPrfFld(sitCtlGnr.prl.IPrjId)}"
+													value="#{scrCtlPrsRol.lstPrsPrfTch(sitCtlGnr.prl.IPrjId)}"
 													var="varPrsPrf"
 													itemLabel="#{varPrsPrf.dtaTblPr.SPrsLstNme} #{varPrsPrf.dtaTblPr.SPrsNme}"
 													itemValue="#{varPrsPrf.IPrsRolId}" />
@@ -793,8 +794,7 @@
 										requiredMessage="#{message.D_MSG_FRM01_PRC_DTE()}"
 										pattern="#{html.D_PTT()}" placeholder="#{html.D_PTT()}"
 										style="text-align: center; width: #{html.I_HTML_SZE_CLN()}%;"
-										maxdate="#{default.D_CURRENT_DATE()}"
-										mindate="#{default.D_DAY_SUBTRACT(default.D_CURRENT_DATE(), default.I_DAYS_SBS())}">
+										maxdate="#{default.D_CURRENT_DATE()}">
 									</p:calendar>
 									<p:message for="cln-sit-lrv-dte-prc" display="text"
 										escape="true" />
@@ -841,6 +841,7 @@
 											var="varLrsCtn" itemLabel="#{varLrsCtn.SOptNme}"
 											itemValue="#{varLrsCtn.IOptId}" />
 									</p:selectOneMenu>
+									<p:message for="som-sit-lrs-ctn" display="text" escape="true" />
 
 									<h:outputLabel for="som-sit-lrs-stg"
 										value="#{html.S_LBL_LRV_STG()}" />
@@ -858,6 +859,7 @@
 											var="varLrsStg" itemLabel="#{varLrsStg.SOptNme}"
 											itemValue="#{varLrsStg.IOptId}" />
 									</p:selectOneMenu>
+									<p:message for="som-sit-lrs-stg" display="text" escape="true" />
 
 								</h:panelGrid>
 							</h:panelGroup>
@@ -877,6 +879,7 @@
 										required="#{sitCtlGnr.rqrLrvNmbLive}" styleClass="sit-inp-ctr"
 										requiredMessage="#{message.I_MSG_FRM01_LRP_NMB()}"
 										onkeypress="return validarEnteros(event);" />
+									<p:message for="inp-sit-lrs-nmb" display="text" escape="true" />
 
 									<h:outputLabel for="inp-sit-lrs-nmb-dd"
 										value="#{html.I_LBL_LRV_N_DD()}" />
@@ -887,6 +890,8 @@
 										required="#{sitCtlGnr.rqrLrvNmbDied}" styleClass="sit-inp-ctr"
 										requiredMessage="#{message.I_MSG_FRM01_LRP_NMB_DD()}"
 										onkeypress="return validarEnteros(event);" />
+									<p:message for="inp-sit-lrs-nmb-dd" display="text"
+										escape="true" />
 
 								</h:panelGrid>
 							</h:panelGroup>
@@ -1116,8 +1121,7 @@
 										requiredMessage="#{message.D_MSG_FRM01_PRC_DTE()}"
 										pattern="#{html.D_PTT()}" placeholder="#{html.D_PTT()}"
 										style="text-align: center; width: #{html.I_HTML_SZE_CLN()}%;"
-										maxdate="#{default.D_CURRENT_DATE()}"
-										mindate="#{default.D_DAY_SUBTRACT(default.D_CURRENT_DATE(), default.I_DAYS_SBS())}">
+										maxdate="#{default.D_CURRENT_DATE()}">
 									</p:calendar>
 									<p:message for="cln-sit-adl-dte-prc" display="text"
 										escape="true" />
@@ -1164,6 +1168,7 @@
 											value="#{sitCtlOpt.lstOptNme(code.I_SIT_SEX())}" var="varSpc"
 											itemLabel="#{varSpc.SOptNme}" itemValue="#{varSpc.IOptId}" />
 									</p:selectOneMenu>
+									<p:message for="som-sit-adl-sex" display="text" escape="true" />
 
 									<h:outputLabel for="som-sit-adl-gns"
 										value="#{html.S_LBL_ADL_GNS()}" />
@@ -1180,6 +1185,7 @@
 											value="#{sitCtlOpt.lstOptNme(code.I_SIT_GNR())}" var="varSpc"
 											itemLabel="#{varSpc.SOptNme}" itemValue="#{varSpc.IOptId}" />
 									</p:selectOneMenu>
+									<p:message for="som-sit-adl-gns" display="text" escape="true" />
 
 								</h:panelGrid>
 							</h:panelGroup>
@@ -1199,6 +1205,8 @@
 										required="#{sitCtlGnr.rqrAdlNmb}" styleClass="sit-inp-ctr"
 										requiredMessage="#{message.I_MSG_FRM01_ADL_NMB()}"
 										onkeypress="return validarEnteros(event);" />
+									<p:message for="inp-sit-adl-nmb-lve" display="text"
+										escape="true" />
 
 									<h:outputLabel for="inp-sit-adl-nmb-dd"
 										value="#{html.I_LBL_ADL_N_DD()}" />
@@ -1209,6 +1217,8 @@
 										required="#{sitCtlGnr.rqrAdlNmbDd}" styleClass="sit-inp-ctr"
 										requiredMessage="#{message.I_MSG_FRM01_ADL_NMB_DD()}"
 										onkeypress="return validarEnteros(event);" />
+									<p:message for="inp-sit-adl-nmb-dd" display="text"
+										escape="true" />
 
 								</h:panelGrid>
 							</h:panelGroup>
@@ -1513,7 +1523,7 @@
 										style="text-align: center; width: #{html.I_HTML_SZE_CLN()}%;"
 										maxdate="#{default.D_CURRENT_DATE()}">
 									</p:calendar>
-									<p:message for="cln-sit-dte-prc" display="text" escape="true" />
+									<p:message for="som-sit-src-prm-end" display="text" escape="true" />
 								</h:panelGroup>
 
 							</h:panelGrid>
@@ -2086,7 +2096,7 @@
 										style="background: #{webCtlClr.CLR_PNL_LARVAE().SClrHex};">
 										<h:panelGrid columns="3" cellpadding="5" cellspacing="5"
 											styleClass="main-100"
-											columnClasses="main-05, main-10, main-85">
+											columnClasses="main-10, main-10, main-80">
 
 											<h:panelGroup layout="block" styleClass="pnl pnl-title-view"
 												style="background: #{webCtlClr.CLR_PNL_TITLE().SClrHex};">
@@ -2106,7 +2116,7 @@
 
 
 
-											<h:panelGroup layout="block" styleClass="main-80">
+											<h:panelGroup layout="block" styleClass="main-95">
 												<p:spacer height="5" />
 
 												<p:dataTable
@@ -2114,12 +2124,12 @@
 													var="varLrsStg" styleClass="sit-tbl main-100">
 
 													<p:column headerText="#{html.D_LBL_LRV_PRC_DTE()}"
-														styleClass="main-10 alg-ctr">
+														styleClass="main-20 alg-ctr">
 														<h:outputText
 															value="#{method.SConvert(varLrsStg.DGnrDtlDtePrc)}" />
 													</p:column>
 													<p:column headerText="#{html.S_LBL_LRV_PRC()}"
-														styleClass="main-10 alg-ctr">
+														styleClass="main-20 alg-ctr">
 														<h:outputText
 															value="#{sitCtlOpt.ent(varLrsStg.IPrcId).SOptNme}" />
 													</p:column>
@@ -2134,11 +2144,11 @@
 															value="#{sitCtlOpt.ent(varLrsStg.IStgId).SOptNme}" />
 													</p:column>
 													<p:column headerText="#{html.I_LBL_LRV_N_LVE()}"
-														styleClass="main-20 alg-ctr">
+														styleClass="main-10 alg-ctr">
 														<h:outputText value="#{varLrsStg.IGnrDtlNmb}" />
 													</p:column>
 													<p:column headerText="#{html.I_LBL_LRV_N_DD()}"
-														styleClass="main-20 alg-ctr">
+														styleClass="main-10 alg-ctr">
 														<h:outputText value="#{varLrsStg.iGnrDtlNmbDd}" />
 													</p:column>
 
@@ -2162,7 +2172,7 @@
 										style="background: #{webCtlClr.CLR_PNL_ADULTS().SClrHex};">
 										<h:panelGrid columns="3" cellpadding="5" cellspacing="5"
 											styleClass="main-100"
-											columnClasses="main-05, main-10, main-85">
+											columnClasses="main-10, main-10, main-80">
 											<h:panelGroup layout="block" styleClass="pnl pnl-title-view"
 												style="background: #{webCtlClr.CLR_PNL_TITLE().SClrHex};">
 												<h:outputLabel value="#{html.S_TTL_FRM01_ADL()}"
@@ -2177,13 +2187,13 @@
 													</h:panelGrid>
 												</h:panelGroup>
 											</h:panelGrid>
-											<h:panelGroup layout="block" styleClass="main-80">
+											<h:panelGroup layout="block" styleClass="main-95">
 												<p:spacer height="5" />
 												<p:dataTable
 													value="#{sitCtlGnr.lstGnrDtl(varGnr,code.I_SIT_ADL())}"
 													var="varAdl" styleClass="sit-tbl main-100">
 													<p:column headerText="#{html.D_LBL_ADL_PRC_DTE()}"
-														styleClass="main-10 alg-ctr">
+														styleClass="main-20 alg-ctr">
 														<h:outputText
 															value="#{method.SConvert(varAdl.DGnrDtlDtePrc)}" />
 													</p:column>
@@ -2203,11 +2213,11 @@
 															value="#{sitCtlOpt.ent(varAdl.IGnsId).SOptNme}" />
 													</p:column>
 													<p:column headerText="#{html.I_LBL_ADL_N_LVE()}"
-														styleClass="main-15 alg-ctr">
+														styleClass="main-10 alg-ctr">
 														<h:outputText value="#{varAdl.IGnrDtlNmb}" />
 													</p:column>
 													<p:column headerText="#{html.I_LBL_ADL_N_DD()}"
-														styleClass="main-15 alg-ctr">
+														styleClass="main-10 alg-ctr">
 														<h:outputText value="#{varAdl.iGnrDtlNmbDd}" />
 													</p:column>
 												</p:dataTable>

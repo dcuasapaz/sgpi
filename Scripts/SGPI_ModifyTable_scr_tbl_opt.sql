@@ -18,3 +18,5 @@ SELECT * FROM scr_tbl_opt WHERE i_opt_tpe = 2 ORDER BY 1;
 UPDATE scr_tbl_opt SET s_opt_cde = 'ins' WHERE i_opt_cde = 21;
 UPDATE scr_tbl_opt SET s_opt_cde = 'scr' WHERE i_opt_cde = 22;
 UPDATE scr_tbl_opt SET s_opt_cde = 'dta' WHERE i_opt_cde = 23;
+
+SELECT * FROM scr_tbl_opt ORDER BY 1

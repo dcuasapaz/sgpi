@@ -16,7 +16,7 @@ a {
 /***************************************************************************************/
 label {
 	font-weight: bold;
-	color: #34373c;
+	font-size: 12px;
 }
 
 .epi-wek {
@@ -42,11 +42,11 @@ label {
 }
 
 .adm-inf-ttl {
-	padding-top: 10px;
 	width: 100%;
-	text-align: left;
+	text-align: center;
 	font-size: 1.7em;
-	padding-left: 10px;
+	background: #1881b4;
+	border-radius: 3px;
 }
 
 .adm-inf-ttl-lbl {
@@ -557,7 +557,7 @@ label {
 }
 
 .bdy-ctt {
-	background: #01305a;
+	background: #e4e4e4;
 	top: 40px;
 	position: relative;
 	border-top: 3px solid #34373c;
@@ -570,7 +570,7 @@ label {
 }
 
 .bdy-ctt-dta {
-	background: white;
+	background: #00d3f5;
 	border-left: 5px solid #34373c;
 }
 
@@ -876,4 +876,8 @@ label {
 .scr-prl-img {
 	width: 100px;
 	padding: 15px;
+}
+
+.mnu-bdy-lnk-img-obj {
+	width: 70px;
 }
