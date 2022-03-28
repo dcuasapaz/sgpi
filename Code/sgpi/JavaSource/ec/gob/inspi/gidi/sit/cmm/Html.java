@@ -553,6 +553,10 @@ public class Html {
 		return LabelTableExport.FIELD_AGENT.getSLblNme();
 	}
 
+	public static String S_LBL_TBL_TRP_LAB() {
+		return LabelTableExport.LAB_TECHNICIAN.getSLblNme();
+	}
+
 	public static String B_LBL_TBL_EGS_CLC() {
 		return LabelTableExport.COLECTED_EGS.getSLblNme();
 	}
@@ -577,6 +581,174 @@ public class Html {
 		return LabelTableExport.N_NO_VIABLE.getSLblNme();
 	}
 
+	public static String I_LBL_TBL_TTL_EGS_AE_F() {
+		return LabelTableExport.i_ttl_egs_emg_ae_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_AE_M() {
+		return LabelTableExport.i_ttl_egs_emg_ae_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_AE() {
+		return LabelTableExport.i_ttl_egs_emg_ae.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_ALB_F() {
+		return LabelTableExport.i_ttl_egs_emg_alb_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_ALB_M() {
+		return LabelTableExport.i_ttl_egs_emg_alb_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_ALB() {
+		return LabelTableExport.i_ttl_egs_emg_alb.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_CLX_F() {
+		return LabelTableExport.i_ttl_egs_emg_clx_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_CLX_M() {
+		return LabelTableExport.i_ttl_egs_emg_clx_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_CLX() {
+		return LabelTableExport.i_ttl_egs_emg_clx.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_CLX_SP_F() {
+		return LabelTableExport.i_ttl_egs_emg_clx_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_CLX_SP_M() {
+		return LabelTableExport.i_ttl_egs_emg_clx_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_CLX_SP() {
+		return LabelTableExport.i_ttl_egs_emg_clx_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_CLX_SP_CS_F() {
+		return LabelTableExport.i_ttl_egs_emg_clx_sp_cs_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_CLX_SP_CS_M() {
+		return LabelTableExport.i_ttl_egs_emg_clx_sp_cs_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_CLX_SP_CS() {
+		return LabelTableExport.i_ttl_egs_emg_clx_sp_cs.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_F() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_M() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT() {
+		return LabelTableExport.i_ttl_egs_emg_lmt.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_DRH_F() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_drh_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_DRH_M() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_drh_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_DRH() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_drh.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_FLV_F() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_flv_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_FLV_M() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_flv_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_FLV() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_flv.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_SP_F() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_SP_M() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_LMT_SP() {
+		return LabelTableExport.i_ttl_egs_emg_lmt_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_ONR_F() {
+		return LabelTableExport.i_ttl_egs_emg_onr_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_ONR_M() {
+		return LabelTableExport.i_ttl_egs_emg_onr_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_ONR() {
+		return LabelTableExport.i_ttl_egs_emg_onr.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_ONR_SP_F() {
+		return LabelTableExport.i_ttl_egs_emg_onr_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_ONR_SP_M() {
+		return LabelTableExport.i_ttl_egs_emg_onr_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_ONR_SP() {
+		return LabelTableExport.i_ttl_egs_emg_onr_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_SP_F() {
+		return LabelTableExport.i_ttl_egs_emg_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_SP_M() {
+		return LabelTableExport.i_ttl_egs_emg_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_SP() {
+		return LabelTableExport.i_ttl_egs_emg_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_WYM_SP_F() {
+		return LabelTableExport.i_ttl_egs_emg_wym_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_WYM_SP_M() {
+		return LabelTableExport.i_ttl_egs_emg_wym_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_WYM_SP() {
+		return LabelTableExport.i_ttl_egs_emg_wym_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_WYM_SP_CS_F() {
+		return LabelTableExport.i_ttl_egs_emg_wym_sp_cs_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_WYM_SP_CS_M() {
+		return LabelTableExport.i_ttl_egs_emg_wym_sp_cs_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_WYM_SP_CS() {
+		return LabelTableExport.i_ttl_egs_emg_wym_sp_cs.getSLblNme();
+	}
+
 	public static String B_LBL_TBL_LRV_CLC() {
 		return LabelTableExport.COLECTED_LRV.getSLblNme();
 	}
@@ -587,6 +759,198 @@ public class Html {
 
 	public static String I_LBL_TBL_LRV_CLC_DEAD() {
 		return LabelTableExport.N_LARVAE_DEAD.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_AE_F() {
+		return LabelTableExport.i_ttl_lrv_emg_ae_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_AE_M() {
+		return LabelTableExport.i_ttl_lrv_emg_ae_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_AE() {
+		return LabelTableExport.i_ttl_lrv_emg_ae.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_ALB_F() {
+		return LabelTableExport.i_ttl_lrv_emg_alb_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_ALB_M() {
+		return LabelTableExport.i_ttl_lrv_emg_alb_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_ALB() {
+		return LabelTableExport.i_ttl_lrv_emg_alb.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_CLX_F() {
+		return LabelTableExport.i_ttl_lrv_emg_clx_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_CLX_M() {
+		return LabelTableExport.i_ttl_lrv_emg_clx_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_CLX() {
+		return LabelTableExport.i_ttl_lrv_emg_clx.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_CLX_SP_F() {
+		return LabelTableExport.i_ttl_lrv_emg_clx_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_CLX_SP_M() {
+		return LabelTableExport.i_ttl_lrv_emg_clx_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_CLX_SP() {
+		return LabelTableExport.i_ttl_lrv_emg_clx_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_CLX_SP_CS_F() {
+		return LabelTableExport.i_ttl_lrv_emg_clx_sp_cs_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_CLX_SP_CS_M() {
+		return LabelTableExport.i_ttl_lrv_emg_clx_sp_cs_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_CLX_SP_CS() {
+		return LabelTableExport.i_ttl_lrv_emg_clx_sp_cs.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_F() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_M() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_DRH_F() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_drh_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_DRH_M() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_drh_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_DRH() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_drh.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_FLV_F() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_flv_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_FLV_M() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_flv_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_FLV() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_flv.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_SP_F() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_SP_M() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_LMT_SP() {
+		return LabelTableExport.i_ttl_lrv_emg_lmt_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_ONR_F() {
+		return LabelTableExport.i_ttl_lrv_emg_onr_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_ONR_M() {
+		return LabelTableExport.i_ttl_lrv_emg_onr_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_ONR() {
+		return LabelTableExport.i_ttl_lrv_emg_onr.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_ONR_SP_F() {
+		return LabelTableExport.i_ttl_lrv_emg_onr_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_ONR_SP_M() {
+		return LabelTableExport.i_ttl_lrv_emg_onr_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_ONR_SP() {
+		return LabelTableExport.i_ttl_lrv_emg_onr_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_SP_F() {
+		return LabelTableExport.i_ttl_lrv_emg_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_SP_M() {
+		return LabelTableExport.i_ttl_lrv_emg_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_SP() {
+		return LabelTableExport.i_ttl_lrv_emg_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_WYM_SP_F() {
+		return LabelTableExport.i_ttl_lrv_emg_wym_sp_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_WYM_SP_M() {
+		return LabelTableExport.i_ttl_lrv_emg_wym_sp_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_WYM_SP() {
+		return LabelTableExport.i_ttl_lrv_emg_wym_sp.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_WYM_SP_CS_F() {
+		return LabelTableExport.i_ttl_lrv_emg_wym_sp_cs_f.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_WYM_SP_CS_M() {
+		return LabelTableExport.i_ttl_lrv_emg_wym_sp_cs_m.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_WYM_SP_CS() {
+		return LabelTableExport.i_ttl_lrv_emg_wym_sp_cs.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_TRC_ADL() {
+		return LabelTableExport.i_ttl_egs_emg_adl.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_LRV_TRC_ADL() {
+		return LabelTableExport.i_ttl_lrv_emg_adl.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_TTL_EGS_EMG_ADL() {
+		return LabelTableExport.i_dfr_egs_emg_adl_emg.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_EGS_VLD() {
+		return LabelTableExport.s_ttl_vld_egs.getSLblNme();
+	}
+
+	public static String I_LBL_TBL_LRV_EMG_ADL() {
+		return LabelTableExport.i_dfr_lrv_emg_adl_emg.getSLblNme();
+	}
+
+	public static String S_LBL_TBL_LRV_VLD() {
+		return LabelTableExport.s_ttl_vld_lrv.getSLblNme();
 	}
 
 	public static String S_LBL_TBL_PRC_CMM() {
@@ -842,6 +1206,10 @@ public class Html {
 	/* PAGE: Title */
 	/*---------------------------------------------------------------------------------------------------------*/
 	public String ttlPgeField = "Field";
+
+	public static String P_TTL_PRT() {
+		return HtmlObject.TTL_PARENTAL.getSLblNme();
+	}
 
 	public String imgLoad = "/img/gif/load.gif";
 	public String slcOne = "Select one";

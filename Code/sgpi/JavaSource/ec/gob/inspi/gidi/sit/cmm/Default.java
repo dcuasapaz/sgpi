@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import javax.faces.bean.ManagedBean;
 
 import ec.gob.inspi.gidi.sit.enm.I_Default;
+import ec.gob.inspi.gidi.sit.enm.S_Default;
 
 @ManagedBean
 public class Default {
@@ -28,6 +29,10 @@ public class Default {
 
 	public static int I_DFL_VLE() {
 		return I_Default.I_DFL_VALUE.getICdeVle();
+	}
+
+	public static String S_DFL_VLE() {
+		return S_Default.S_DLF_NO_DATA.getSLblNme();
 	}
 
 	/** PAGINAS SISTEMA **/

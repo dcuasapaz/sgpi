@@ -687,7 +687,7 @@ public class SitCtlGnr {
 			return tch;
 		} catch (Exception e) {
 			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
-			return null;
+			return Default.S_DFL_VLE();
 		}
 	}
 
@@ -742,6 +742,148 @@ public class SitCtlGnr {
 		} catch (Exception e) {
 			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.VALIDATE, e.getMessage());
 			return false;
+		}
+	}
+
+	public int ITtlAdlEgs(SitTblGnr gnr, int ISexId, int IGnsId) {
+		try {
+			List<SitTblGnrDtl> auxLstGnrDtl = new ArrayList<SitTblGnrDtl>();
+			auxLstGnrDtl = SGnrDtl.lstGnrDtlPrcAdl(gnr, Code.I_SIT_ADL(), true, ISexId, IGnsId, Code.I_SIT_PRC_FLD(),
+					Code.I_SIT_PRC_FLD_EGS());
+			int ttl = 0;
+			if (auxLstGnrDtl.size() > 0) {
+				for (SitTblGnrDtl auxGnrDtl : auxLstGnrDtl) {
+					ttl = ttl + auxGnrDtl.getIGnrDtlNmb();
+				}
+			} else {
+				ttl = Default.I_DFL_SLC_VLE();
+			}
+			return ttl;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public int ITtlAdlEgsSum(SitTblGnr gnr, int IGnsId) {
+		try {
+			List<SitTblGnrDtl> auxLstGnrDtl = new ArrayList<SitTblGnrDtl>();
+			auxLstGnrDtl = SGnrDtl.lstGnrDtlPrcAdlTtl(gnr, Code.I_SIT_ADL(), true, IGnsId, Code.I_SIT_PRC_FLD(),
+					Code.I_SIT_PRC_FLD_EGS());
+			int ttl = 0;
+			if (auxLstGnrDtl.size() > 0) {
+				for (SitTblGnrDtl auxGnrDtl : auxLstGnrDtl) {
+					ttl = ttl + auxGnrDtl.getIGnrDtlNmb();
+				}
+			} else {
+				ttl = Default.I_DFL_SLC_VLE();
+			}
+			return ttl;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public int ITtlAdlLrv(SitTblGnr gnr, int ISexId, int IGnsId) {
+		try {
+			List<SitTblGnrDtl> auxLstGnrDtl = new ArrayList<SitTblGnrDtl>();
+			auxLstGnrDtl = SGnrDtl.lstGnrDtlPrcAdl(gnr, Code.I_SIT_ADL(), true, ISexId, IGnsId, Code.I_SIT_PRC_FLD(),
+					Code.I_SIT_PRC_FLD_LRV());
+			int ttl = 0;
+			if (auxLstGnrDtl.size() > 0) {
+				for (SitTblGnrDtl auxGnrDtl : auxLstGnrDtl) {
+					ttl = ttl + auxGnrDtl.getIGnrDtlNmb();
+				}
+			} else {
+				ttl = Default.I_DFL_SLC_VLE();
+			}
+			return ttl;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public int ITtlAdlLrvSum(SitTblGnr gnr, int IGnsId) {
+		try {
+			List<SitTblGnrDtl> auxLstGnrDtl = new ArrayList<SitTblGnrDtl>();
+			auxLstGnrDtl = SGnrDtl.lstGnrDtlPrcAdlTtl(gnr, Code.I_SIT_ADL(), true, IGnsId, Code.I_SIT_PRC_FLD(),
+					Code.I_SIT_PRC_FLD_LRV());
+			int ttl = 0;
+			if (auxLstGnrDtl.size() > 0) {
+				for (SitTblGnrDtl auxGnrDtl : auxLstGnrDtl) {
+					ttl = ttl + auxGnrDtl.getIGnrDtlNmb();
+				}
+			} else {
+				ttl = Default.I_DFL_SLC_VLE();
+			}
+			return ttl;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public int ITtlAdlTrc(SitTblGnr gnr, int IPrcId) {
+		try {
+			List<SitTblGnrDtl> auxLstGnrDtl = new ArrayList<SitTblGnrDtl>();
+			auxLstGnrDtl = SGnrDtl.lstGnrDtlPrcTcr(gnr, Code.I_SIT_ADL(), true, IPrcId);
+			int ttl = 0;
+			if (auxLstGnrDtl.size() > 0) {
+				for (SitTblGnrDtl auxGnrDtl : auxLstGnrDtl) {
+					ttl = ttl + auxGnrDtl.getIGnrDtlNmb();
+				}
+			} else {
+				ttl = Default.I_DFL_SLC_VLE();
+			}
+			return ttl;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public int IDfrClcTrcEgs(int ITtlEgs, int ITtlEgsAdl) {
+		try {
+			int ttl = 0;
+			ttl = ITtlEgs - ITtlEgsAdl;
+			if (ttl < 0) {
+				ttl = Default.I_DFL_SLC_VLE();
+			}
+			return ttl;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public int IDfrClcTrcLrv(int ITtlLrv, int ITtlLrvAdl) {
+		try {
+			int ttl = 0;
+			ttl = ITtlLrv - ITtlLrvAdl;
+			if (ttl < 0) {
+				ttl = Default.I_DFL_SLC_VLE();
+			}
+			return ttl;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.I_DFL_SLC_VLE();
+		}
+	}
+
+	public String SDfrClcVld(int ITtlEgs) {
+		try {
+			String vle = "";
+			if (ITtlEgs < 0) {
+				vle = "Error";
+			} else {
+				vle = "OK";
+			}
+			return vle;
+		} catch (Exception e) {
+			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.CALCULATE, e.getMessage());
+			return Default.S_DFL_VLE();
 		}
 	}
 
@@ -910,43 +1052,48 @@ public class SitCtlGnr {
 		try {
 			this.newGnr();
 			this.actBtnDwn(false, true);
-			if (ISrcSteId == Default.I_DFL_SLC_VLE() && ISrcPrcId != Default.I_DFL_SLC_VLE()) {
-				if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
-					lstGnr = SGnr.lstGnrPrmNoStePrc(prl.getIPrjId(), ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
-				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
-					lstGnr = SGnr.lstGnrPrmNoSteSet(prl.getIPrjId(), ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
-				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
-					lstGnr = SGnr.lstGnrPrmNoSteClc(prl.getIPrjId(), ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
-				}
-			} else if (ISrcSteId == Default.I_DFL_SLC_VLE() && ISrcPrcId == Default.I_DFL_SLC_VLE()) {
-				if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
-					lstGnr = SGnr.lstGnrPrmNoStePrcPrc(prl.getIPrjId(), DSrcDteStr, DSrcDteEnd, true);
-				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
-					lstGnr = SGnr.lstGnrPrmNoStePrcSet(prl.getIPrjId(), DSrcDteStr, DSrcDteEnd, true);
-				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
-					lstGnr = SGnr.lstGnrPrmNoStePrcClc(prl.getIPrjId(), DSrcDteStr, DSrcDteEnd, true);
-				}
-			} else if (ISrcSteId != Default.I_DFL_SLC_VLE() && ISrcPrcId == Default.I_DFL_SLC_VLE()) {
-				SitTblSte steAux = new SitTblSte();
-				steAux = SSte.searchId(ISrcSteId);
-				if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
-					lstGnr = SGnr.lstGnrPrmNoPrcPrc(prl.getIPrjId(), steAux, DSrcDteStr, DSrcDteEnd, true);
-				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
-					lstGnr = SGnr.lstGnrPrmNoPrcSet(prl.getIPrjId(), steAux, DSrcDteStr, DSrcDteEnd, true);
-				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
-					lstGnr = SGnr.lstGnrPrmNoPrcClc(prl.getIPrjId(), steAux, DSrcDteStr, DSrcDteEnd, true);
+			if (prl.getIPrjId() == Code.I_CODE_PRJ_RLA5074()) {
+				if (ISrcSteId == Default.I_DFL_SLC_VLE() && ISrcPrcId != Default.I_DFL_SLC_VLE()) {
+					if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
+						lstGnr = SGnr.lstGnrPrmNoStePrc(prl.getIPrjId(), ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+					} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
+						lstGnr = SGnr.lstGnrPrmNoSteSet(prl.getIPrjId(), ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+					} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
+						lstGnr = SGnr.lstGnrPrmNoSteClc(prl.getIPrjId(), ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+					}
+				} else if (ISrcSteId == Default.I_DFL_SLC_VLE() && ISrcPrcId == Default.I_DFL_SLC_VLE()) {
+					if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
+						lstGnr = SGnr.lstGnrPrmNoStePrcPrc(prl.getIPrjId(), DSrcDteStr, DSrcDteEnd, true);
+					} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
+						lstGnr = SGnr.lstGnrPrmNoStePrcSet(prl.getIPrjId(), DSrcDteStr, DSrcDteEnd, true);
+					} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
+						lstGnr = SGnr.lstGnrPrmNoStePrcClc(prl.getIPrjId(), DSrcDteStr, DSrcDteEnd, true);
+					}
+				} else if (ISrcSteId != Default.I_DFL_SLC_VLE() && ISrcPrcId == Default.I_DFL_SLC_VLE()) {
+					SitTblSte steAux = new SitTblSte();
+					steAux = SSte.searchId(ISrcSteId);
+					if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
+						lstGnr = SGnr.lstGnrPrmNoPrcPrc(prl.getIPrjId(), steAux, DSrcDteStr, DSrcDteEnd, true);
+					} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
+						lstGnr = SGnr.lstGnrPrmNoPrcSet(prl.getIPrjId(), steAux, DSrcDteStr, DSrcDteEnd, true);
+					} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
+						lstGnr = SGnr.lstGnrPrmNoPrcClc(prl.getIPrjId(), steAux, DSrcDteStr, DSrcDteEnd, true);
+					}
+				} else {
+					SitTblSte steAux = new SitTblSte();
+					steAux = SSte.searchId(ISrcSteId);
+					if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
+						lstGnr = SGnr.lstGnrPrmPrc(prl.getIPrjId(), steAux, ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+					} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
+						lstGnr = SGnr.lstGnrPrmSet(prl.getIPrjId(), steAux, ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+					} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
+						lstGnr = SGnr.lstGnrPrmClc(prl.getIPrjId(), steAux, ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
+					}
 				}
 			} else {
-				SitTblSte steAux = new SitTblSte();
-				steAux = SSte.searchId(ISrcSteId);
-				if (ISrcPrmId == Code.I_SIT_SRC_DTE_PRC()) {
-					lstGnr = SGnr.lstGnrPrmPrc(prl.getIPrjId(), steAux, ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
-				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_SET()) {
-					lstGnr = SGnr.lstGnrPrmSet(prl.getIPrjId(), steAux, ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
-				} else if (ISrcPrmId == Code.I_SIT_SRC_DTE_CLC()) {
-					lstGnr = SGnr.lstGnrPrmClc(prl.getIPrjId(), steAux, ISrcPrcId, DSrcDteStr, DSrcDteEnd, true);
-				}
+				// Consultas ECU5032
 			}
+
 			this.cptSrcPrm();
 		} catch (Exception e) {
 			Print.LOG_SEVERE_CONTROLLER(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());

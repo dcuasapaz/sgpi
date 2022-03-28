@@ -14,7 +14,7 @@
 			<p:growl id="grw-sit" redisplay="true" showDetail="true"
 				showSummary="true" />
 			<h:panelGroup id="pgr-sit-mnu" layout="block" styleClass="brr-mnu">
-				
+
 				<h:panelGrid columns="10"
 					columnClasses="main-10, main-10, main-10, main-10, main-10, main-10, main-10, main-10">
 					<h:panelGroup layout="block" styleClass="brr-mnu-item">
@@ -1523,7 +1523,8 @@
 										style="text-align: center; width: #{html.I_HTML_SZE_CLN()}%;"
 										maxdate="#{default.D_CURRENT_DATE()}">
 									</p:calendar>
-									<p:message for="som-sit-src-prm-end" display="text" escape="true" />
+									<p:message for="som-sit-src-prm-end" display="text"
+										escape="true" />
 								</h:panelGroup>
 
 							</h:panelGrid>
@@ -1656,6 +1657,11 @@
 							<h:outputText
 								value="#{sitCtlGnr.STchAgn(varGnr,code.I_TCH_FLD())}" />
 						</p:column>
+						<p:column headerText="#{html.S_LBL_TBL_TRP_LAB()}" visible="false"
+							exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.STchAgn(varGnr,code.I_TCH_LAB())}" />
+						</p:column>
 						<p:column headerText="#{html.B_LBL_TBL_EGS_CLC()}" visible="false"
 							exportable="true">
 							<h:outputText value="#{method.chgBoolean(varGnr.BGnrEgs)}" />
@@ -1680,22 +1686,569 @@
 							visible="false" exportable="true">
 							<h:outputText value="#{varGnr.iGnrNmbEgsVlbNo}" />
 						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_AE_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_AE())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_AE_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_AE())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_AE()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_AE())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_ALB_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_ALB())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_ALB_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_ALB())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_ALB()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_ALB())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_CLX_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_CLX())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_CLX_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_CLX())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_CLX()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_CLX())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_CLX_SP_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_CLX_SP())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_CLX_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_CLX_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_CLX_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_CLX_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_CLX_SP_CS_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_CLX_SP_CS())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_CLX_SP_CS_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_CLX_SP_CS())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_CLX_SP_CS()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_CLX_SP_CS())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_LMT())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_LMT())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_LMT())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_DRH_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_LMT_DRH())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_DRH_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_LMT_DRH())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_DRH()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_LMT_DRH())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_FLV_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_LMT_FLV())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_FLV_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_LMT_FLV())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_FLV()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_LMT_FLV())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_SP_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_LMT_SP())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_LMT_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_LMT_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_LMT_SP())}" />
+						</p:column>
+
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_ONR_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_ONR())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_ONR_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_ONR())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_ONR()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_ONR())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_ONR_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_ONR())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_ONR_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_ONR_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_ONR_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_ONR_SP())}" />
+						</p:column>
+
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_SP_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_SP())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_WYM_SP_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_WYM_SP())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_WYM_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_WYM_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_WYM_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_WYM_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_WYM_SP_CS_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_F(),code.I_CODE_WYM_SP_CS())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_WYM_SP_CS_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgs(varGnr,code.I_CODE_M(),code.I_CODE_WYM_SP_CS())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_WYM_SP_CS()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlEgsSum(varGnr,code.I_CODE_WYM_SP_CS())}" />
+						</p:column>
+
 						<p:column headerText="#{html.B_LBL_TBL_LRV_CLC()}" visible="false"
 							exportable="true">
 							<h:outputText value="#{method.chgBoolean(varGnr.BGnrLrs)}" />
 						</p:column>
+
 						<p:column headerText="#{html.I_LBL_TBL_LRV_CLC_LIVE()}"
 							visible="false" exportable="true">
 							<h:outputText value="#{sitCtlGnr.ITtlLrvLive(varGnr)}" />
 						</p:column>
+
 						<p:column headerText="#{html.I_LBL_TBL_LRV_CLC_DEAD()}"
 							visible="false" exportable="true">
 							<h:outputText value="#{sitCtlGnr.ITtlLrvDead(varGnr)}" />
 						</p:column>
+
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_AE_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_AE())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_AE_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_AE())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_AE()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_AE())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_ALB_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_ALB())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_ALB_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_ALB())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_ALB()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_ALB())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_CLX_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_CLX())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_CLX_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_CLX())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_CLX()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_CLX())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_CLX_SP_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_CLX_SP())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_CLX_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_CLX_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_CLX_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_CLX_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_CLX_SP_CS_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_CLX_SP_CS())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_CLX_SP_CS_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_CLX_SP_CS())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_CLX_SP_CS()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_CLX_SP_CS())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_LMT())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_LMT())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_LMT())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_DRH_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_LMT_DRH())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_DRH_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_LMT_DRH())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_DRH()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_LMT_DRH())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_FLV_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_LMT_FLV())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_FLV_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_LMT_FLV())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_FLV()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_LMT_FLV())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_SP_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_LMT_SP())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_LMT_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_LMT_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_LMT_SP())}" />
+						</p:column>
+
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_ONR_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_ONR())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_ONR_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_ONR())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_ONR()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_ONR())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_ONR_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_ONR())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_ONR_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_ONR_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_ONR_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_ONR_SP())}" />
+						</p:column>
+
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_SP_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_SP())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_WYM_SP_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_WYM_SP())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_WYM_SP_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_WYM_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_WYM_SP()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_WYM_SP())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_WYM_SP_CS_F()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_F(),code.I_CODE_WYM_SP_CS())} " />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_WYM_SP_CS_M()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrv(varGnr,code.I_CODE_M(),code.I_CODE_WYM_SP_CS())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_WYM_SP_CS()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlLrvSum(varGnr,code.I_CODE_WYM_SP_CS())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_TRC_ADL()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlTrc(varGnr,code.I_SIT_PRC_FLD_EGS())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_LRV_TRC_ADL()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.ITtlAdlTrc(varGnr,code.I_SIT_PRC_FLD_LRV())}" />
+						</p:column>
+
+						<p:column headerText="#{html.I_LBL_TBL_TTL_EGS_EMG_ADL()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.IDfrClcTrcEgs(sitCtlGnr.ITtlEgs(varGnr),sitCtlGnr.ITtlAdlTrc(varGnr,code.I_SIT_PRC_FLD_EGS()))}" />
+						</p:column>
+						<p:column headerText="#{html.S_LBL_TBL_EGS_VLD()}" visible="false"
+							exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.SDfrClcVld(sitCtlGnr.IDfrClcTrcEgs(sitCtlGnr.ITtlEgs(varGnr),sitCtlGnr.ITtlAdlTrc(varGnr,code.I_SIT_PRC_FLD_EGS())))}" />
+						</p:column>
+						<p:column headerText="#{html.I_LBL_TBL_LRV_EMG_ADL()}"
+							visible="false" exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.IDfrClcTrcLrv(sitCtlGnr.ITtlLrvLive(varGnr),sitCtlGnr.ITtlAdlTrc(varGnr,code.I_SIT_PRC_FLD_LRV()))}" />
+						</p:column>
+						<p:column headerText="#{html.S_LBL_TBL_LRV_VLD()}" visible="false"
+							exportable="true">
+							<h:outputText
+								value="#{sitCtlGnr.SDfrClcVld(sitCtlGnr.IDfrClcTrcEgs(sitCtlGnr.ITtlEgs(varGnr),sitCtlGnr.IDfrClcTrcLrv(sitCtlGnr.ITtlLrvLive(varGnr),sitCtlGnr.ITtlAdlTrc(varGnr,code.I_SIT_PRC_FLD_LRV()))))}" />
+						</p:column>
+
 						<p:column headerText="#{html.S_LBL_TBL_PRC_CMM()}" visible="false"
 							exportable="true">
 							<h:outputText value="#{varGnr.SGnrObs}" />
 						</p:column>
+
 						<p:column headerText="#{html.S_LBL_TBL_EGS_CMM()}" visible="false"
 							exportable="true">
 							<h:outputText value="#{varGnr.SGnrObsEgs}" />

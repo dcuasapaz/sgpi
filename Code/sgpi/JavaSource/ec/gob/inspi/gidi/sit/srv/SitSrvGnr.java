@@ -113,7 +113,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 	 */
 	public List<SitTblGnr> lstGnrPrmNoStePrc(int IPrjId, int ISrcPrcId, Date DDteStr, Date SDteEnd, boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.ITpeId = :param2 AND gnr.dGnrRgsDte BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.ITpeId = :param2 AND gnr.dGnrRgsDte BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", IPrjId);
 			q.setParameter("param2", ISrcPrcId);
@@ -129,7 +129,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 
 	public List<SitTblGnr> lstGnrPrmNoSteSet(int IPrjId, int ISrcPrcId, Date DDteStr, Date SDteEnd, boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.ITpeId = :param2 AND gnr.dGnrDteSet BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.ITpeId = :param2 AND gnr.dGnrDteSet BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", IPrjId);
 			q.setParameter("param2", ISrcPrcId);
@@ -145,7 +145,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 
 	public List<SitTblGnr> lstGnrPrmNoSteClc(int IPrjId, int ISrcPrcId, Date DDteStr, Date SDteEnd, boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.ITpeId = :param2 AND gnr.dGnrDteClc BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.ITpeId = :param2 AND gnr.dGnrDteClc BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", IPrjId);
 			q.setParameter("param2", ISrcPrcId);
@@ -171,7 +171,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 	 */
 	public List<SitTblGnr> lstGnrPrmNoPrcPrc(int IPrjId, SitTblSte ste, Date DDteStr, Date SDteEnd, boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6 AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.dGnrRgsDte BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6 AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.dGnrRgsDte BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", ste);
 			q.setParameter("param3", DDteStr);
@@ -187,7 +187,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 
 	public List<SitTblGnr> lstGnrPrmNoPrcSet(int IPrjId, SitTblSte ste, Date DDteStr, Date SDteEnd, boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6 AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.dGnrDteSet BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6 AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.dGnrDteSet BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", ste);
 			q.setParameter("param3", DDteStr);
@@ -203,7 +203,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 
 	public List<SitTblGnr> lstGnrPrmNoPrcClc(int IPrjId, SitTblSte ste, Date DDteStr, Date SDteEnd, boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6 AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.dGnrDteClc BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6 AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.dGnrDteClc BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", ste);
 			q.setParameter("param3", DDteStr);
@@ -229,7 +229,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 	 */
 	public List<SitTblGnr> lstGnrPrmNoStePrcPrc(int IPrjId, Date DDteStr, Date SDteEnd, boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.dGnrRgsDte BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId= :param1 AND gnr.BGnrStt = :param5 AND gnr.dGnrRgsDte BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", IPrjId);
 			q.setParameter("param3", DDteStr);
@@ -244,7 +244,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 
 	public List<SitTblGnr> lstGnrPrmNoStePrcSet(int IPrjId, Date DDteStr, Date SDteEnd, boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.dGnrDteSet BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.dGnrDteSet BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", IPrjId);
 			q.setParameter("param3", DDteStr);
@@ -259,7 +259,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 
 	public List<SitTblGnr> lstGnrPrmNoStePrcClc(int IPrjId, Date DDteStr, Date SDteEnd, boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.dGnrDteClc BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param1 AND gnr.BGnrStt = :param5 AND gnr.dGnrDteClc BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", IPrjId);
 			q.setParameter("param3", DDteStr);
@@ -285,7 +285,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 	public List<SitTblGnr> lstGnrPrmPrc(int IPrjId, SitTblSte ste, int ISrcPrcId, Date DDteStr, Date SDteEnd,
 			boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6 AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.ITpeId = :param2 AND gnr.dGnrRgsDte BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6 AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.ITpeId = :param2 AND gnr.dGnrRgsDte BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", ste);
 			q.setParameter("param2", ISrcPrcId);
@@ -313,7 +313,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 	public List<SitTblGnr> lstGnrPrmSet(int IPrjId, SitTblSte ste, int ISrcPrcId, Date DDteStr, Date SDteEnd,
 			boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6  AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.ITpeId = :param2 AND gnr.dGnrDteSet BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6  AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.ITpeId = :param2 AND gnr.dGnrDteSet BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", ste);
 			q.setParameter("param2", ISrcPrcId);
@@ -341,7 +341,7 @@ public class SitSrvGnr extends SrvDb<SitTblGnr> {
 	public List<SitTblGnr> lstGnrPrmClc(int IPrjId, SitTblSte ste, int ISrcPrcId, Date DDteStr, Date SDteEnd,
 			boolean BGnrStt) {
 		try {
-			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6  AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.ITpeId = :param2 AND gnr.dGnrDteClc BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sNmbTrap";
+			String sql = "SELECT gnr FROM SitTblGnr gnr WHERE gnr.scrTblPrsRol.IPrjId = :param6  AND gnr.BGnrStt = :param5 AND gnr.sitTblNmb.sitTblSte =:param1 AND gnr.ITpeId = :param2 AND gnr.dGnrDteClc BETWEEN :param3 AND :param4 ORDER BY gnr.dGnrDteClc, gnr.sitTblNmb.sitTblSte.sSteNme, CAST(gnr.sitTblNmb.sNmbTrap AS integer)";
 			Query q = em.createQuery(sql);
 			q.setParameter("param1", ste);
 			q.setParameter("param2", ISrcPrcId);

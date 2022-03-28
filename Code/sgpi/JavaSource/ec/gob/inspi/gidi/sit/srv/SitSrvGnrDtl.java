@@ -76,4 +76,56 @@ public class SitSrvGnrDtl extends SrvDb<SitTblGnrDtl> {
 			return null;
 		}
 	}
+
+	public List<SitTblGnrDtl> lstGnrDtlPrcAdl(SitTblGnr gnr, int ITpeDtl, boolean BGnrDtlStt, int ISexId, int IGnsId,
+			int IPrcFldId, int IPrcFldEgsId) {
+		try {
+			String sql = "SELECT gnr FROM SitTblGnrDtl gnr WHERE gnr.sitTblGnr = :param1 AND gnr.iTpeDtl = :param2 AND gnr.BGnrDtlStt = :param3 AND gnr.iSexId = :param4 AND gnr.iGnsId = :param5 AND (gnr.IPrcId = :param6 OR gnr.IPrcId = :param7) ORDER BY gnr.DGnrDtlDtePrc, gnr.IPrcId";
+			Query q = em.createQuery(sql);
+			q.setParameter("param1", gnr);
+			q.setParameter("param2", ITpeDtl);
+			q.setParameter("param3", BGnrDtlStt);
+			q.setParameter("param4", ISexId);
+			q.setParameter("param5", IGnsId);
+			q.setParameter("param6", IPrcFldId);
+			q.setParameter("param7", IPrcFldEgsId);
+			return q.getResultList();
+		} catch (Exception e) {
+			Print.LOG_SEVERE_SERVICE(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+			return null;
+		}
+	}
+
+	public List<SitTblGnrDtl> lstGnrDtlPrcAdlTtl(SitTblGnr gnr, int ITpeDtl, boolean BGnrDtlStt, int IGnsId,
+			int IPrcFldId, int IPrcFldEgsId) {
+		try {
+			String sql = "SELECT gnr FROM SitTblGnrDtl gnr WHERE gnr.sitTblGnr = :param1 AND gnr.iTpeDtl = :param2 AND gnr.BGnrDtlStt = :param3 AND gnr.iGnsId = :param5 AND (gnr.IPrcId = :param6 OR gnr.IPrcId = :param7) ORDER BY gnr.DGnrDtlDtePrc, gnr.IPrcId";
+			Query q = em.createQuery(sql);
+			q.setParameter("param1", gnr);
+			q.setParameter("param2", ITpeDtl);
+			q.setParameter("param3", BGnrDtlStt);
+			q.setParameter("param5", IGnsId);
+			q.setParameter("param6", IPrcFldId);
+			q.setParameter("param7", IPrcFldEgsId);
+			return q.getResultList();
+		} catch (Exception e) {
+			Print.LOG_SEVERE_SERVICE(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+			return null;
+		}
+	}
+
+	public List<SitTblGnrDtl> lstGnrDtlPrcTcr(SitTblGnr gnr, int ITpeDtl, boolean BGnrDtlStt, int IPrcId) {
+		try {
+			String sql = "SELECT gnr FROM SitTblGnrDtl gnr WHERE gnr.sitTblGnr = :param1 AND gnr.iTpeDtl = :param2 AND gnr.BGnrDtlStt = :param3 AND gnr.IPrcId = :param6 ORDER BY gnr.DGnrDtlDtePrc, gnr.IPrcId";
+			Query q = em.createQuery(sql);
+			q.setParameter("param1", gnr);
+			q.setParameter("param2", ITpeDtl);
+			q.setParameter("param3", BGnrDtlStt);
+			q.setParameter("param6", IPrcId);
+			return q.getResultList();
+		} catch (Exception e) {
+			Print.LOG_SEVERE_SERVICE(this.getClass().getSimpleName(), Process.SELECT, e.getMessage());
+			return null;
+		}
+	}
 }
