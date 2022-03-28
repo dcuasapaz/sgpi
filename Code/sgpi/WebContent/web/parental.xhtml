@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core">
+
+<ui:composition template="/tpl/tpl_adm.xhtml">
+	<ui:define name="ttl">#{html.P_TTL_PRT()}</ui:define>
+
+	<ui:define name="ctt">
+		<h:form id="frm-sit">
+			<p:growl id="grw-sit" redisplay="true" showDetail="true"
+				showSummary="true" />
+			<h:panelGroup id="pgr-sit-mnu" layout="block" styleClass="brr-mnu">
+
+				<h:panelGrid columns="10"
+					columnClasses="main-10, main-10, main-10, main-10, main-10, main-10, main-10, main-10">
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-hme" value="#{html.S_BTN_MNU_HME()}"
+							disabled="#{sitCtlPrt.dsbBtnHme}"
+							rendered="#{sitCtlPrt.vsbBtnHme}"
+							action="#{webCtlMnu.home(scrCtlSss.prl.IRolId)}" update="@form"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-add" value="#{html.S_BTN_MNU_NEW()}"
+							action="#{sitCtlPrt.add()}" update="@form"
+							disabled="#{sitCtlPrt.dsbBtnAdd}"
+							rendered="#{sitCtlPrt.vsbBtnAdd}"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-sve" value="#{html.S_BTN_MNU_SVE()}"
+							action="#{sitCtlPrt.sve()}" update="@form"
+							disabled="#{sitCtlPrt.dsbBtnSve}"
+							rendered="#{sitCtlPrt.vsbBtnSve}"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-upd" value="#{html.S_BTN_MNU_UPD()}"
+							action="#{sitCtlPrt.upd()}" update="@form"
+							disabled="#{sitCtlPrt.dsbBtnUpd}"
+							rendered="#{sitCtlPrt.vsbBtnUpd}"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-src" value="#{html.S_BTN_MNU_SRC()}"
+							action="#{sitCtlPrt.src()}" update="@form"
+							disabled="#{sitCtlPrt.dsbBtnSrc}"
+							rendered="#{sitCtlPrt.vsbBtnSrc}"
+							styleClass="brr-mnu-item-btn btn-success" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" styleClass="brr-mnu-item">
+						<p:commandLink id="itm-sit-rst" value="#{html.S_BTN_MNU_RST()}"
+							icon="ui-icon-arrowrefresh-1-n" disabled="#{sitCtlPrt.dsbBtnRtr}"
+							rendered="#{sitCtlPrt.vsbBtnRtr}"
+							onclick="window.location.reload()"
+							styleClass="brr-mnu-item-btn btn-dark" />
+					</h:panelGroup>
+				</h:panelGrid>
+
+				<h:panelGroup layout="block" styleClass="pnl-mnu-lne" />
+
+				<p:blockUI id="blc-sit-hme" block="frm-sit" trigger="itm-sit-hme">
+					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
+				</p:blockUI>
+				<p:blockUI id="blc-sit-add" block="frm-sit" trigger="itm-sit-add">
+					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
+				</p:blockUI>
+				<p:blockUI id="blc-sit-sve" block="frm-sit" trigger="itm-sit-sve">
+					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
+				</p:blockUI>
+				<p:blockUI id="blc-sit-upd" block="frm-sit" trigger="itm-sit-upd">
+					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
+				</p:blockUI>
+				<p:blockUI id="blc-sit-src" block="frm-sit" trigger="itm-sit-src">
+					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
+				</p:blockUI>
+				<p:blockUI id="blc-sit-rst" block="frm-sit" trigger="itm-sit-rst">
+					<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
+				</p:blockUI>
+
+			</h:panelGroup>
+			<p:spacer height="#{html.I_PNL_SPC()}" />
+			<h:panelGroup id="pgr-sit-dta" layout="block" styleClass="main-100"
+				rendered="#{sitCtlPrt.vsbPgrDta}">
+
+
+
+				<p:messages id="msg-sit" showDetail="true" closable="true"
+					escape="false" showIcon="true" redisplay="true">
+					<p:autoUpdate />
+				</p:messages>
+
+				<h:panelGroup id="pgr-sit-tbl-src" layout="block"
+					styleClass="main-100">
+
+					<p:spacer height="3" />
+
+					<h:panelGrid styleClass="pnl-src-prm" columns="1">
+
+						<h:panelGrid styleClass="main-100" columns="2"
+							columnClasses="main-20, main-80">
+							<h:outputLabel value="#{html.S_LBL_PRJ_NME()}" />
+							<h:outputText
+								value="#{sitCtlOpt.ent(scrCtlSss.prl.IPrjId).SOptNme}" />
+						</h:panelGrid>
+
+						<h:panelGroup layout="block" styleClass="pnl-div" />
+
+						<h:panelGrid styleClass="main-100" columns="2"
+							columnClasses="main-50, main-50">
+							<h:panelGrid styleClass="main-100" columns="2"
+								columnClasses="main-20, main-80">
+								<h:outputLabel for="som-sit-src-ste"
+									value="#{html.S_LBL_PRC_LCT()}" />
+								<h:panelGroup layout="block" styleClass="main-100">
+									<p:selectOneMenu id="som-sit-src-ste"
+										value="#{sitCtlPrt.ISrcSteId}"
+										style="width:  #{html.I_HTML_SZE_CMB()}%;"
+										disabled="#{sitCtlPrt.dsbSrcSte}"
+										rendered="#{sitCtlPrt.vsbSrcSte}"
+										required="#{sitCtlPrt.rqrSrcSte}" filter="true"
+										filterMatchMode="contains"
+										requiredMessage="#{html.S_LBL_PRC_LCT()}">
+										<f:selectItem itemLabel="#{html.S_ITM_SLC()}" itemValue=""
+											noSelectionOption="true" />
+										<f:selectItem itemLabel="#{html.S_ITM_ALL()}"
+											itemValue="#{default.I_DFL_SLC_VLE()}" />
+										<f:selectItems
+											value="#{sitCtlSte.lstSte(scrCtlSss.prl.IPrjId)}"
+											var="varSte" itemLabel="#{varSte.SSteNme}"
+											itemValue="#{varSte.ISteId}" />
+									</p:selectOneMenu>
+									<p:message for="som-sit-src-ste" display="text" escape="true" />
+								</h:panelGroup>
+
+							</h:panelGrid>
+
+							<h:panelGrid styleClass="main-100" columns="2"
+								columnClasses="main-20, main-80">
+
+								<h:outputLabel for="som-sit-src-tpe"
+									value="#{html.S_LBL_PRC_NME()}" />
+								<h:panelGroup layout="block" styleClass="main-100">
+									<p:selectOneMenu id="som-sit-src-tpe"
+										value="#{sitCtlPrt.ISrcPrcId}"
+										style="width: #{html.I_HTML_SZE_CMB()}%;"
+										disabled="#{sitCtlPrt.dsbSrcPrc}"
+										rendered="#{sitCtlPrt.vsbSrcPrc}"
+										required="#{sitCtlPrt.rqrSrcPrc}" filter="true"
+										filterMatchMode="contains"
+										requiredMessage="#{html.S_LBL_PRC_NME()}">
+										<f:selectItem itemLabel="#{html.S_ITM_SLC()}" itemValue=""
+											noSelectionOption="true" />
+										<f:selectItem itemLabel="#{html.S_ITM_ALL()}"
+											itemValue="#{default.I_DFL_SLC_VLE()}" />
+										<f:selectItems value="#{sitCtlOpt.lstOpt(code.sitTpe())}"
+											var="varSte" itemLabel="#{varSte.SOptNme}"
+											itemValue="#{varSte.IOptId}" />
+									</p:selectOneMenu>
+									<p:message for="som-sit-src-tpe" display="text" escape="true" />
+								</h:panelGroup>
+							</h:panelGrid>
+						</h:panelGrid>
+
+						<h:panelGroup layout="block" styleClass="pnl-div" />
+
+						<h:panelGrid styleClass="main-100" columns="3"
+							columnClasses="main-40, main-40,main-20">
+							<h:panelGrid styleClass="main-100" columns="1">
+								<h:outputLabel for="som-sit-src-prm"
+									value="#{html.S_PNL_SRC_PRM_DTE()}" />
+								<h:panelGroup layout="block" styleClass="main-100">
+									<p:selectOneMenu id="som-sit-src-prm"
+										value="#{sitCtlPrt.ISrcPrmId}"
+										style="width: #{html.I_HTML_SZE_CMB()}%;"
+										disabled="#{sitCtlPrt.dsbSrcPrm}"
+										rendered="#{sitCtlPrt.vsbSrcPrm}"
+										required="#{sitCtlPrt.rqrSrcPrm}" filter="true"
+										filterMatchMode="contains"
+										requiredMessage="#{html.S_PNL_SRC_PRM_DTE()}">
+										<f:selectItem itemLabel="#{html.S_ITM_SLC()}" itemValue=""
+											noSelectionOption="true" />
+										<f:selectItems
+											value="#{sitCtlOpt.lstOpt(code.I_SIT_SRC_DTE())}"
+											var="varPrm" itemLabel="#{varPrm.SOptNme}"
+											itemValue="#{varPrm.IOptId}" />
+									</p:selectOneMenu>
+									<p:message for="som-sit-src-prm" display="text" escape="true" />
+								</h:panelGroup>
+							</h:panelGrid>
+							<h:panelGrid styleClass="main-100" columns="1">
+								<h:outputLabel for="som-sit-src-prm-str"
+									value="#{html.S_PNL_SRC_PRM_DTE_STR()}" />
+								<h:panelGroup layout="block" styleClass="main-100">
+									<p:calendar id="som-sit-src-prm-str"
+										value="#{sitCtlPrt.DSrcDteStr}"
+										disabled="#{sitCtlPrt.dsbSrcDteStr}"
+										rendered="#{sitCtlPrt.vsbSrcDteStr}"
+										required="#{sitCtlPrt.rqrSrcDteStr}" navigator="true"
+										requiredMessage="#{html.S_PNL_SRC_PRM_DTE_STR()}"
+										pattern="#{html.D_PTT()}" placeholder="#{html.D_PTT()}"
+										style="text-align: center; width: #{html.I_HTML_SZE_CLN()}%;"
+										maxdate="#{default.D_CURRENT_DATE()}">
+									</p:calendar>
+									<p:message for="som-sit-src-prm-str" display="text"
+										escape="true" />
+								</h:panelGroup>
+								<h:outputLabel for="som-sit-src-prm-end"
+									value="#{html.S_PNL_SRC_PRM_DTE_END()}" />
+								<h:panelGroup layout="block" styleClass="main-100">
+									<p:calendar id="som-sit-src-prm-end"
+										value="#{sitCtlPrt.DSrcDteEnd}"
+										disabled="#{sitCtlPrt.dsbSrcDteEnd}"
+										rendered="#{sitCtlPrt.vsbSrcDteEnd}"
+										required="#{sitCtlPrt.rqrSrcDteEnd}" navigator="true"
+										requiredMessage="#{html.S_PNL_SRC_PRM_DTE_END()}"
+										pattern="#{html.D_PTT()}" placeholder="#{html.D_PTT()}"
+										style="text-align: center; width: #{html.I_HTML_SZE_CLN()}%;"
+										maxdate="#{default.D_CURRENT_DATE()}">
+									</p:calendar>
+									<p:message for="som-sit-src-prm-end" display="text"
+										escape="true" />
+								</h:panelGroup>
+
+							</h:panelGrid>
+							<h:panelGrid styleClass="main-100" columns="1">
+								<h:panelGroup layout="block" styleClass="brr-mnu-item">
+									<p:commandLink id="btn-sit-src" value="Search"
+										action="#{sitCtlPrt.srcPrm()}" update="@form"
+										disabled="#{sitCtlPrt.dsbBtnSrcPrm}"
+										rendered="#{sitCtlPrt.vsbBtnSrcPrm}"
+										styleClass="btn btn-primary brr-mnu-item-btn" />
+									<p:blockUI block="pgr-sit-tbl" trigger="btn-sit-src">
+										<p:graphicImage value="#{html.imgLoad}" styleClass="img-load" />
+									</p:blockUI>
+								</h:panelGroup>
+							</h:panelGrid>
+						</h:panelGrid>
+
+					</h:panelGrid>
+
+				</h:panelGroup>
+
+				<h:panelGroup id="png-sit-tbl-dtl" layout="block"
+					styleClass="main-90">
+
+					<p:dataTable id="dtb-sit-fld" value="#{sitCtlPrt.lstGnr}"
+						var="varGnr" paginator="true"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+						rowsPerPageTemplate="10,20,30" rows="20" styleClass="main-100">
+						<p:column headerText="#{html.S_LBL_PRC_NME()}"
+							styleClass="main-10"
+							filterBy="#{sitCtlOpt.ent(varGnr.ITpeId).SOptNme}"
+							sortBy="#{sitCtlOpt.ent(varGnr.ITpeId).SOptNme}"
+							exportable="true">
+							<h:outputText value="#{sitCtlOpt.ent(varGnr.ITpeId).SOptNme}" />
+						</p:column>
+						<p:column headerText="#{html.D_LBL_PRC_DTE()}"
+							styleClass="main-10 alg-ctr" filterBy="#{varGnr.dGnrRgsDte}"
+							sortBy="#{varGnr.dGnrRgsDte}" exportable="true">
+							<h:outputText value="#{varGnr.dGnrRgsDte}" />
+						</p:column>
+						<p:column headerText="#{html.S_LBL_PRC_STS()}"
+							styleClass="main-10"
+							filterBy="#{sitCtlOpt.ent(varGnr.iPrcStsId).SOptNme}"
+							sortBy="#{sitCtlOpt.ent(varGnr.iPrcStsId).SOptNme}"
+							exportable="true">
+							<h:outputText value="#{sitCtlOpt.ent(varGnr.iPrcStsId).SOptNme}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGroup>
+
+
+
+			</h:panelGroup>
+
+			<h:panelGroup id="pgr-sit-tbl" layout="block" styleClass="main-100"
+				rendered="#{sitCtlPrt.vsbPgrTbl}">
+				<p:spacer height="#{html.I_PNL_SPC()}" />
+			</h:panelGroup>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</h:html>

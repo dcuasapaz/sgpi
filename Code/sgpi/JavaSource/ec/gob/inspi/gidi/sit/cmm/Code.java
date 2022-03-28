@@ -16,6 +16,80 @@ public class Code {
 
 	}
 
+	// --------------------------------------------------------------
+	public static int I_CODE_PRJ_RLA5074() {
+		return CodeSit.RLA5074.getICdeVle();
+	}
+
+	public static int I_CODE_PRJ_ECU5032() {
+		return CodeSit.ECU5032.getICdeVle();
+	}
+
+	public static int I_CODE_AE() {
+		return CodeSit.AE.getICdeVle();
+	}
+
+	public static int I_CODE_ALB() {
+		return CodeSit.ALB.getICdeVle();
+	}
+
+	public static int I_CODE_CLX() {
+		return CodeSit.CLX.getICdeVle();
+	}
+
+	public static int I_CODE_CLX_SP() {
+		return CodeSit.CLX_SP.getICdeVle();
+	}
+
+	public static int I_CODE_CLX_SP_CS() {
+		return CodeSit.CLX_SP_CS.getICdeVle();
+	}
+
+	public static int I_CODE_LMT() {
+		return CodeSit.LMT.getICdeVle();
+	}
+
+	public static int I_CODE_LMT_DRH() {
+		return CodeSit.LMT_DRH.getICdeVle();
+	}
+
+	public static int I_CODE_LMT_FLV() {
+		return CodeSit.LMT_FLV.getICdeVle();
+	}
+
+	public static int I_CODE_LMT_SP() {
+		return CodeSit.LMT_SP.getICdeVle();
+	}
+
+	public static int I_CODE_ONR() {
+		return CodeSit.ONR.getICdeVle();
+	}
+
+	public static int I_CODE_ONR_SP() {
+		return CodeSit.ONR_SP.getICdeVle();
+	}
+
+	public static int I_CODE_SP() {
+		return CodeSit.SP.getICdeVle();
+	}
+
+	public static int I_CODE_WYM_SP() {
+		return CodeSit.WYM_SP.getICdeVle();
+	}
+
+	public static int I_CODE_WYM_SP_CS() {
+		return CodeSit.WYM_SP_CS.getICdeVle();
+	}
+
+	public static int I_CODE_F() {
+		return CodeSit.FEMALE.getICdeVle();
+	}
+
+	public static int I_CODE_M() {
+		return CodeSit.MALE.getICdeVle();
+	}
+	// --------------------------------------------------------------
+
 	public static int I_SIT_PRC_STS() {
 		return CodeSit.PROCESS_STATUS.getICdeVle();
 	}
@@ -34,6 +108,14 @@ public class Code {
 
 	public static int I_SIT_PRC_FLD() {
 		return CodeSit.PROCESS_FIELD.getICdeVle();
+	}
+
+	public static int I_SIT_PRC_FLD_EGS() {
+		return CodeSit.PROCESS_FIELD_EGS.getICdeVle();
+	}
+
+	public static int I_SIT_PRC_FLD_LRV() {
+		return CodeSit.PROCESS_FIELD_LRV.getICdeVle();
 	}
 
 	/****************************************************************************/
@@ -335,181 +417,6 @@ public class Code {
 
 	public int dteDayNrmNo() {
 		return 30;
-	}
-
-	/****************************************************************************/
-	/* +++++++++++++++++++++++++++++++ MDL: TSK +++++++++++++++++++++++++++++++ */
-	/****************************************************************************/
-	/* ------------------------------- ENTITIES ------------------------------- */
-
-	public int tskCtg() {
-		return 100;
-	}
-
-	public int tskCtgSub() {
-		return 10000;
-	}
-
-	public int tskGnrTpe() {
-		return 200;
-	}
-
-	public int tskTpe() {
-		return 300;
-	}
-
-	public int tskRslExp() {
-		return 600;
-	}
-
-	public int tskRslSpc() {
-		return 700;
-	}
-
-	public int tskFleStt() {
-		return 800;
-	}
-
-	public int tskPrmTpe() {
-		return 400;
-	}
-
-	public int tskRslTpeItg() {
-		return 710;
-	}
-
-	public int tskRslHlf() {
-		return 5000;
-	}
-
-	public int tskRslNne() {
-		return 827;
-	}
-
-	public int tskFrc() {
-		return 1000;
-	}
-
-	public int tskDvs() {
-		return 2000;
-	}
-
-	public int tskStt() {
-		return 3000;
-	}
-
-	public int tskPrmStt() {
-		return 900;
-	}
-
-	public int tskGrp() {
-		return 4000;
-	}
-
-	public int tskMtv() {
-		return 500;
-	}
-
-	public int tskPrmLve() {
-		return 401;
-	}
-
-	public int tskPrmHld() {
-		return 402;
-	}
-
-	/* ------------------------------- ESPECIFIC ------------------------------- */
-	public int tskFrcTp() {
-		return 1001;
-	}
-
-	public int tskFrcTc() {
-		return 1002;
-	}
-
-	public int tskDvsDia() {
-		return 2001;
-	}
-
-	public int tskDvsPrd() {
-		return 2004;
-	}
-
-	public int tskGrpInd() {
-		return 4001;
-	}
-
-	public int tskGrpMlt() {
-		return 4002;
-	}
-
-	/* ------------------------------- DEFAULT ------------------------------- */
-	public int tskFrcCmpHr() {
-		return 8;
-	}
-
-	public int tskRgsHrNmb() {
-		return 1;
-	}
-
-	/****************************************************************************/
-	/* +++++++++++++++++++++++++++++++ MDL: EVN +++++++++++++++++++++++++++++++ */
-	/****************************************************************************/
-
-	public int evnTpeRgs() {
-		return -100;
-	}
-
-	public int evnTpeRgsEcn() {
-		return -101;
-	}
-
-	public int evnTpeRgsDcm() {
-		return -102;
-	}
-
-	public int evnRqs() {
-		return 100;
-	}
-
-	public int evnTpeEcn() {
-		return 200;
-	}
-
-	public int evnTpeDcm() {
-		return 1000;
-	}
-
-	public int evnStt() {
-		return 300;
-	}
-
-	public int evnTpeCrs() {
-		return 206;
-	}
-
-	public int evnChsTpr() {
-		return 2001;
-	}
-
-	public int evnChsAnl() {
-		return 2002;
-	}
-
-	public int evnChsAgua() {
-		return 2003;
-	}
-
-	public int evnChsOpt() {
-		return 2004;
-	}
-
-	public int evnChsOptSi() {
-		return 13;
-	}
-
-	public int evnChsOptNo() {
-		return 14;
 	}
 
 }
