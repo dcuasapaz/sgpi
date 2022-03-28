@@ -1,5 +1,22 @@
 user: webadmin
 password:JBE71Dvl
 
+Workstation
+IP: 192.168.9.135
+Database
+user: postgres
+password: Pst!SrvPrd2
+port: 65001
+
+user: sgpi
+password: Sgpi!DvlEnv
+
+Server app
+IP: 192.168.9.135
+user: webadmin
+password: Pst!SrvPrd2
+port: 8090
+
+
 
 
