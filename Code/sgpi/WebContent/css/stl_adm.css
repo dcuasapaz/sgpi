@@ -638,8 +638,9 @@ label {
 }
 
 .hdr-lgo-obj {
-	width: 400px;
+	width: 175px;
 	border-right: solid 1px #fff;
+	border-radius: 10px;
 }
 
 #adm-usr {
